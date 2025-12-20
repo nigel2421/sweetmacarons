@@ -1,0 +1,34 @@
+type User @table {
+  email: String!
+  displayName: String!
+  createdAt: Timestamp!
+  shippingAddress: String
+  billingAddress: String
+  phoneNumber: String
+}
+
+type Flavor @table {
+  name: String!
+  price: Float!
+  available: Boolean!
+  description: String
+  imageUrl: String
+  allergens: [String]
+}
+
+type Order @table {
+  user: User!
+  orderDate: Timestamp!
+  totalAmount: Float!
+  status: String!
+  shippingAddressSnapshot: String
+  notes: String
+}
+
+type OrderItem @table {
+  order: Order!
+  flavor: Flavor
+  quantity: Int!
+  unitPrice: Float!
+  flavorNameSnapshot: String
+}

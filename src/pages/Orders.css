@@ -1,0 +1,106 @@
+
+.orders-page {
+  padding: 40px;
+  background-color: #f9f9f9;
+}
+
+.orders-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.admin-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.download-csv-button, .logout-button {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.download-csv-button {
+  background-color: #2ecc71;
+  color: #fff;
+}
+
+.download-csv-button:hover {
+  background-color: #27ae60;
+}
+
+.logout-button {
+  background-color: #e74c3c;
+  color: #fff;
+}
+
+.logout-button:hover {
+  background-color: #c0392b;
+}
+
+.orders-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #fff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.orders-table th, .orders-table td {
+  padding: 16px;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+}
+
+.orders-table th {
+  background-color: #f2f2f2;
+  font-weight: 600;
+}
+
+.view-more-button {
+  background-color: #3498db;
+  color: #fff;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 4px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.view-more-button:hover {
+  background-color: #2980b9;
+}
+
+.order-status {
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 20px;
+  text-transform: capitalize;
+  display: inline-block;
+}
+
+.order-status.new {
+  background-color: #3498db;
+  color: #fff;
+}
+
+.order-status.processing {
+  background-color: #f1c40f;
+  color: #fff;
+}
+
+.order-status.completed {
+  background-color: #2ecc71;
+  color: #fff;
+}
+
+.order-status.cancelled {
+  background-color: #e74c3c;
+  color: #fff;
+}

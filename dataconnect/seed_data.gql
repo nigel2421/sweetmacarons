@@ -1,0 +1,74 @@
+mutation CreateSeedData @transaction @auth(level: USER, insecureReason: "This operation is safe to expose to all logged in users.") {
+  user_insertMany(data: [
+    {
+      id: "550e8400-e29b-41d4-a716-446655440000",
+      displayName: "demouser1",
+      email: "demouser1@example.com",
+      createdAt: "2024-01-01T00:00:00Z"
+    },
+    {
+      id: "550e8400-e29b-41d4-a716-446655440001",
+      displayName: "demouser2",
+      email: "demouser2@example.com",
+      createdAt: "2024-01-02T00:00:00Z"
+    }
+  ])
+  flavor_insertMany(data: [
+    {
+      id: "650e8400-e29b-41d4-a716-446655440002",
+      name: "Vanilla",
+      price: 2.50,
+      available: true
+    },
+    {
+      id: "750e8400-e29b-41d4-a716-446655440003",
+      name: "Chocolate",
+      price: 2.75,
+      available: true
+    }
+  ])
+  order_insertMany(data: [
+    {
+      id: "850e8400-e29b-41d4-a716-446655440004",
+      userId: "550e8400-e29b-41d4-a716-446655440000",
+      orderDate: "2024-01-05T12:00:00Z",
+      totalAmount: 5.25,
+      status: "COMPLETED",
+      shippingAddressSnapshot: "123 Main St"
+    },
+    {
+      id: "950e8400-e29b-41d4-a716-446655440005",
+      userId: "550e8400-e29b-41d4-a716-446655440001",
+      orderDate: "2024-01-06T14:00:00Z",
+      totalAmount: 2.75,
+      status: "PENDING",
+      shippingAddressSnapshot: "456 Elm St"
+    }
+  ])
+  orderItem_insertMany(data: [
+    {
+      id: "a50e8400-e29b-41d4-a716-446655440006",
+      orderId: "850e8400-e29b-41d4-a716-446655440004",
+      flavorId: "650e8400-e29b-41d4-a716-446655440002",
+      quantity: 1,
+      unitPrice: 2.50,
+      flavorNameSnapshot: "Vanilla"
+    },
+    {
+      id: "b50e8400-e29b-41d4-a716-446655440007",
+      orderId: "850e8400-e29b-41d4-a716-446655440004",
+      flavorId: "750e8400-e29b-41d4-a716-446655440003",
+      quantity: 1,
+      unitPrice: 2.75,
+      flavorNameSnapshot: "Chocolate"
+    },
+    {
+      id: "c50e8400-e29b-41d4-a716-446655440008",
+      orderId: "950e8400-e29b-41d4-a716-446655440005",
+      flavorId: "750e8400-e29b-41d4-a716-446655440003",
+      quantity: 1,
+      unitPrice: 2.75,
+      flavorNameSnapshot: "Chocolate"
+    }
+  ])
+}

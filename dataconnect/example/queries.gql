@@ -1,0 +1,48 @@
+mutation CreateDemoUser @auth(level: PUBLIC, insecureReason: "This operation is for demo purposes only and does not require authentication") {
+  user_insert(data: {
+    id: "550e8400-e29b-41d4-a716-446655440000",
+    displayName: "demouser1",
+    email: "demouser1@example.com",
+    createdAt: "2024-04-26T12:00:00Z"
+  })
+}
+
+query ListAvailableFlavors @auth(level: PUBLIC, insecureReason: "This operation is safe to expose to the public") {
+  flavors(where: {available: {eq: true}}) {
+    id
+    name
+    description
+    price
+    imageUrl
+    allergens
+  }
+}
+
+mutation CreateOrder($userId: UUID!, $notes: String, $shippingAddressSnapshot: String!, $status: String!, $totalAmount: Float!) @auth(level: USER) {
+  order_insert(data: {
+    userId: $userId,
+    notes: $notes,
+    orderDate_expr: "request.time",
+    shippingAddressSnapshot: $shippingAddressSnapshot,
+    status: $status,
+    totalAmount: $totalAmount
+  })
+}
+
+query GetUserOrders($userId: UUID!) @auth(level: USER) {
+  user(id: $userId) {
+    orders_on_user {
+      id
+      orderDate
+      status
+      totalAmount
+      notes
+      shippingAddressSnapshot
+      orderItems_on_order {
+        quantity
+        unitPrice
+        flavorNameSnapshot
+      }
+    }
+  }
+}

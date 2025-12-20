@@ -1,0 +1,118 @@
+
+.disclaimer-page {
+  padding: 2rem;
+}
+
+.disclaimer-nav {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 2rem;
+}
+
+.disclaimer-nav button {
+  background-color: #d32f2f;
+  color: #fff;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.disclaimer-nav button:hover {
+  background-color: #b71c1c;
+}
+
+.disclaimer-content {
+  max-width: 800px;
+  margin: 0 auto;
+  background-color: #fff;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.disclaimer-content h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.5rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  color: #d32f2f;
+}
+
+.deposit-info,
+.payment-info {
+  margin-bottom: 1.5rem;
+}
+
+.deposit-info p,
+.payment-info p {
+  font-size: 1.1rem;
+}
+
+.whatsapp-number {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background-color: #f5f5f5;
+  padding: 0.75rem;
+  border-radius: 5px;
+}
+
+.whatsapp-number span {
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.whatsapp-number button {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #333;
+}
+
+.consent-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.cart-review {
+  margin-top: 2rem;
+  border-top: 1px solid #ddd;
+  padding-top: 1.5rem;
+}
+
+.cart-item-review {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+.cart-totals-review {
+  margin-top: 1rem;
+  text-align: right;
+}
+
+.checkout-button {
+  background-color: #25d366;
+  color: #fff;
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: 100%;
+  font-size: 1.2rem;
+}
+
+.checkout-button:hover {
+  background-color: #128c7e;
+}
+
+.checkout-button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
