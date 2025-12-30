@@ -33,8 +33,15 @@ const Dashboard = ({ orders }) => {
     return orders;
   }, [orders, filter, startDate, endDate]);
 
+  const deliveredOrders = useMemo(() => {
+    return filteredOrders.filter(order => order.status === 'delivered');
+  }, [filteredOrders]);
+
   const totalOrders = filteredOrders.length;
-  const totalRevenue = filteredOrders.reduce((acc, order) => acc + order.grandTotal, 0);
+  const totalRevenue = deliveredOrders.reduce((acc, order) => acc + ((order.macaronsTotal || 0) + (order.deliveryFee || 0)), 0);
+  const pendingRevenue = filteredOrders
+    .filter(order => order.status !== 'delivered')
+    .reduce((acc, order) => acc + ((order.macaronsTotal || 0) + (order.deliveryFee || 0)), 0);
 
   const macaronCounts = useMemo(() => {
     const counts = {};
@@ -100,6 +107,10 @@ const Dashboard = ({ orders }) => {
         <div className="stat-card">
           <h3>Total Revenue</h3>
           <p>Ksh {totalRevenue.toLocaleString()}</p>
+        </div>
+        <div className="stat-card">
+          <h3>Pending Revenue</h3>
+          <p>Ksh {pendingRevenue.toLocaleString()}</p>
         </div>
         <div className="stat-card top-macarons">
           <h3>Top 3 Macarons</h3>

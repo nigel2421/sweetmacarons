@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { macarons } from './macaronsData';
+import './Macarons.css';
 
 const MacaronCard = ({ macaron, onSelect, onAddToCart }) => {
   const [selectedOption, setSelectedOption] = useState(macaron.options[0]);
@@ -13,13 +14,16 @@ const MacaronCard = ({ macaron, onSelect, onAddToCart }) => {
 
   const handleSelectChange = (e) => {
     e.stopPropagation();
-    setSelectedOption(JSON.parse(e.target.value));
+    const selected = macaron.options.find(
+      (option) => JSON.stringify(option) === e.target.value
+    );
+    setSelectedOption(selected);
   };
 
   return (
     <motion.div
       className="macaron-card"
-      onClick={() => onSelect(macaron)}
+      onClick={() => onSelect(macaron, selectedOption)} // Pass selected option
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}

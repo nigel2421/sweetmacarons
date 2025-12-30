@@ -1,0 +1,36 @@
+
+.admin-nav {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.admin-nav a {
+  color: #495057;
+  padding: 0.5rem 1rem;
+  text-decoration: none;
+  font-weight: bold;
+  border-radius: 20px;
+  transition: background-color 0.3s, color 0.3s;
+  white-space: nowrap;
+}
+
+.admin-nav a.active {
+  background-color: #4A90E2;
+  color: white;
+}
+
+.admin-nav a:hover:not(.active) {
+  background-color: #e9ecef;
+}
+
+@media (max-width: 768px) {
+  .admin-nav {
+    gap: 0.5rem;
+  }
+
+  .admin-nav a {
+    padding: 0.5rem;
+    font-size: 0.9rem;
+  }
+}

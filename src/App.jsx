@@ -1,12 +1,15 @@
 
 import { useState, useEffect, lazy, Suspense } from 'react';
-import { Routes, Route, Link, useNavigate } from 'react-router-dom';
+import { Routes, Route, Link, useNavigate, useLocation } from 'react-router-dom';
 import Macarons from './Macarons';
 import CartModal from './CartModal';
 import ProductModal from './ProductModal';
 import HeroSlider from './HeroSlider';
 import Footer from './Footer';
 import ProtectedRoute from './ProtectedRoute';
+import AdminNav from './pages/AdminNav';
+import ScrollToTop from './ScrollToTop';
+import ScrollToTopButton from './components/ScrollToTopButton';
 import { FiShoppingCart } from 'react-icons/fi';
 import { ToastContainer, toast } from 'react-toastify';
 import { db } from './firebase';
@@ -21,6 +24,7 @@ import './pages/Orders.css';
 import './pages/Login.css';
 import './pages/OrderDetailsModal.css';
 import './pages/Analytics.css';
+import './pages/AdminNav.css';
 
 const About = lazy(() => import('./pages/About'));
 const Contact = lazy(() => import('./pages/Contact'));
@@ -54,7 +58,7 @@ function App() {
     return savedCart ? JSON.parse(savedCart) : [];
   });
   const [showCart, setShowCart] = useState(false);
-  const [selectedMacaron, setSelectedMacaron] = useState(null);
+  const [selectedProduct, setSelectedProduct] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(() => {
     return localStorage.getItem('isAuthenticated') === 'true';
   });
@@ -62,6 +66,7 @@ function App() {
   const [loading, setLoading] = useState(true);
 
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     localStorage.setItem('cart', JSON.stringify(cart));
@@ -132,25 +137,35 @@ function App() {
     toast.info('Cart cleared!');
   };
 
-  const handleSelectMacaron = (macaron) => {
-    setSelectedMacaron(macaron);
+  const handleSelectMacaron = (macaron, option) => {
+    setSelectedProduct({ macaron, option });
   };
 
   const handleCloseProductModal = () => {
-    setSelectedMacaron(null);
+    setSelectedProduct(null);
   };
 
   const cartCount = cart.reduce((total, item) => total + item.quantity, 0);
 
+  const isAdminPage = location.pathname === '/orders' || location.pathname === '/analytics';
+
   return (
     <div className="App">
+      <ScrollToTop />
       <header className="App-header">
-        <Link to="/">
-          <img src="/images/logo.jpeg" alt="Los Tres Macarons" className="logo" />
-        </Link>
-        <div className="cart-icon" onClick={() => setShowCart(true)}>
-          <FiShoppingCart />
-          {cartCount > 0 && <span className="cart-count">{cartCount}</span>}
+        <div className="header-left">
+          <Link to="/">
+            <img src="/images/logo.jpeg" alt="Los Tres Macarons" className="logo" />
+          </Link>
+        </div>
+        <div className="header-center">
+          {isAuthenticated && isAdminPage && <AdminNav />}
+        </div>
+        <div className="header-right">
+          <div className="cart-icon" onClick={() => setShowCart(true)}>
+            <FiShoppingCart />
+            {cartCount > 0 && <span className="cart-count">{cartCount}</span>}
+          </div>
         </div>
       </header>
       <main>
@@ -174,7 +189,7 @@ function App() {
               path="/orders"
               element={
                 <ProtectedRoute isAuthenticated={isAuthenticated}>
-                  <Orders onLogout={handleLogout} orders={orders} loading={loading} />
+                  <Orders onLogout={handleLogout} orders={orders} loading={loading} setOrders={setOrders} />
                 </ProtectedRoute>
               }
             />
@@ -199,8 +214,8 @@ function App() {
         onClearCart={clearCart}
       />
       <ProductModal
-        macaron={selectedMacaron}
-        show={!!selectedMacaron}
+        product={selectedProduct}
+        show={!!selectedProduct}
         onClose={handleCloseProductModal}
         onAddToCart={addToCart}
       />
@@ -215,6 +230,7 @@ function App() {
         draggable
         pauseOnHover
       />
+      <ScrollToTopButton />
     </div>
   );
 }

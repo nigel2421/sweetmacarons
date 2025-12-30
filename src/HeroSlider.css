@@ -70,3 +70,9 @@
 .hero-slider-dot.active {
   background: white;
 }
+
+@media (max-width: 768px) {
+  .hero-slider {
+    height: 60vh;
+  }
+}

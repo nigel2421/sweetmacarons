@@ -1,6 +1,8 @@
 
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { doc, setDoc } from 'firebase/firestore';
+import { db } from './firebase';
 import './DisclaimerPage.css';
 
 const DisclaimerPage = () => {
@@ -15,6 +17,7 @@ const DisclaimerPage = () => {
   const { orderId, cart, deliveryFee, macaronsTotal } = location.state || { orderId: null, cart: [], deliveryFee: 0, macaronsTotal: 0 };
 
   const depositAmount = macaronsTotal * 0.3;
+  const balance = macaronsTotal + deliveryFee - depositAmount;
   const whatsappNumber = '+254723734211';
 
   const handleCopyToClipboard = () => {
@@ -22,11 +25,27 @@ const DisclaimerPage = () => {
     alert('Copied to clipboard');
   };
 
-  const handleCheckout = () => {
-    const message = `*Hello!* 👋 I would like to place an order for the following macarons:\n\n${
-      cart.map(item => `• *${item.name}* (Box of ${item.option.box}): Ksh ${item.option.price.toLocaleString()}`).join('\n')
-    }\n\n*Subtotal:* Ksh ${macaronsTotal.toLocaleString()}\n*Delivery Fee:* Ksh ${deliveryFee.toLocaleString()}\n*Total:* Ksh ${(macaronsTotal + deliveryFee).toLocaleString()}\n\nI will pay the 30% deposit of *Ksh ${depositAmount.toLocaleString()}* and share the confirmation message shortly.\n\n*Order ID:* ${orderId}`;
-    window.open(`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`, '_blank');
+  const handleCheckout = async () => {
+    try {
+      await setDoc(doc(db, 'orders', orderId), {
+        orderId,
+        cart,
+        deliveryFee,
+        macaronsTotal,
+        depositAmount,
+        balance,
+        status: 'pending',
+        createdAt: new Date(),
+      });
+
+      const message = `*Hello!* 👋 I would like to place an order for the following macarons:\n\n${
+        cart.map(item => `• *${item.name}* (Box of ${item.option.box}): Ksh ${item.option.price.toLocaleString()}`).join('\n')
+      }\n\n*Subtotal:* Ksh ${macaronsTotal.toLocaleString()}\n*Delivery Fee:* Ksh ${deliveryFee.toLocaleString()}\n*Total:* Ksh ${(macaronsTotal + deliveryFee).toLocaleString()}\n\nI will pay the 30% deposit of *Ksh ${depositAmount.toLocaleString()}* and share the confirmation message shortly.\n\n*Order ID:* ${orderId}`;
+      window.open(`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`, '_blank');
+    } catch (error) {
+      console.error('Error writing document: ', error);
+      alert('There was an error placing your order. Please try again.');
+    }
   };
 
   return (

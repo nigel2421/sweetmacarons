@@ -4,7 +4,7 @@ service cloud.firestore {
     match /orders/{orderId} {
       allow create: if true;
       allow read: if true;
-      allow write: if false;
+      allow write: if true;
     }
   }
 }

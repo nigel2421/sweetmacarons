@@ -1,18 +1,22 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { FiX } from 'react-icons/fi';
 import './ProductModal.css';
 
-const ProductModal = ({ macaron, show, onClose, onAddToCart }) => {
-  const [selectedOption, setSelectedOption] = useState(macaron?.options[0]);
+const ProductModal = ({ product, show, onClose, onAddToCart }) => {
+  const [selectedOption, setSelectedOption] = useState(null);
 
-  if (!show || !macaron) {
+  useEffect(() => {
+    if (product) {
+      setSelectedOption(product.option);
+    }
+  }, [product]);
+
+  if (!show || !product) {
     return null;
   }
-  // Set the selected option to the first option when the macaron changes
-  if (macaron.options[0] !== selectedOption && macaron.options.length > 0) {
-    setSelectedOption(macaron.options[0]);
-  }
+
+  const { macaron } = product;
 
   const handleAddToCart = () => {
     onAddToCart(macaron, selectedOption);
@@ -20,10 +24,10 @@ const ProductModal = ({ macaron, show, onClose, onAddToCart }) => {
   };
 
   return (
-    <div className="product-modal-overlay">
-      <div className="product-modal">
+    <div className="modal-overlay" onClick={onClose}>
+      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
         <div className="product-modal-header">
-          <button onClick={onClose} className="product-modal-close">
+          <button onClick={onClose} className="modal-close-button">
             <FiX />
           </button>
         </div>

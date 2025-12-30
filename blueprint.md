@@ -1,36 +1,51 @@
 
-# Los Tres Macarons Blueprint
+# Macaron Shop Blueprint
 
 ## Overview
 
-A mobile-friendly, visually appealing static website to showcase a variety of macarons and their pricing. The website will feature a modern design with interactive elements and a clean layout.
+This document outlines the features and design of the Macaron Shop application. It serves as a single source of truth for the project's capabilities, from its initial version to the current state.
 
-## Implemented Features
+## Core Features (v1)
 
-*   **Macaron Showcase:** A home page that displays macaron products in a card-based layout with a dropdown for options and an "Add to Cart" button.
-*   **Product Detail Modal:** A modal that appears when a user clicks on a product card, displaying detailed information, ingredients, and allergy notices.
-*   **Initial Styling:** A modern, mobile-friendly design with custom fonts and colors.
-*   **Interactive Pricing:** A dropdown menu on each macaron card and in the detail modal to select box sizes.
-*   **Shopping Cart:** A functional shopping cart with an "Add to Cart" button and a cart icon in the header that displays the item count.
-*   **Enhanced Cart UX:** "Add to Cart" notifications, a cart modal with a remove button, and WhatsApp checkout.
-*   **Currency & Mobile Polish:** Added "Ksh" currency symbol and improved mobile responsiveness.
-*   **Polished Dropdowns:** Improved the styling of the product option dropdowns.
-*   **Mobile UI Fixes:** Corrected the product modal's close button visibility and dropdown text color on mobile.
-*   **Improved Add to Cart Flow:** The product detail modal now closes automatically after an item is added to the cart, and the option selector resets correctly.
-*   **Sticky Header:** The header is sticky to the top of the viewport for easy access.
-*   **Local Storage Cart:** The shopping cart is persisted in local storage.
-*   **Price Formatting:** Prices are formatted with commas for readability.
-*   **Clear Cart Confirmation:** A confirmation modal is displayed before clearing the entire cart.
-*   **Remove Item Confirmation:** A confirmation modal is displayed before removing an item from the cart.
-*   **Toast Notifications:** Toast notifications are displayed for adding, removing, and clearing items from the cart.
-*   **Hero Slider:** A dynamic image slider is now on the homepage to showcase the macaron products.
-*   **Footer:** A footer with social media links, contact information, and quick links has been added.
-*   **About Us Page:** An "About Us" page with a brief history of the company has been created.
-*   **Contact Us Page:** A "Contact Us" page with a contact form has been created.
-*   **Animations:** Added animations to the hero section and product cards to make the website more engaging.
-*   **WhatsApp Integration for Contact Form:** The contact form now opens WhatsApp with a pre-filled message containing the user's name, email, and message.
+*   **Product Showcase:** A beautiful, responsive gallery of macaron flavors.
+*   **Shopping Cart:** Users can add and remove items from their cart.
+*   **Checkout:** A simple checkout process to place orders.
+*   **Admin Dashboard:** A private section for the administrator to view and manage orders.
+*   **Order Management:** Admins can view order details, including items, totals, and customer information.
 
-## Next Steps
+## Design & Style
 
-*   **Testing:** Add unit and integration tests to ensure the application is working as expected.
-*   **Deployment:** Deploy the application to a hosting service.
+*   **Theme:** Modern, elegant, and visually appealing, with a focus on high-quality product imagery.
+*   **Color Palette:** A sophisticated mix of pastels and bold accent colors.
+*   **Typography:** Clean and readable fonts (e.g., Avenir).
+*   **Layout:** Responsive and mobile-first, ensuring a seamless experience on all devices.
+
+## Current Implementation Plan
+
+### Feature: Enhanced Order Workflow & Customer Management
+
+1.  **Dynamic Order Status Workflow:**
+    *   **Goal:** Allow the admin to update the status of an order through a workflow.
+    *   **Implementation:**
+        *   Add a dropdown menu in the `OrderDetailsModal` component.
+        *   The dropdown will contain the following statuses: `New`, `Deposit Paid`, `Confirmed`, `Processed`, `Delivered`.
+        *   An `onchange` event handler will trigger a Firestore update to change the `status` field of the order document.
+
+2.  **Revenue Tied to "Delivered" Status:**
+    *   **Goal:** Make the revenue metric on the dashboard more accurate by only counting completed sales.
+    *   **Implementation:**
+        *   In the `Dashboard.jsx` component, the `totalRevenue` calculation will be modified.
+        *   It will first filter the `orders` array to include only documents where `status === 'Delivered'`.
+        *   The `reduce` function will then sum the `grandTotal` of these filtered orders.
+
+3.  **Customer Name and Phone Number:**
+    *   **Goal:** Capture customer contact information to track orders and identify repeat customers.
+    *   **Implementation:**
+        *   Add two new input fields (`customerName`, `customerPhone`) to the `Checkout.jsx` form.
+        *   These fields will be added to the order object when a new order is created in Firestore.
+        *   The `OrderDetailsModal.jsx` will be updated to display this new information.
+
+4.  **Data Security:**
+    *   **Goal:** Protect customer phone numbers from unauthorized access.
+    *   **Implementation:**
+        *   `firestore.rules` will be updated to restrict read/write access to order documents to authenticated admins only. This ensures customer data is not publicly exposed.

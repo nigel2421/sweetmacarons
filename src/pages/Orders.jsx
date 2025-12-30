@@ -1,18 +1,15 @@
 
-import { useState, useEffect } from 'react';
-import { db } from '../firebase';
-import { collection, getDocs, orderBy, query } from 'firebase/firestore';
+import { useState } from 'react';
 import Papa from 'papaparse';
-import { Link } from 'react-router-dom';
 import OrderDetailsModal from './OrderDetailsModal';
-import Dashboard from './Dashboard';
 import './Orders.css';
 
-const Orders = ({ onLogout, orders, loading }) => {
+const Orders = ({ onLogout, orders, loading, setOrders }) => {
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [ordersPerPage] = useState(10);
+  const [searchTerm, setSearchTerm] = useState('');
 
   const handleLogout = () => {
     onLogout();
@@ -28,14 +25,21 @@ const Orders = ({ onLogout, orders, loading }) => {
     setSelectedOrder(null);
   };
 
+  const handleUpdateStatus = (orderId, newStatus) => {
+    const updatedOrders = orders.map(order =>
+      order.id === orderId ? { ...order, status: newStatus } : order
+    );
+    setOrders(updatedOrders);
+  };
+
   const handleDownloadCsv = () => {
     const csvData = orders.map(order => ({
       'Order ID': order.id,
       'Date': new Date(order.createdAt?.toDate()).toLocaleString(),
-      'Macarons Total': order.macaronsTotal,
-      'Delivery Fee': order.deliveryFee,
-      'Grand Total': order.grandTotal,
-      'Delivery Option': order.deliveryOption,
+      'Macarons Total': order.macaronsTotal || 0,
+      'Delivery Fee': order.deliveryFee || 0,
+      'Grand Total': (order.macaronsTotal || 0) + (order.deliveryFee || 0),
+      'Delivery Option': order.deliveryOption || 'N/A',
       'Status': order.status,
       'Cart Items': order.cart.map(item => `${item.quantity} x ${item.name} (Box of ${item.option.box})`).join(', ')
     }));
@@ -50,12 +54,16 @@ const Orders = ({ onLogout, orders, loading }) => {
     document.body.removeChild(link);
   };
 
+  const filteredOrders = orders.filter(order =>
+    order.id.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   // Pagination logic
   const indexOfLastOrder = currentPage * ordersPerPage;
   const indexOfFirstOrder = indexOfLastOrder - ordersPerPage;
-  const currentOrders = orders.slice(indexOfFirstOrder, indexOfLastOrder);
+  const currentOrders = filteredOrders.slice(indexOfFirstOrder, indexOfLastOrder);
 
-  const totalPages = Math.ceil(orders.length / ordersPerPage);
+  const totalPages = Math.ceil(filteredOrders.length / ordersPerPage);
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
@@ -63,18 +71,23 @@ const Orders = ({ onLogout, orders, loading }) => {
     <div className="orders-page">
       <div className="orders-header">
         <h1>Orders</h1>
-        <div className="admin-actions">
-          <Link to="/analytics" className="analytics-button-mobile">Analytics</Link>
-          <button onClick={handleDownloadCsv} className="download-csv-button">Download as CSV</button>
-          <button onClick={handleLogout} className="logout-button">Logout</button>
+        <div className="header-actions">
+          <input
+            type="text"
+            placeholder="Search by Order ID..."
+            className="search-bar"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+          <div className="admin-actions">
+            <button onClick={handleDownloadCsv} className="download-csv-button">Download as CSV</button>
+            <button onClick={handleLogout} className="logout-button">Logout</button>
+          </div>
         </div>
-      </div>
-      <div className="dashboard-desktop">
-        <Dashboard orders={orders} />
       </div>
       {loading ? (
         <p>Loading orders...</p>
-      ) : orders.length > 0 ? (
+      ) : filteredOrders.length > 0 ? (
         <>
           <table className="orders-table">
             <thead>
@@ -87,26 +100,27 @@ const Orders = ({ onLogout, orders, loading }) => {
               </tr>
             </thead>
             <tbody>
-              {currentOrders.map((order) => (
-                <tr key={order.id}>
-                  <td data-label="Order ID">{order.id}</td>
-                  <td data-label="Date">{new Date(order.createdAt?.toDate()).toLocaleString()}</td>
-                  <td data-label="Total">Ksh {order.grandTotal.toLocaleString()}</td>
-                  <td data-label="Status"><span className={`order-status ${order.status}`}>{order.status}</span></td>
-                  <td data-label="Actions">
-                    <button onClick={() => handleViewMore(order)} className="view-more-button">View More</button>
-                  </td>
-                </tr>
-              ))}
+              {currentOrders.map((order) => {
+                const grandTotal = (order.macaronsTotal || 0) + (order.deliveryFee || 0);
+                return (
+                  <tr key={order.id}>
+                    <td data-label="Order ID">{order.id}</td>
+                    <td data-label="Date">{new Date(order.createdAt?.toDate()).toLocaleString()}</td>
+                    <td data-label="Total">Ksh {grandTotal.toLocaleString()}</td>
+                    <td data-label="Status"><span className={`order-status ${order.status.toLowerCase().replace('-', '')}`}>{order.status}</span></td>
+                    <td data-label="Actions">
+                      <button onClick={() => handleViewMore(order)} className="view-more-button">View More</button>
+                    </td>
+                  </tr>
+                )
+              })}
             </tbody>
           </table>
           <div className="pagination">
-            <button onClick={() => paginate(currentPage - 1)} disabled={currentPage === 1}>
-              Previous
+            <button onClick={() => paginate(currentPage - 1)} disabled={currentPage === 1}>              Previous
             </button>
             <span>Page {currentPage} of {totalPages}</span>
-            <button onClick={() => paginate(currentPage + 1)} disabled={currentPage === totalPages}>
-              Next
+            <button onClick={() => paginate(currentPage + 1)} disabled={currentPage === totalPages || totalPages === 0}>              Next
             </button>
           </div>
         </>
@@ -117,6 +131,7 @@ const Orders = ({ onLogout, orders, loading }) => {
         order={selectedOrder}
         show={isModalOpen}
         onClose={handleCloseModal}
+        onUpdateStatus={handleUpdateStatus}
       />
     </div>
   );
