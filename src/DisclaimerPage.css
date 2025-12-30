@@ -72,11 +72,49 @@
   color: #333;
 }
 
+.whatsapp-instruction {
+  background-color: #fffbe6;
+  border: 1px solid #ffe58f;
+  border-radius: 5px;
+  padding: 1rem;
+  margin-top: 1rem;
+  font-weight: bold;
+  color: #d46b08;
+  text-align: center;
+}
+
 .consent-checkbox {
   display: flex;
   align-items: center;
   gap: 0.5rem;
   margin-bottom: 1.5rem;
+}
+
+.consent-checkbox input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  width: 24px;
+  height: 24px;
+  border: 2px solid #d32f2f;
+  border-radius: 5px;
+  cursor: pointer;
+  position: relative;
+  transition: background-color 0.3s ease;
+}
+
+.consent-checkbox input[type="checkbox"]:checked {
+  background-color: #d32f2f;
+}
+
+.consent-checkbox input[type="checkbox"]:checked::after {
+  content: '\2713';
+  font-size: 18px;
+  color: #fff;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .cart-review {

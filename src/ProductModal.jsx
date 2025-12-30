@@ -1,6 +1,7 @@
 
 import { useState } from 'react';
 import { FiX } from 'react-icons/fi';
+import './ProductModal.css';
 
 const ProductModal = ({ macaron, show, onClose, onAddToCart }) => {
   const [selectedOption, setSelectedOption] = useState(macaron?.options[0]);
@@ -27,11 +28,13 @@ const ProductModal = ({ macaron, show, onClose, onAddToCart }) => {
           </button>
         </div>
         <div className="product-modal-body">
-          <img
-            src={macaron.image}
-            alt={macaron.name}
-            className="product-modal-image"
-          />
+          <div className="product-modal-image-container">
+            <img
+              src={macaron.image}
+              alt={macaron.name}
+              className="product-modal-image"
+            />
+          </div>
           <div className="product-modal-info">
             <h2 className="product-modal-name">{macaron.name}</h2>
             <p className="product-modal-description">{macaron.description}</p>

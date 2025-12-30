@@ -28,6 +28,7 @@ A mobile-friendly, visually appealing static website to showcase a variety of ma
 *   **About Us Page:** An "About Us" page with a brief history of the company has been created.
 *   **Contact Us Page:** A "Contact Us" page with a contact form has been created.
 *   **Animations:** Added animations to the hero section and product cards to make the website more engaging.
+*   **WhatsApp Integration for Contact Form:** The contact form now opens WhatsApp with a pre-filled message containing the user's name, email, and message.
 
 ## Next Steps
 

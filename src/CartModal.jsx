@@ -14,6 +14,7 @@ const CartModal = ({ cart, show, onClose, onRemoveItem, onClearCart }) => {
   const [isConfirmationVisible, setIsConfirmationVisible] = useState(false);
   const [confirmationAction, setConfirmationAction] = useState(null);
   const [itemToRemove, setItemToRemove] = useState(null);
+  const [isPlacingOrder, setIsPlacingOrder] = useState(false); // New state for loading
   const navigate = useNavigate();
 
   if (!show) {
@@ -30,6 +31,7 @@ const CartModal = ({ cart, show, onClose, onRemoveItem, onClearCart }) => {
   const grandTotal = macaronsTotal + deliveryFee;
 
   const handleProceedToCheckout = async () => {
+    setIsPlacingOrder(true); // Start loading
     try {
       const orderDetails = {
         cart,
@@ -54,6 +56,8 @@ const CartModal = ({ cart, show, onClose, onRemoveItem, onClearCart }) => {
     } catch (e) {
       console.error("Error adding document: ", e);
       toast.error("There was an issue placing your order. Please try again.");
+    } finally {
+      setIsPlacingOrder(false); // Stop loading
     }
   };
 
@@ -82,6 +86,12 @@ const CartModal = ({ cart, show, onClose, onRemoveItem, onClearCart }) => {
     <>
       <div className="cart-modal-overlay" onClick={onClose}>
         <div className="cart-modal" onClick={(e) => e.stopPropagation()}>
+          {isPlacingOrder && (
+            <div className="loading-overlay">
+              <div className="loading-spinner"></div>
+              <p>Please wait...</p>
+            </div>
+          )}
           <div className="cart-modal-header">
             <h2>Shopping Cart</h2>
             <button onClick={onClose} className="cart-modal-close">
@@ -167,9 +177,9 @@ const CartModal = ({ cart, show, onClose, onRemoveItem, onClearCart }) => {
               <button
                 onClick={handleProceedToCheckout}
                 className="cart-modal-checkout"
-                disabled={cart.length === 0}
+                disabled={cart.length === 0 || isPlacingOrder}
               >
-                Place Order
+                {isPlacingOrder ? 'Placing Order...' : 'Place Order'}
               </button>
             </div>
           )}

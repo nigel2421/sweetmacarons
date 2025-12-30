@@ -1,19 +1,16 @@
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, lazy, Suspense } from 'react';
 import { Routes, Route, Link, useNavigate } from 'react-router-dom';
 import Macarons from './Macarons';
 import CartModal from './CartModal';
 import ProductModal from './ProductModal';
-import DisclaimerPage from './DisclaimerPage';
 import HeroSlider from './HeroSlider';
 import Footer from './Footer';
-import About from './pages/About';
-import Contact from './pages/Contact';
-import Orders from './pages/Orders';
-import Login from './pages/Login';
 import ProtectedRoute from './ProtectedRoute';
 import { FiShoppingCart } from 'react-icons/fi';
 import { ToastContainer, toast } from 'react-toastify';
+import { db } from './firebase';
+import { collection, getDocs, orderBy, query } from 'firebase/firestore';
 import 'react-toastify/dist/ReactToastify.css';
 import './App.css';
 import './HeroSlider.css';
@@ -23,6 +20,15 @@ import './pages/Contact.css';
 import './pages/Orders.css';
 import './pages/Login.css';
 import './pages/OrderDetailsModal.css';
+import './pages/Analytics.css';
+
+const About = lazy(() => import('./pages/About'));
+const Contact = lazy(() => import('./pages/Contact'));
+const Orders = lazy(() => import('./pages/Orders'));
+const Login = lazy(() => import('./pages/Login'));
+const Analytics = lazy(() => import('./pages/Analytics'));
+const DisclaimerPage = lazy(() => import('./DisclaimerPage'));
+const NotFoundPage = lazy(() => import('./pages/NotFoundPage'));
 
 const slides = [
   {
@@ -52,6 +58,8 @@ function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(() => {
     return localStorage.getItem('isAuthenticated') === 'true';
   });
+  const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const navigate = useNavigate();
 
@@ -61,6 +69,29 @@ function App() {
 
   useEffect(() => {
     localStorage.setItem('isAuthenticated', isAuthenticated);
+  }, [isAuthenticated]);
+
+  useEffect(() => {
+    const fetchOrders = async () => {
+      try {
+        const ordersCollection = collection(db, 'orders');
+        const q = query(ordersCollection, orderBy('createdAt', 'desc'));
+        const querySnapshot = await getDocs(q);
+        const ordersData = querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setOrders(ordersData);
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching orders: ", error);
+        setLoading(false);
+      }
+    };
+
+    if (isAuthenticated) {
+      fetchOrders();
+    }
   }, [isAuthenticated]);
 
   const handleLogin = () => {
@@ -74,20 +105,19 @@ function App() {
   };
 
   const addToCart = (macaron, option) => {
-    const existingItem = cart.find(
-      (item) => item.id === macaron.id && item.option.box === option.box
-    );
+    const cartItemId = `${macaron.id}-${option.box}`;
+    const existingItem = cart.find((item) => item.id === cartItemId);
 
     if (existingItem) {
       setCart(
         cart.map((item) =>
-          item.id === macaron.id && item.option.box === option.box
+          item.id === cartItemId
             ? { ...item, quantity: item.quantity + 1 }
             : item
         )
       );
     } else {
-      setCart([...cart, { ...macaron, option, quantity: 1, id: `${macaron.id}-${option.box}` }]);
+      setCart([...cart, { ...macaron, option, quantity: 1, id: cartItemId }]);
     }
     toast.success(`${macaron.name} (Box of ${option.box}) added to cart!`);
   };
@@ -124,30 +154,41 @@ function App() {
         </div>
       </header>
       <main>
-        <Routes>
-          <Route
-            path="/"
-            element={
-              <>
-                <HeroSlider slides={slides} />
-                <h2 className="explore-macarons">Explore Macarons</h2>
-                <Macarons onSelectMacaron={handleSelectMacaron} onAddToCart={addToCart} />
-              </>
-            }
-          />
-          <Route path="/about" element={<About />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/disclaimer" element={<DisclaimerPage />} />
-          <Route path="/login" element={<Login onLogin={handleLogin} />} />
-          <Route
-            path="/orders"
-            element={
-              <ProtectedRoute isAuthenticated={isAuthenticated}>
-                <Orders onLogout={handleLogout} />
-              </ProtectedRoute>
-            }
-          />
-        </Routes>
+        <Suspense fallback={<div>Loading...</div>}>
+          <Routes>
+            <Route
+              path="/"
+              element={
+                <>
+                  <HeroSlider slides={slides} />
+                  <h2 className="explore-macarons">Explore Macarons</h2>
+                  <Macarons onSelectMacaron={handleSelectMacaron} onAddToCart={addToCart} />
+                </>
+              }
+            />
+            <Route path="/about" element={<About />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/disclaimer" element={<DisclaimerPage />} />
+            <Route path="/login" element={<Login onLogin={handleLogin} />} />
+            <Route
+              path="/orders"
+              element={
+                <ProtectedRoute isAuthenticated={isAuthenticated}>
+                  <Orders onLogout={handleLogout} orders={orders} loading={loading} />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/analytics"
+              element={
+                <ProtectedRoute isAuthenticated={isAuthenticated}>
+                  <Analytics orders={orders} />
+                </ProtectedRoute>
+              }
+            />
+            <Route path="*" element={<NotFoundPage />} />
+          </Routes>
+        </Suspense>
       </main>
       <Footer />
       <CartModal
