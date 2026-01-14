@@ -1,7 +1,7 @@
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { macarons } from './macaronsData';
+import { FiStar } from 'react-icons/fi'; // Import star icon
 import './Macarons.css';
 
 const MacaronCard = ({ macaron, onSelect, onAddToCart }) => {
@@ -20,6 +20,19 @@ const MacaronCard = ({ macaron, onSelect, onAddToCart }) => {
     setSelectedOption(selected);
   };
 
+  // Helper to render star ratings
+  const renderRating = () => {
+    if (!macaron.averageRating || macaron.reviewCount === 0) {
+      return <span className="no-rating">No reviews yet</span>;
+    }
+    const stars = [];
+    const rating = Math.round(macaron.averageRating * 2) / 2; // Round to nearest 0.5
+    for (let i = 1; i <= 5; i++) {
+      stars.push(<FiStar key={i} className={i <= rating ? 'star-filled' : 'star-empty'} />);
+    }
+    return stars;
+  };
+
   return (
     <motion.div
       className="macaron-card"
@@ -36,6 +49,14 @@ const MacaronCard = ({ macaron, onSelect, onAddToCart }) => {
       />
       <div className="macaron-card-content">
         <h3 className="macaron-card-name">{macaron.name}</h3>
+        
+        <div className="macaron-card-rating">
+          {renderRating()}
+          {macaron.reviewCount > 0 && 
+            <span className="review-count">({macaron.reviewCount})</span>
+          }
+        </div>
+
         {macaron.price && (
           <p className="macaron-card-price">
             Ksh {macaron.price.toLocaleString()}/= per piece
@@ -67,12 +88,12 @@ const MacaronCard = ({ macaron, onSelect, onAddToCart }) => {
   );
 };
 
-const Macarons = ({ onSelectMacaron, onAddToCart }) => {
+const Macarons = ({ macarons, onSelectMacaron, onAddToCart }) => {
   return (
     <div className="macarons-container">
-      {macarons.map((macaron, index) => (
+      {macarons.map((macaron) => (
         <MacaronCard
-          key={index}
+          key={macaron.id}
           macaron={macaron}
           onSelect={onSelectMacaron}
           onAddToCart={onAddToCart}

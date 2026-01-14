@@ -1,0 +1,36 @@
+
+.terms-of-service-container {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 30px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    line-height: 1.8;
+    color: #333;
+  }
+  
+  .terms-of-service-container h1, 
+  .terms-of-service-container h2 {
+    color: #2c3e50;
+    border-bottom: 2px solid #f0e4d7;
+    padding-bottom: 10px;
+    margin-top: 20px;
+  }
+  
+  .terms-of-service-container h1 {
+    text-align: center;
+    font-size: 2.5em;
+    margin-bottom: 20px;
+  }
+  
+  .terms-of-service-container h2 {
+    font-size: 1.8em;
+    margin-bottom: 15px;
+  }
+  
+  .terms-of-service-container p {
+    margin-bottom: 15px;
+    text-align: left;
+  }
+  

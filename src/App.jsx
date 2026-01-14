@@ -12,8 +12,9 @@ import ScrollToTop from './ScrollToTop';
 import ScrollToTopButton from './components/ScrollToTopButton';
 import { FiShoppingCart } from 'react-icons/fi';
 import { ToastContainer, toast } from 'react-toastify';
-import { db } from './firebase';
-import { collection, getDocs, orderBy, query } from 'firebase/firestore';
+import { db, auth } from './firebase';
+import { onAuthStateChanged } from 'firebase/auth';
+import { collection, getDocs, orderBy, query, where } from 'firebase/firestore';
 import 'react-toastify/dist/ReactToastify.css';
 import './App.css';
 import './HeroSlider.css';
@@ -25,6 +26,9 @@ import './pages/Login.css';
 import './pages/OrderDetailsModal.css';
 import './pages/Analytics.css';
 import './pages/AdminNav.css';
+import './pages/PrivacyPolicy.css';
+import './pages/TermsOfService.css';
+import './pages/DataDeletion.css';
 
 const About = lazy(() => import('./pages/About'));
 const Contact = lazy(() => import('./pages/Contact'));
@@ -33,6 +37,9 @@ const Login = lazy(() => import('./pages/Login'));
 const Analytics = lazy(() => import('./pages/Analytics'));
 const DisclaimerPage = lazy(() => import('./DisclaimerPage'));
 const NotFoundPage = lazy(() => import('./pages/NotFoundPage'));
+const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy'));
+const TermsOfService = lazy(() => import('./pages/TermsOfService'));
+const DataDeletion = lazy(() => import('./pages/DataDeletion'));
 
 const slides = [
   {
@@ -53,15 +60,14 @@ const slides = [
 ];
 
 function App() {
+  const [macarons, setMacarons] = useState([]);
   const [cart, setCart] = useState(() => {
     const savedCart = localStorage.getItem('cart');
     return savedCart ? JSON.parse(savedCart) : [];
   });
   const [showCart, setShowCart] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
-  const [isAuthenticated, setIsAuthenticated] = useState(() => {
-    return localStorage.getItem('isAuthenticated') === 'true';
-  });
+  const [user, setUser] = useState(null);
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -69,43 +75,56 @@ function App() {
   const location = useLocation();
 
   useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setUser(user);
+    });
+    return () => unsubscribe();
+  }, []);
+
+  useEffect(() => {
+    const fetchMacarons = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, "macarons"));
+        const macaronsData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        setMacarons(macaronsData);
+      } catch (error) {
+        console.error("Error fetching macarons: ", error);
+        toast.error("Could not fetch macarons. Please try again later.");
+      }
+    };
+
+    fetchMacarons();
+  }, []);
+
+  useEffect(() => {
     localStorage.setItem('cart', JSON.stringify(cart));
   }, [cart]);
 
   useEffect(() => {
-    localStorage.setItem('isAuthenticated', isAuthenticated);
-  }, [isAuthenticated]);
-
-  useEffect(() => {
     const fetchOrders = async () => {
-      try {
-        const ordersCollection = collection(db, 'orders');
-        const q = query(ordersCollection, orderBy('createdAt', 'desc'));
-        const querySnapshot = await getDocs(q);
-        const ordersData = querySnapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
-        setOrders(ordersData);
-        setLoading(false);
-      } catch (error) {
-        console.error("Error fetching orders: ", error);
-        setLoading(false);
+      if (user) {
+        try {
+          const ordersCollection = collection(db, 'orders');
+          const q = query(ordersCollection, where("userId", "==", user.uid), orderBy('createdAt', 'desc'));
+          const querySnapshot = await getDocs(q);
+          const ordersData = querySnapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+          }));
+          setOrders(ordersData);
+          setLoading(false);
+        } catch (error) {
+          console.error("Error fetching orders: ", error);
+          setLoading(false);
+        }
       }
     };
 
-    if (isAuthenticated) {
-      fetchOrders();
-    }
-  }, [isAuthenticated]);
-
-  const handleLogin = () => {
-    setIsAuthenticated(true);
-  };
+    fetchOrders();
+  }, [user]);
 
   const handleLogout = () => {
-    setIsAuthenticated(false);
-    localStorage.removeItem('isAuthenticated');
+    auth.signOut();
     navigate('/login');
   };
 
@@ -159,7 +178,7 @@ function App() {
           </Link>
         </div>
         <div className="header-center">
-          {isAuthenticated && isAdminPage && <AdminNav />}
+          {user && isAdminPage && <AdminNav />}
         </div>
         <div className="header-right">
           <div className="cart-icon" onClick={() => setShowCart(true)}>
@@ -177,18 +196,21 @@ function App() {
                 <>
                   <HeroSlider slides={slides} />
                   <h2 className="explore-macarons">Explore Macarons</h2>
-                  <Macarons onSelectMacaron={handleSelectMacaron} onAddToCart={addToCart} />
+                  <Macarons macarons={macarons} onSelectMacaron={handleSelectMacaron} onAddToCart={addToCart} />
                 </>
               }
             />
             <Route path="/about" element={<About />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/disclaimer" element={<DisclaimerPage />} />
-            <Route path="/login" element={<Login onLogin={handleLogin} />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+            <Route path="/terms-of-service" element={<TermsOfService />} />
+            <Route path="/data-deletion" element={<DataDeletion />} />
             <Route
               path="/orders"
               element={
-                <ProtectedRoute isAuthenticated={isAuthenticated}>
+                <ProtectedRoute isAuthenticated={!!user}>
                   <Orders onLogout={handleLogout} orders={orders} loading={loading} setOrders={setOrders} />
                 </ProtectedRoute>
               }
@@ -196,7 +218,7 @@ function App() {
             <Route
               path="/analytics"
               element={
-                <ProtectedRoute isAuthenticated={isAuthenticated}>
+                <ProtectedRoute isAuthenticated={!!user}>
                   <Analytics orders={orders} />
                 </ProtectedRoute>
               }

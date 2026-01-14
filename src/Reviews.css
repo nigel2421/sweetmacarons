@@ -1,0 +1,152 @@
+/* General Section Styles */
+.reviews-section {
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid #eee;
+}
+
+.reviews-section h3, .reviews-section h4 {
+  color: #333;
+  margin-bottom: 1rem;
+}
+
+/* Review List */
+.reviews-list {
+  margin-bottom: 2rem;
+}
+
+.review-item {
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.review-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.review-name {
+  font-weight: bold;
+  color: #555;
+}
+
+.review-rating {
+  color: #fdd835; /* Gold color for existing review stars */
+  font-size: 1.2rem;
+}
+
+.review-comment {
+  color: #666;
+}
+
+/* Review Form */
+.review-form-container {
+  background-color: #fff;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.review-form .form-group {
+  margin-bottom: 1.5rem; /* Increased spacing */
+}
+
+.review-form .form-group-rating {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.review-form label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600; /* Bolder labels */
+  color: #444;
+}
+
+.review-form input,
+.review-form textarea {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 1rem;
+}
+
+/* New Star Rating Design */
+.star-rating-container {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+.rating-number {
+  font-size: 1.2rem;
+  color: #333;
+  font-weight: 600;
+}
+
+.star-rating-input {
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 30px; /* Fully rounded corners */
+  padding: 0.5rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem; /* Space between stars */
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.star {
+  cursor: pointer;
+  transition: transform 0.1s ease-in-out;
+}
+
+.star:hover {
+  transform: scale(1.15); /* Slightly enlarge on hover */
+}
+
+/* SVG Path Styles for stars */
+.star path {
+  fill: none;
+  stroke: #fcc419; /* A vibrant gold for the outline */
+  stroke-width: 1.5;
+  transition: fill 0.2s ease-in-out;
+}
+
+.star.filled path {
+  fill: #fcc419; /* Same gold for the fill */
+}
+
+
+/* Form Button */
+.review-form button {
+  background-color: #4A90E2;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s;
+}
+
+.review-form button:hover {
+  background-color: #357ABD;
+}
+
+.review-form button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.error-message {
+  color: #D32F2F;
+  margin-bottom: 1rem;
+}

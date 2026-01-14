@@ -1,10 +1,18 @@
 
 import { useState, useEffect } from 'react';
 import { FiX } from 'react-icons/fi';
+import Reviews from './Reviews'; // Import the new Reviews component
+import { auth } from './firebase'; // Import auth
 import './ProductModal.css';
 
 const ProductModal = ({ product, show, onClose, onAddToCart }) => {
   const [selectedOption, setSelectedOption] = useState(null);
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged(setUser);
+    return unsubscribe;
+  }, []);
 
   useEffect(() => {
     if (product) {
@@ -71,6 +79,10 @@ const ProductModal = ({ product, show, onClose, onAddToCart }) => {
               </button>
             </div>
           </div>
+        </div>
+        {/* Add the Reviews component here */}
+        <div className="product-modal-reviews">
+          <Reviews productId={macaron.id} user={user} />
         </div>
       </div>
     </div>

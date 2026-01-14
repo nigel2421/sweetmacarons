@@ -1,3 +1,4 @@
+
 .macarons-container {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -13,6 +14,9 @@
   background-color: #fff;
   box-shadow: 0 4px 8px rgba(0,0,0,0.1);
   transition: transform 0.3s, box-shadow 0.3s;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .macaron-card:hover {
@@ -20,8 +24,90 @@
   box-shadow: 0 12px 24px rgba(0,0,0,0.2);
 }
 
+.macaron-card-image {
+  max-width: 100%;
+  height: auto;
+  border-radius: 10px;
+  margin-bottom: 1rem;
+}
+
+.macaron-card-content {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.macaron-card-name {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 0.5rem 0;
+}
+
+.macaron-card-rating {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.25rem;
+  margin-bottom: 0.75rem;
+  color: #fcc419;
+}
+
+.star-filled {
+  fill: #fcc419;
+}
+
+.star-empty {
+  fill: #e0e0e0;
+}
+
+.review-count {
+  font-size: 0.9rem;
+  color: #757575;
+  margin-left: 0.5rem;
+}
+
+.no-rating {
+  font-size: 0.9rem;
+  color: #999;
+}
+
+.macaron-card-price,
+.macaron-card-minimum {
+  margin: 0.25rem 0;
+  color: #555;
+}
+
+.macaron-card-actions {
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.macaron-card-select {
+  padding: 0.5rem;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.macaron-card-button {
+  background-color: #4A90E2;
+  color: white;
+  border: none;
+  padding: 0.75rem;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.macaron-card-button:hover {
+  background-color: #357ABD;
+}
+
 @media (max-width: 768px) {
   .macarons-container {
     grid-template-columns: 1fr;
+    padding: 1rem;
   }
 }

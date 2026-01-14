@@ -1,51 +1,53 @@
 
-# Macaron Shop Blueprint
+# Los Tres Macarons - Application Blueprint
 
 ## Overview
 
-This document outlines the features and design of the Macaron Shop application. It serves as a single source of truth for the project's capabilities, from its initial version to the current state.
+This document outlines the architecture, features, and design of the Los Tres Macarons web application. The application is a modern e-commerce platform built with React and Firebase, providing a seamless and beautiful user experience for purchasing handcrafted macarons.
 
-## Core Features (v1)
+## Core Technologies
 
-*   **Product Showcase:** A beautiful, responsive gallery of macaron flavors.
-*   **Shopping Cart:** Users can add and remove items from their cart.
-*   **Checkout:** A simple checkout process to place orders.
-*   **Admin Dashboard:** A private section for the administrator to view and manage orders.
-*   **Order Management:** Admins can view order details, including items, totals, and customer information.
+*   **Frontend:** React (with Vite)
+*   **Backend & Database:** Firebase (Firestore, Firebase Authentication)
+*   **Styling:** CSS Modules, with a focus on modern, clean design.
+*   **Deployment:** Firebase Hosting
 
-## Design & Style
+## Implemented Features
 
-*   **Theme:** Modern, elegant, and visually appealing, with a focus on high-quality product imagery.
-*   **Color Palette:** A sophisticated mix of pastels and bold accent colors.
-*   **Typography:** Clean and readable fonts (e.g., Avenir).
-*   **Layout:** Responsive and mobile-first, ensuring a seamless experience on all devices.
+### Design and User Experience
+*   **Visually Stunning Design:** A modern and premium feel with a professional color palette, elegant typography, and high-quality imagery.
+*   **Responsive Layout:** Fully mobile-responsive design that looks great on desktops, tablets, and smartphones.
+*   **Intuitive Navigation:** A clear and simple header with links to Home, About, Contact, and Orders.
+*   **Engaging Home Page:** A hero slider showcasing beautiful macaron images and a grid of available macaron flavors.
+*   **Product Modal:** A detailed modal view for each macaron, showing a larger image, description, price, and an "Add to Cart" option.
+*   **Social Media Integration:** Footer links to the company's Facebook and Instagram pages.
 
-## Current Implementation Plan
+### E-Commerce Functionality
+*   **Product Listings:** Macarons are displayed with their name, price, and image.
+*   **Shopping Cart:** A fully functional cart that allows users to add, remove, and view items.
+*   **Checkout Process:** A streamlined, multi-step checkout process.
+*   **Order Management:** (For Admin) A dashboard to view and manage incoming orders.
 
-### Feature: Enhanced Order Workflow & Customer Management
+### Administrative Features
+*   **Admin Dashboard:** A protected area for site administrators to manage products, view orders, and see analytics.
+*   **Login Page:** A secure login page for administrators.
+*   **Analytics:** A visual representation of sales data and order trends.
 
-1.  **Dynamic Order Status Workflow:**
-    *   **Goal:** Allow the admin to update the status of an order through a workflow.
-    *   **Implementation:**
-        *   Add a dropdown menu in the `OrderDetailsModal` component.
-        *   The dropdown will contain the following statuses: `New`, `Deposit Paid`, `Confirmed`, `Processed`, `Delivered`.
-        *   An `onchange` event handler will trigger a Firestore update to change the `status` field of the order document.
+### Legal and Information Pages
+*   **Disclaimer Page:** A standard disclaimer page.
+*   **Privacy Policy:** A page outlining the website's privacy policy.
+*   **Terms of Service:** A page detailing the terms of service for using the website.
+*   **Data Deletion:** A page with instructions on how users can request the deletion of their data.
 
-2.  **Revenue Tied to "Delivered" Status:**
-    *   **Goal:** Make the revenue metric on the dashboard more accurate by only counting completed sales.
-    *   **Implementation:**
-        *   In the `Dashboard.jsx` component, the `totalRevenue` calculation will be modified.
-        *   It will first filter the `orders` array to include only documents where `status === 'Delivered'`.
-        *   The `reduce` function will then sum the `grandTotal` of these filtered orders.
+---
 
-3.  **Customer Name and Phone Number:**
-    *   **Goal:** Capture customer contact information to track orders and identify repeat customers.
-    *   **Implementation:**
-        *   Add two new input fields (`customerName`, `customerPhone`) to the `Checkout.jsx` form.
-        *   These fields will be added to the order object when a new order is created in Firestore.
-        *   The `OrderDetailsModal.jsx` will be updated to display this new information.
+## Current Task: Implement Legal and Information Pages
 
-4.  **Data Security:**
-    *   **Goal:** Protect customer phone numbers from unauthorized access.
-    *   **Implementation:**
-        *   `firestore.rules` will be updated to restrict read/write access to order documents to authenticated admins only. This ensures customer data is not publicly exposed.
+### Plan:
+1.  **Create New Page Components:**
+    *   `src/pages/PrivacyPolicy.jsx`
+    *   `src/pages/TermsOfService.jsx`
+    *   `src/pages/DataDeletion.jsx`
+2.  **Add Styling:** Create corresponding CSS files for each new page.
+3.  **Update App Routes:** Add routes for the new pages in `App.jsx`.
+4.  **Update Footer:** Add links to the new pages in the `Footer.jsx` component.
