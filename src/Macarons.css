@@ -53,23 +53,10 @@
   color: #fcc419;
 }
 
-.star-filled {
-  fill: #fcc419;
-}
-
-.star-empty {
-  fill: #e0e0e0;
-}
-
 .review-count {
   font-size: 0.9rem;
   color: #757575;
   margin-left: 0.5rem;
-}
-
-.no-rating {
-  font-size: 0.9rem;
-  color: #999;
 }
 
 .macaron-card-price,
@@ -103,6 +90,22 @@
 
 .macaron-card-button:hover {
   background-color: #357ABD;
+}
+
+.view-reviews-button {
+  background-color: transparent;
+  color: #4A90E2;
+  border: 1px solid #4A90E2;
+  padding: 0.5rem;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+  margin-top: 0.5rem;
+}
+
+.view-reviews-button:hover {
+  background-color: #4A90E2;
+  color: white;
 }
 
 @media (max-width: 768px) {

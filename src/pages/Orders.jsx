@@ -1,18 +1,56 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Papa from 'papaparse';
 import OrderDetailsModal from './OrderDetailsModal';
+import { auth, db } from '../firebase';
+import { collection, getDocs, query, where } from 'firebase/firestore';
+import { adminEmails } from '../admin';
 import './Orders.css';
+import { Link } from 'react-router-dom';
 
-const Orders = ({ onLogout, orders, loading, setOrders }) => {
+const Orders = ({ onLogout, onReorder }) => {
+  const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [ordersPerPage] = useState(10);
   const [searchTerm, setSearchTerm] = useState('');
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged(user => {
+      if (user) {
+        const userIsAdmin = adminEmails.includes(user.email);
+        setIsAdmin(userIsAdmin);
+        fetchOrders(userIsAdmin, user.uid);
+      } else {
+        setIsAdmin(false);
+        setOrders([]);
+        setLoading(false);
+      }
+    });
+    return () => unsubscribe();
+  }, []);
+
+  const fetchOrders = async (isAdmin, uid) => {
+    setLoading(true);
+    let ordersQuery;
+    if (isAdmin) {
+      ordersQuery = collection(db, 'orders');
+    } else {
+      ordersQuery = query(collection(db, 'orders'), where('userId', '==', uid));
+    }
+    const querySnapshot = await getDocs(ordersQuery);
+    const ordersData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    setOrders(ordersData);
+    setLoading(false);
+  };
 
   const handleLogout = () => {
-    onLogout();
+    auth.signOut().then(() => {
+      if(onLogout) onLogout();
+    });
   };
 
   const handleViewMore = (order) => {
@@ -26,6 +64,7 @@ const Orders = ({ onLogout, orders, loading, setOrders }) => {
   };
 
   const handleUpdateStatus = (orderId, newStatus) => {
+    // In a real app, you would update this in Firestore
     const updatedOrders = orders.map(order =>
       order.id === orderId ? { ...order, status: newStatus } : order
     );
@@ -67,10 +106,22 @@ const Orders = ({ onLogout, orders, loading, setOrders }) => {
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
+  if (loading) {
+    return <p>Loading...</p>;
+  }
+
+  if (!auth.currentUser) {
+    return <p>Please login to view this page.</p>;
+  }
+
+  if (!isAdmin && !auth.currentUser) {
+    return <p>You do not have permission to view this page.</p>;
+  }
+
   return (
     <div className="orders-page">
       <div className="orders-header">
-        <h1>Orders</h1>
+        <h1>{isAdmin ? 'All Orders' : 'My Orders'}</h1>
         <div className="header-actions">
           <input
             type="text"
@@ -80,42 +131,44 @@ const Orders = ({ onLogout, orders, loading, setOrders }) => {
             onChange={(e) => setSearchTerm(e.target.value)}
           />
           <div className="admin-actions">
-            <button onClick={handleDownloadCsv} className="download-csv-button">Download as CSV</button>
+            {isAdmin && <button onClick={handleDownloadCsv} className="download-csv-button">Download as CSV</button>}
+            <Link to="/" className="visit-store-button">Visit Store</Link>
             <button onClick={handleLogout} className="logout-button">Logout</button>
           </div>
         </div>
       </div>
-      {loading ? (
-        <p>Loading orders...</p>
-      ) : filteredOrders.length > 0 ? (
+      {filteredOrders.length > 0 ? (
         <>
-          <table className="orders-table">
-            <thead>
-              <tr>
-                <th>Order ID</th>
-                <th>Date</th>
-                <th>Total</th>
-                <th>Status</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {currentOrders.map((order) => {
-                const grandTotal = (order.macaronsTotal || 0) + (order.deliveryFee || 0);
-                return (
-                  <tr key={order.id}>
-                    <td data-label="Order ID">{order.id}</td>
-                    <td data-label="Date">{new Date(order.createdAt?.toDate()).toLocaleString()}</td>
-                    <td data-label="Total">Ksh {grandTotal.toLocaleString()}</td>
-                    <td data-label="Status"><span className={`order-status ${order.status.toLowerCase().replace('-', '')}`}>{order.status}</span></td>
-                    <td data-label="Actions">
-                      <button onClick={() => handleViewMore(order)} className="view-more-button">View More</button>
-                    </td>
-                  </tr>
-                )
-              })}
-            </tbody>
-          </table>
+          <div className="orders-table-container">
+            <table className="orders-table">
+              <thead>
+                <tr>
+                  <th>Order ID</th>
+                  <th>Date</th>
+                  <th>Total</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {currentOrders.map((order) => {
+                  const grandTotal = (order.macaronsTotal || 0) + (order.deliveryFee || 0);
+                  return (
+                    <tr key={order.id}>
+                      <td data-label="Order ID">{order.id}</td>
+                      <td data-label="Date">{new Date(order.createdAt?.toDate()).toLocaleString()}</td>
+                      <td data-label="Total">Ksh {grandTotal.toLocaleString()}</td>
+                      <td data-label="Status"><span className={`order-status ${order.status.toLowerCase().replace('-', '')}`}>{order.status}</span></td>
+                      <td data-label="Actions">
+                        <button onClick={() => handleViewMore(order)} className="view-more-button">View More</button>
+                        {!isAdmin && <button onClick={() => onReorder(order)} className="reorder-button">Order Again</button>}
+                      </td>
+                    </tr>
+                  )
+                })}
+              </tbody>
+            </table>
+          </div>
           <div className="pagination">
             <button onClick={() => paginate(currentPage - 1)} disabled={currentPage === 1}>              Previous
             </button>
@@ -131,7 +184,8 @@ const Orders = ({ onLogout, orders, loading, setOrders }) => {
         order={selectedOrder}
         show={isModalOpen}
         onClose={handleCloseModal}
-        onUpdateStatus={handleUpdateStatus}
+        onUpdateStatus={isAdmin ? handleUpdateStatus : undefined}
+        onReorder={!isAdmin ? onReorder : undefined}
       />
     </div>
   );

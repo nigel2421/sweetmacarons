@@ -1,0 +1,11 @@
+
+.star-rating {
+  display: flex;
+  align-items: center;
+  color: #fdd835; /* Or any color you prefer */
+  font-size: 1rem;
+}
+
+.star-rating svg {
+  margin-right: 2px;
+}

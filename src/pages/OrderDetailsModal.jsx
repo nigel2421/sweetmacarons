@@ -6,7 +6,7 @@ import { doc, updateDoc } from 'firebase/firestore';
 import { toast } from 'react-toastify';
 import './OrderDetailsModal.css';
 
-const OrderDetailsModal = ({ order, show, onClose, onUpdateStatus }) => {
+const OrderDetailsModal = ({ order, show, onClose, onUpdateStatus, onReorder }) => {
   if (!show) {
     return null;
   }
@@ -43,13 +43,17 @@ const OrderDetailsModal = ({ order, show, onClose, onUpdateStatus }) => {
           <p><strong>Date:</strong> {new Date(order.createdAt?.toDate()).toLocaleString()}</p>
           <div className="status-selector">
             <strong>Status:</strong>
-            <select value={order.status} onChange={(e) => handleStatusChange(e.target.value)}>
-              <option value="new">New</option>
-              <option value="deposit-paid">Deposit Paid</option>
-              <option value="confirmed">Confirmed</option>
-              <option value="processed">Processed</option>
-              <option value="delivered">Delivered</option>
-            </select>
+            {onUpdateStatus ? (
+              <select value={order.status} onChange={(e) => handleStatusChange(e.target.value)}>
+                <option value="new">New</option>
+                <option value="deposit-paid">Deposit Paid</option>
+                <option value="confirmed">Confirmed</option>
+                <option value="processed">Processed</option>
+                <option value="delivered">Delivered</option>
+              </select>
+            ) : (
+              <span>{order.status}</span>
+            )}
           </div>
           <hr />
           <h4>Items</h4>
@@ -71,6 +75,11 @@ const OrderDetailsModal = ({ order, show, onClose, onUpdateStatus }) => {
           </div>
           <p><strong>Delivery Option:</strong> {order.deliveryOption || 'N/A'}</p>
         </div>
+        {onReorder && (
+          <div className="modal-footer">
+            <button onClick={() => onReorder(order)} className="reorder-button-modal">Order Again</button>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -5,8 +5,8 @@ import './AdminNav.css';
 const AdminNav = () => {
   return (
     <nav className="admin-nav">
-      <NavLink to="/orders" end>Orders</NavLink>
-      <NavLink to="/analytics">Analytics</NavLink>
+      <NavLink to="/admin/orders" end>Orders</NavLink>
+      <NavLink to="/admin/analytics">Analytics</NavLink>
     </nav>
   );
 };

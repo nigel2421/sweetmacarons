@@ -2,7 +2,7 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getFirestore, collection, addDoc, getDocs, query, where } from "firebase/firestore";
-import { getAuth } from "firebase/auth"; // Import getAuth
+import { getAuth, GoogleAuthProvider, FacebookAuthProvider, setPersistence, browserLocalPersistence } from "firebase/auth"; // Import providers
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -19,6 +19,11 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app); // Initialize and export auth
+setPersistence(auth, browserLocalPersistence);
+
+// Initialize providers
+const googleProvider = new GoogleAuthProvider();
+const facebookProvider = new FacebookAuthProvider();
 
 // Function to get reviews for a specific product
 const getReviews = async (productId) => {
@@ -42,4 +47,4 @@ const addReview = async (review) => {
   }
 };
 
-export { db, auth, getReviews, addReview }; // Export auth
+export { db, auth, googleProvider, facebookProvider, getReviews, addReview }; // Export auth and providers

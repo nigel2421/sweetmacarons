@@ -1,11 +1,14 @@
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { FiStar } from 'react-icons/fi'; // Import star icon
+import { useNavigate } from 'react-router-dom';
+import StarRating from './components/StarRating';
+import { auth } from './firebase';
 import './Macarons.css';
 
 const MacaronCard = ({ macaron, onSelect, onAddToCart }) => {
   const [selectedOption, setSelectedOption] = useState(macaron.options[0]);
+  const navigate = useNavigate();
 
   const handleAddToCart = (e) => {
     e.stopPropagation();
@@ -20,23 +23,21 @@ const MacaronCard = ({ macaron, onSelect, onAddToCart }) => {
     setSelectedOption(selected);
   };
 
-  // Helper to render star ratings
-  const renderRating = () => {
-    if (!macaron.averageRating || macaron.reviewCount === 0) {
-      return <span className="no-rating">No reviews yet</span>;
+  const handleViewReviews = (e) => {
+    e.stopPropagation();
+    if (auth.currentUser) {
+      // Navigate to reviews page if logged in
+      navigate(`/macarons/${macaron.id}/reviews`);
+    } else {
+      // Redirect to login page if not logged in
+      navigate('/login');
     }
-    const stars = [];
-    const rating = Math.round(macaron.averageRating * 2) / 2; // Round to nearest 0.5
-    for (let i = 1; i <= 5; i++) {
-      stars.push(<FiStar key={i} className={i <= rating ? 'star-filled' : 'star-empty'} />);
-    }
-    return stars;
   };
 
   return (
     <motion.div
       className="macaron-card"
-      onClick={() => onSelect(macaron, selectedOption)} // Pass selected option
+      onClick={() => onSelect(macaron, selectedOption)}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
@@ -49,9 +50,8 @@ const MacaronCard = ({ macaron, onSelect, onAddToCart }) => {
       />
       <div className="macaron-card-content">
         <h3 className="macaron-card-name">{macaron.name}</h3>
-        
         <div className="macaron-card-rating">
-          {renderRating()}
+          <StarRating rating={macaron.averageRating || 0} />
           {macaron.reviewCount > 0 && 
             <span className="review-count">({macaron.reviewCount})</span>
           }
@@ -83,6 +83,9 @@ const MacaronCard = ({ macaron, onSelect, onAddToCart }) => {
             Add to Cart
           </button>
         </div>
+        <button className="view-reviews-button" onClick={handleViewReviews}>
+          View Reviews
+        </button>
       </div>
     </motion.div>
   );

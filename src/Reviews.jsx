@@ -36,6 +36,12 @@ const Reviews = ({ productId, user }) => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
+    if (user) {
+      setNewReview(prev => ({ ...prev, name: user.displayName?.split(' ')[0] || '' }));
+    }
+  }, [user]);
+
+  useEffect(() => {
     const fetchReviews = async () => {
       setIsLoading(true);
       try {
@@ -108,7 +114,7 @@ const Reviews = ({ productId, user }) => {
         });
       });
 
-      setNewReview({ rating: 0, name: '', comment: '' });
+      setNewReview({ rating: 0, name: user.displayName?.split(' ')[0] || '', comment: '' });
 
       // Refetch reviews to display the new one instantly
       const q = query(collection(db, 'reviews'), where('productId', '==', productId));

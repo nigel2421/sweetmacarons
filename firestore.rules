@@ -1,25 +1,25 @@
-
 rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // Macarons can be read by anyone, but only written to by authenticated users (for reviews)
+    // Macarons can be read by anyone
     match /macarons/{macaronId} {
       allow read: if true;
-      allow write: if request.auth != null;
+      allow write: if request.auth != null; // Only authenticated users can write
     }
 
-    // Reviews can be created by authenticated users, but only modified by their author.
+    // Reviews can be read by anyone
     match /reviews/{reviewId} {
       allow read: if true;
       allow create: if request.auth != null;
       allow update, delete: if request.auth != null && request.auth.uid == resource.data.author_uid;
     }
 
-    // Orders can only be read and written by the user who owns them.
+    // Orders can be created by anyone
     match /orders/{orderId} {
-        allow read, write, create: if request.auth != null && request.auth.uid == request.resource.data.userId;
+      allow create: if true;
+      allow read, write: if request.auth != null && request.auth.uid == resource.data.userId;
     }
   }
 }
