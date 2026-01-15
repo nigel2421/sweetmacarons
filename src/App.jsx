@@ -12,7 +12,8 @@ import ScrollToTop from './ScrollToTop';
 import ScrollToTopButton from './components/ScrollToTopButton';
 import { FiShoppingCart, FiUser } from 'react-icons/fi';
 import { ToastContainer, toast } from 'react-toastify';
-import { auth } from './firebase'; // Correctly import auth
+import { auth, db } from './firebase'; // Correctly import auth and db
+import { collection, getDocs } from "firebase/firestore";
 import { onAuthStateChanged } from 'firebase/auth';
 import { macarons as macaronsData } from './data'; // Import local macaron data
 import 'react-toastify/dist/ReactToastify.css';
@@ -84,7 +85,23 @@ function App() {
   }, []);
 
   useEffect(() => {
-    setMacarons(macaronsData);
+    const fetchMacaronsWithReviews = async () => {
+      const reviewsCollection = collection(db, 'reviews');
+      const reviewSnapshot = await getDocs(reviewsCollection);
+      const reviews = reviewSnapshot.docs.map(doc => doc.data());
+
+      const macaronsWithReviews = macaronsData.map(macaron => {
+        const productReviews = reviews.filter(review => review.productId === macaron.id);
+        const averageRating = productReviews.length > 0 
+          ? productReviews.reduce((acc, review) => acc + review.rating, 0) / productReviews.length
+          : 0;
+        return { ...macaron, averageRating, reviewCount: productReviews.length };
+      });
+
+      setMacarons(macaronsWithReviews);
+    };
+
+    fetchMacaronsWithReviews();
   }, []);
 
   useEffect(() => {
@@ -200,8 +217,8 @@ function App() {
             <Route path="/data-deletion" element={<DataDeletion />} />
             <Route path="/my-account" element={<ProtectedRoute isAuthenticated={!!user}><MyAccount onLogout={handleLogout} /></ProtectedRoute>} />
             <Route path="/my-orders" element={<ProtectedRoute isAuthenticated={!!user}><MyOrders onLogout={handleLogout} onReorder={handleReorder} /></ProtectedRoute>} />
-            <Route path="/admin/orders" element={<ProtectedRoute isAuthenticated={!!user}><Orders onLogout={handleLogout} /></ProtectedRoute>} />
-            <Route path="/admin/analytics" element={<ProtectedRoute isAuthenticated={!!user}><Analytics orders={orders} /></ProtectedRoute>} />
+            <Route path="/admin/orders" element={<ProtectedRoute isAuthenticated={!!user} adminOnly={true}><Orders onLogout={handleLogout} /></ProtectedRoute>} />
+            <Route path="/admin/analytics" element={<ProtectedRoute isAuthenticated={!!user} adminOnly={true}><Analytics orders={orders} /></ProtectedRoute>} />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </Suspense>

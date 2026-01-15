@@ -35,16 +35,21 @@ const Orders = ({ onLogout, onReorder }) => {
 
   const fetchOrders = async (isAdmin, uid) => {
     setLoading(true);
-    let ordersQuery;
-    if (isAdmin) {
-      ordersQuery = collection(db, 'orders');
-    } else {
-      ordersQuery = query(collection(db, 'orders'), where('userId', '==', uid));
+    try {
+      let ordersQuery;
+      if (isAdmin) {
+        ordersQuery = collection(db, 'orders');
+      } else {
+        ordersQuery = query(collection(db, 'orders'), where('userId', '==', uid));
+      }
+      const querySnapshot = await getDocs(ordersQuery);
+      const ordersData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      setOrders(ordersData);
+    } catch (error) {
+      console.error("Error fetching orders: ", error);
+    } finally {
+      setLoading(false);
     }
-    const querySnapshot = await getDocs(ordersQuery);
-    const ordersData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-    setOrders(ordersData);
-    setLoading(false);
   };
 
   const handleLogout = () => {

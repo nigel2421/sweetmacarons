@@ -16,7 +16,7 @@ export const macarons = [
   },
   {
     id: 2,
-    name: "Milk Chocolate Peanut Paste Macarons",
+    name: "Peanut Paste Snickers Macarons",
     price: 300,
     options: [
       { box: 6, price: 1800 },
@@ -24,8 +24,8 @@ export const macarons = [
       { box: 20, price: 5400 },
     ],
     image: "images/milk-chocolate-peanut.jpg",
-    description: "A rich and nutty macaron with a smooth milk chocolate and peanut paste filling.",
-    ingredients: "Almond flour, icing sugar, egg whites, milk chocolate, peanuts, cream.",
+    description: "A rich and nutty macaron with a smooth milk chocolate and peanut paste filling, with a surprise of a piece of Snickers inside.",
+    ingredients: "Almond flour, icing sugar, egg whites, milk chocolate, peanuts, cream, Snickers bar.",
     allergies: "Contains nuts (almonds, peanuts) and dairy.",
   },
   {
@@ -43,7 +43,7 @@ export const macarons = [
   },
   {
     id: 4,
-    name: "Lemon Ganache and Lemon Gel Macarons",
+    name: "Lemon and Lemon Gel Macarons",
     price: 300,
     options: [
       { box: 6, price: 1800 },
@@ -89,5 +89,19 @@ export const macarons = [
     description: "A delightful assortment of our most popular flavors. A perfect choice when you can't decide on just one!.",
     ingredients: "Varies. Please see individual macaron descriptions.",
     allergies: "Contains nuts (almonds) and dairy.",
+  },
+  {
+    id: 8,
+    name: "Vegan Macarons",
+    price: 350,
+    options: [
+      { box: 6, price: 2100 },
+      { box: 10, price: 3500 },
+      { box: 20, price: 6300, discount: "10%" },
+    ],
+    image: "images/vegan.png",
+    description: "A delicious and cruelty-free macaron, made with plant-based ingredients.",
+    ingredients: "Almond flour, icing sugar, aquafaba, vegan butter, and natural flavors.",
+    allergies: "Contains nuts (almonds).",
   },
 ];

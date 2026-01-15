@@ -11,6 +11,7 @@
   .my-account-page h1 {
     text-align: center;
     margin-bottom: 2rem;
+    color: #333;
   }
   
   .account-details {
@@ -20,6 +21,7 @@
   .account-details p {
     font-size: 1.1rem;
     margin-bottom: 1rem;
+    color: #333;
   }
   
   .account-actions {

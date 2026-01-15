@@ -4,6 +4,11 @@
   background-color: #f8f5f2;
 }
 
+.orders-page h1,
+.orders-page p {
+  color: #333;
+}
+
 .orders-header {
   display: flex;
   justify-content: space-between;

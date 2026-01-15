@@ -7,8 +7,6 @@ import {
   where,
   getDocs,
   addDoc,
-  doc,
-  runTransaction,
 } from 'firebase/firestore';
 import './Reviews.css';
 
@@ -73,8 +71,8 @@ const Reviews = ({ productId, user }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!newReview.name || !newReview.comment || newReview.rating === 0) {
-      setError('Please fill in all fields and provide a rating.');
+    if (newReview.rating === 0) {
+      setError('Please provide a rating.');
       return;
     }
 
@@ -82,36 +80,12 @@ const Reviews = ({ productId, user }) => {
     setError(null);
 
     try {
-      const macaronRef = doc(db, 'macarons', productId);
-      
-      await runTransaction(db, async (transaction) => {
-        const macaronDoc = await transaction.get(macaronRef);
-        if (!macaronDoc.exists()) {
-          throw new Error("Macaron document not found!");
-        }
-
-        // Add the new review to the 'reviews' collection
-        const newReviewRef = doc(collection(db, 'reviews'));
-        transaction.set(newReviewRef, {
-          ...newReview,
-          productId,
-          createdAt: new Date(),
-          author_uid: user.uid, // Add author UID
-        });
-        
-        // Update the average rating on the macaron document
-        const macaronData = macaronDoc.data();
-        const currentReviewCount = macaronData.reviewCount || 0;
-        const currentAverageRating = macaronData.averageRating || 0;
-        
-        const newReviewCount = currentReviewCount + 1;
-        const newTotalRating = (currentAverageRating * currentReviewCount) + newReview.rating;
-        const newAverageRating = newTotalRating / newReviewCount;
-        
-        transaction.update(macaronRef, {
-          reviewCount: newReviewCount,
-          averageRating: newAverageRating,
-        });
+      // Add the new review to the 'reviews' collection
+      await addDoc(collection(db, 'reviews'), {
+        ...newReview,
+        productId,
+        createdAt: new Date(),
+        author_uid: user.uid, // Add author UID
       });
 
       setNewReview({ rating: 0, name: user.displayName?.split(' ')[0] || '', comment: '' });
@@ -186,14 +160,13 @@ const Reviews = ({ productId, user }) => {
               </div>
             </div>
             <div className="form-group">
-              <label htmlFor="comment">Comment</label>
+              <label htmlFor="comment">Comment (Optional)</label>
               <textarea
                 id="comment"
                 name="comment"
                 rows="4"
                 value={newReview.comment}
                 onChange={handleInputChange}
-                required
               ></textarea>
             </div>
             <button type="submit" disabled={isLoading}>
