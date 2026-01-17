@@ -1,12 +1,12 @@
-
 .orders-page {
   padding: 2rem;
   background-color: #f8f5f2;
 }
 
 .orders-page h1,
-.orders-page p {
-  color: #333;
+.orders-page p,
+.orders-page span {
+  color: #2D3748;
 }
 
 .orders-header {
@@ -41,13 +41,14 @@
   background-color: white;
   border-radius: 10px;
   overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
 .orders-table th,
 .orders-table td {
   padding: 1rem;
   text-align: left;
+  color: #2D3748;
 }
 
 .orders-table thead {
@@ -109,6 +110,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  color: #2D3748;
 }
 
 .pagination button {
@@ -171,5 +173,6 @@
     font-weight: bold;
     text-align: left;
     margin-right: 1rem;
+    color: #2D3748;
   }
 }

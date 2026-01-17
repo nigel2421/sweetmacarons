@@ -72,6 +72,7 @@ function App() {
   const [showCart, setShowCart] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [user, setUser] = useState(null);
+  const [authLoading, setAuthLoading] = useState(true);
   const [orders, setOrders] = useState([]);
 
   const navigate = useNavigate();
@@ -80,6 +81,7 @@ function App() {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setUser(user);
+      setAuthLoading(false);
     });
     return () => unsubscribe();
   }, []);
@@ -92,7 +94,7 @@ function App() {
 
       const macaronsWithReviews = macaronsData.map(macaron => {
         const productReviews = reviews.filter(review => review.productId === macaron.id);
-        const averageRating = productReviews.length > 0 
+        const averageRating = productReviews.length > 0
           ? productReviews.reduce((acc, review) => acc + review.rating, 0) / productReviews.length
           : 0;
         return { ...macaron, averageRating, reviewCount: productReviews.length };
@@ -196,32 +198,39 @@ function App() {
         </div>
       </header>
       <main>
-        <Suspense fallback={<div>Loading...</div>}>
-          <Routes>
-            <Route
-              path="/"
-              element={
-                <>
-                  <HeroSlider slides={slides} />
-                  <h2 className="explore-macarons">Explore Macarons</h2>
-                  <Macarons macarons={macarons} onSelectMacaron={handleSelectMacaron} onAddToCart={addToCart} />
-                </>
-              }
-            />
-            <Route path="/about" element={<About />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/disclaimer" element={<DisclaimerPage />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-            <Route path="/terms-of-service" element={<TermsOfService />} />
-            <Route path="/data-deletion" element={<DataDeletion />} />
-            <Route path="/my-account" element={<ProtectedRoute isAuthenticated={!!user}><MyAccount onLogout={handleLogout} /></ProtectedRoute>} />
-            <Route path="/my-orders" element={<ProtectedRoute isAuthenticated={!!user}><MyOrders onLogout={handleLogout} onReorder={handleReorder} /></ProtectedRoute>} />
-            <Route path="/admin/orders" element={<ProtectedRoute isAuthenticated={!!user} adminOnly={true}><Orders onLogout={handleLogout} /></ProtectedRoute>} />
-            <Route path="/admin/analytics" element={<ProtectedRoute isAuthenticated={!!user} adminOnly={true}><Analytics orders={orders} /></ProtectedRoute>} />
-            <Route path="*" element={<NotFoundPage />} />
-          </Routes>
-        </Suspense>
+        {authLoading ? (
+          <div className="loading-overlay">
+            <div className="loading-spinner"></div>
+            <p>Checking authentication...</p>
+          </div>
+        ) : (
+          <Suspense fallback={<div>Loading...</div>}>
+            <Routes>
+              <Route
+                path="/"
+                element={
+                  <>
+                    <HeroSlider slides={slides} />
+                    <h2 className="explore-macarons">Explore Macarons</h2>
+                    <Macarons macarons={macarons} onSelectMacaron={handleSelectMacaron} onAddToCart={addToCart} />
+                  </>
+                }
+              />
+              <Route path="/about" element={<About />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/disclaimer" element={<DisclaimerPage />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+              <Route path="/terms-of-service" element={<TermsOfService />} />
+              <Route path="/data-deletion" element={<DataDeletion />} />
+              <Route path="/my-account" element={<ProtectedRoute isAuthenticated={!!user}><MyAccount onLogout={handleLogout} /></ProtectedRoute>} />
+              <Route path="/my-orders" element={<ProtectedRoute isAuthenticated={!!user}><MyOrders onLogout={handleLogout} onReorder={handleReorder} /></ProtectedRoute>} />
+              <Route path="/admin/orders" element={<ProtectedRoute isAuthenticated={!!user} adminOnly={true}><Orders onLogout={handleLogout} /></ProtectedRoute>} />
+              <Route path="/admin/analytics" element={<ProtectedRoute isAuthenticated={!!user} adminOnly={true}><Analytics orders={orders} /></ProtectedRoute>} />
+              <Route path="*" element={<NotFoundPage />} />
+            </Routes>
+          </Suspense>
+        )}
       </main>
       <Footer />
       <CartModal

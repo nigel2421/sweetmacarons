@@ -1,6 +1,6 @@
-
 .disclaimer-page {
   padding: 2rem;
+  color: #2D3748;
 }
 
 .disclaimer-nav {
@@ -30,6 +30,7 @@
   padding: 2rem;
   border-radius: 10px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  color: #2D3748;
 }
 
 .disclaimer-content h1 {
@@ -48,6 +49,7 @@
 .deposit-info p,
 .payment-info p {
   font-size: 1.1rem;
+  color: #2D3748;
 }
 
 .whatsapp-number {
@@ -62,6 +64,7 @@
 .whatsapp-number span {
   font-size: 1.2rem;
   font-weight: 700;
+  color: #2D3748;
 }
 
 .whatsapp-number button {
@@ -88,6 +91,7 @@
   align-items: center;
   gap: 0.5rem;
   margin-bottom: 1.5rem;
+  color: #2D3748;
 }
 
 .consent-checkbox input[type="checkbox"] {
@@ -127,11 +131,13 @@
   display: flex;
   justify-content: space-between;
   margin-bottom: 0.5rem;
+  color: #2D3748;
 }
 
 .cart-totals-review {
   margin-top: 1rem;
   text-align: right;
+  color: #2D3748;
 }
 
 .checkout-button {

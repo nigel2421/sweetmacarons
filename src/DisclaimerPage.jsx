@@ -15,17 +15,18 @@ const DisclaimerPage = () => {
   const { orderId, cart, deliveryFee, macaronsTotal, depositAmount: stateDeposit, balance } = location.state || { orderId: null, cart: [], deliveryFee: 0, macaronsTotal: 0 };
 
   const depositAmount = stateDeposit || macaronsTotal * 0.3;
-  const whatsappNumber = '254741303030';
+  const orderWhatsAppNumber = '254723734211';
+  const paymentNumber = '0769456153';
 
   const handleCopyToClipboard = () => {
-    navigator.clipboard.writeText(whatsappNumber);
-    alert('Copied to clipboard');
+    navigator.clipboard.writeText(paymentNumber);
+    alert('Payment number copied to clipboard');
   };
 
   const handleCheckout = () => {
     const orderItems = cart.map(item => `• *${item.name}* (Box of ${item.option.box}) x ${item.quantity}: Ksh ${(item.option.price * item.quantity).toLocaleString()}`).join('\n');
     const message = `*Hello Los Tres Macarons!* 👋\n\nI would like to place an order for the following:\n\n${orderItems}\n\n*Subtotal:* Ksh ${macaronsTotal.toLocaleString()}\n*Delivery Fee:* Ksh ${deliveryFee.toLocaleString()}\n*Total:* Ksh ${(macaronsTotal + deliveryFee).toLocaleString()}\n\n*Deposit Required (30%):* Ksh ${depositAmount.toLocaleString()}\n\n*Order ID:* ${orderId}\n\nI will share the payment confirmation shortly. Thank you!`;
-    window.open(`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`, '_blank');
+    window.open(`https://wa.me/${orderWhatsAppNumber}?text=${encodeURIComponent(message)}`, '_blank');
   };
 
   return (
@@ -46,9 +47,9 @@ const DisclaimerPage = () => {
         <div className="payment-info">
           <p>You can pay via Lipa Na MPESA or to Pochi la Biashara on the number provided below.</p>
           <div className="whatsapp-number">
-            <span>{whatsappNumber}</span>
-            <button onClick={handleCopyToClipboard} title="Copy number">
-              <i className="fas fa-copy" style={{ color: '#333' }}></i>
+            <span>{paymentNumber}</span>
+            <button onClick={handleCopyToClipboard} title="Copy payment number">
+              <i className="fas fa-copy" style={{ color: '#2D3748' }}></i>
             </button>
           </div>
           <p className="whatsapp-instruction">Please share the deposit confirmation message via WhatsApp.</p>

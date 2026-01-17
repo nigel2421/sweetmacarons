@@ -185,7 +185,9 @@ main {
 /* Mobile Styles */
 @media (max-width: 768px) {
   .App-header {
-    padding: 0.5rem 1rem;
+    padding: 0.8rem 1rem;
+    flex-wrap: nowrap;
+    gap: 0.5rem;
   }
 
   .header-left {
@@ -194,31 +196,52 @@ main {
 
   .header-center {
     flex: 1 1 auto;
-    overflow: hidden;
-    margin: 0 0.5rem;
+    min-width: 0;
   }
 
   .header-title {
-    font-size: 1.5rem;
+    font-size: 1.4rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding: 0.2rem 0;
   }
 
   .header-right {
     flex: 0 0 auto;
+    gap: 1rem;
   }
 
   .logo {
-    height: 70px;
+    height: 60px;
+  }
+
+  .cart-icon,
+  .user-icon {
+    font-size: 1.3rem;
   }
 
   main {
-    padding: 1rem;
+    padding: 1rem 0.5rem;
   }
 
   .explore-macarons {
     font-size: 1.8rem;
+    margin-top: 1rem;
+    margin-bottom: 1.5rem;
   }
 
   .macarons-container {
-    padding: 0 1rem;
+    padding: 0.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .header-title {
+    font-size: 1.2rem;
+  }
+
+  .logo {
+    height: 50px;
   }
 }

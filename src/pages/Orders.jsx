@@ -83,6 +83,8 @@ const Orders = ({ onLogout, onReorder }) => {
       'Macarons Total': order.macaronsTotal || 0,
       'Delivery Fee': order.deliveryFee || 0,
       'Grand Total': (order.macaronsTotal || 0) + (order.deliveryFee || 0),
+      'Deposit Amount': order.depositAmount || 0,
+      'Balance': order.balance || 0,
       'Delivery Option': order.deliveryOption || 'N/A',
       'Status': order.status,
       'Cart Items': order.cart.map(item => `${item.quantity} x ${item.name} (Box of ${item.option.box})`).join(', ')
@@ -151,6 +153,8 @@ const Orders = ({ onLogout, onReorder }) => {
                   <th>Order ID</th>
                   <th>Date</th>
                   <th>Total</th>
+                  <th>Deposit</th>
+                  <th>Balance</th>
                   <th>Status</th>
                   <th>Actions</th>
                 </tr>
@@ -163,6 +167,8 @@ const Orders = ({ onLogout, onReorder }) => {
                       <td data-label="Order ID">{order.id}</td>
                       <td data-label="Date">{order.createdAt ? new Date(order.createdAt.toDate()).toLocaleString() : 'Pending...'}</td>
                       <td data-label="Total">Ksh {grandTotal.toLocaleString()}</td>
+                      <td data-label="Deposit">Ksh {order.depositAmount?.toLocaleString() || '0'}</td>
+                      <td data-label="Balance">Ksh {order.balance?.toLocaleString() || '0'}</td>
                       <td data-label="Status"><span className={`order-status ${order.status.toLowerCase().replace('-', '')}`}>{order.status}</span></td>
                       <td data-label="Actions">
                         <button onClick={() => handleViewMore(order)} className="view-more-button">View More</button>
