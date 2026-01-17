@@ -54,7 +54,7 @@ const Orders = ({ onLogout, onReorder }) => {
 
   const handleLogout = () => {
     auth.signOut().then(() => {
-      if(onLogout) onLogout();
+      if (onLogout) onLogout();
     });
   };
 
@@ -119,7 +119,7 @@ const Orders = ({ onLogout, onReorder }) => {
     return <p>Please login to view this page.</p>;
   }
 
-  if (!isAdmin && !auth.currentUser) {
+  if (!isAdmin && location.pathname.startsWith('/admin')) {
     return <p>You do not have permission to view this page.</p>;
   }
 
@@ -161,7 +161,7 @@ const Orders = ({ onLogout, onReorder }) => {
                   return (
                     <tr key={order.id}>
                       <td data-label="Order ID">{order.id}</td>
-                      <td data-label="Date">{new Date(order.createdAt?.toDate()).toLocaleString()}</td>
+                      <td data-label="Date">{order.createdAt ? new Date(order.createdAt.toDate()).toLocaleString() : 'Pending...'}</td>
                       <td data-label="Total">Ksh {grandTotal.toLocaleString()}</td>
                       <td data-label="Status"><span className={`order-status ${order.status.toLowerCase().replace('-', '')}`}>{order.status}</span></td>
                       <td data-label="Actions">

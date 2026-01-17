@@ -12,10 +12,10 @@ const DisclaimerPage = () => {
     window.scrollTo(0, 0);
   }, []);
 
-  const { orderId, cart, deliveryFee, macaronsTotal } = location.state || { orderId: null, cart: [], deliveryFee: 0, macaronsTotal: 0 };
+  const { orderId, cart, deliveryFee, macaronsTotal, depositAmount: stateDeposit, balance } = location.state || { orderId: null, cart: [], deliveryFee: 0, macaronsTotal: 0 };
 
-  const depositAmount = macaronsTotal * 0.3;
-  const whatsappNumber = '+254723734211';
+  const depositAmount = stateDeposit || macaronsTotal * 0.3;
+  const whatsappNumber = '254741303030';
 
   const handleCopyToClipboard = () => {
     navigator.clipboard.writeText(whatsappNumber);
@@ -23,9 +23,8 @@ const DisclaimerPage = () => {
   };
 
   const handleCheckout = () => {
-    const message = `*Hello!* 👋 I would like to place an order for the following macarons:\n\n${
-      cart.map(item => `• *${item.name}* (Box of ${item.option.box}): Ksh ${item.option.price.toLocaleString()}`).join('\n')
-    }\n\n*Subtotal:* Ksh ${macaronsTotal.toLocaleString()}\n*Delivery Fee:* Ksh ${deliveryFee.toLocaleString()}\n*Total:* Ksh ${(macaronsTotal + deliveryFee).toLocaleString()}\n\nI will pay the 30% deposit of *Ksh ${depositAmount.toLocaleString()}* and share the confirmation message shortly.\n\n*Order ID:* ${orderId}`;
+    const orderItems = cart.map(item => `• *${item.name}* (Box of ${item.option.box}) x ${item.quantity}: Ksh ${(item.option.price * item.quantity).toLocaleString()}`).join('\n');
+    const message = `*Hello Los Tres Macarons!* 👋\n\nI would like to place an order for the following:\n\n${orderItems}\n\n*Subtotal:* Ksh ${macaronsTotal.toLocaleString()}\n*Delivery Fee:* Ksh ${deliveryFee.toLocaleString()}\n*Total:* Ksh ${(macaronsTotal + deliveryFee).toLocaleString()}\n\n*Deposit Required (30%):* Ksh ${depositAmount.toLocaleString()}\n\n*Order ID:* ${orderId}\n\nI will share the payment confirmation shortly. Thank you!`;
     window.open(`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`, '_blank');
   };
 

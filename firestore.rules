@@ -19,7 +19,8 @@ service cloud.firestore {
     // Orders can be created by anyone
     match /orders/{orderId} {
       allow create: if true;
-      allow read, write: if request.auth != null && request.auth.uid == resource.data.userId;
+      allow read: if true; // Temporary allow read for all to debug
+      allow update, delete: if request.auth != null && (request.auth.uid == resource.data.userId || request.auth.token.email == 'lostresmacarons@gmail.com');
     }
   }
 }

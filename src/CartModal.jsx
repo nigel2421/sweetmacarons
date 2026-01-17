@@ -46,27 +46,33 @@ const CartModal = ({ cart, show, onClose, onRemoveItem, onClearCart }) => {
         balance,
         createdAt: serverTimestamp(),
         status: 'new',
-        ...(currentUser && { userId: currentUser.uid, userEmail: currentUser.email }),
+        userId: currentUser ? currentUser.uid : 'user',
+        userEmail: currentUser ? currentUser.email : 'Guest User',
+        isGuest: !currentUser
       };
 
       const docRef = await addDoc(collection(db, "orders"), orderDetails);
 
-      if (isWhatsAppOrder) {
-        const orderItems = cart.map(item => `${item.quantity} x ${item.name} (Box of ${item.option.box})`).join('\n');
-        const message = `I would like to place an order with the following items:\n\n${orderItems}\n\nSubtotal: Ksh ${macaronsTotal.toLocaleString()}\nDelivery Fee: Ksh ${deliveryFee.toLocaleString()}\nGrand Total: Ksh ${grandTotal.toLocaleString()}\n\nThank you!`;
-        const whatsappUrl = `https://wa.me/254741303030?text=${encodeURIComponent(message)}`;
-        window.open(whatsappUrl, '_blank');
-      } else {
-        navigate('/disclaimer', {
-          state: { orderId: docRef.id, cart, deliveryFee, macaronsTotal, depositAmount, balance },
-        });
-      }
-
       toast.success("Your order has been recorded successfully!");
       onClearCart();
       onClose();
+
+      navigate('/disclaimer', {
+        state: {
+          orderId: docRef.id,
+          cart,
+          deliveryFee,
+          macaronsTotal,
+          depositAmount,
+          balance
+        },
+      });
     } catch (e) {
       console.error("Error adding document: ", e);
+      if (e.code) {
+        console.error("Firebase Error Code:", e.code);
+        console.error("Firebase Error Message:", e.message);
+      }
       toast.error("There was an issue recording your order. Please try again.");
     } finally {
       setIsPlacingOrder(false);
@@ -184,10 +190,10 @@ const CartModal = ({ cart, show, onClose, onRemoveItem, onClearCart }) => {
                       </div>
                     </div>
                     <button
-                        onClick={() => showConfirmation('clear')}
-                        className="cart-modal-clear-cart"
+                      onClick={() => showConfirmation('clear')}
+                      className="cart-modal-clear-cart"
                     >
-                        Clear Cart
+                      Clear Cart
                     </button>
                   </>
                 ) : (
@@ -202,13 +208,6 @@ const CartModal = ({ cart, show, onClose, onRemoveItem, onClearCart }) => {
                     disabled={cart.length === 0 || isPlacingOrder}
                   >
                     {isPlacingOrder ? 'Placing...' : 'Place Order'}
-                  </button>
-                  <button
-                    onClick={() => handlePlaceOrder(true)}
-                    className="cart-modal-whatsapp"
-                    disabled={cart.length === 0 || isPlacingOrder}
-                  >
-                    {isPlacingOrder ? 'Redirecting...' : 'Order on WhatsApp'}
                   </button>
                 </div>
               )}
