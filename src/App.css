@@ -48,8 +48,8 @@
 }
 
 .logo {
-  height: 90px;
-  border-radius: 50%;
+  height: 80px;
+  border-radius: 10%;
 }
 
 .nav-links {
@@ -213,7 +213,7 @@ main {
   }
 
   .logo {
-    height: 60px;
+    height: 80px;
   }
 
   .cart-icon,
@@ -242,6 +242,6 @@ main {
   }
 
   .logo {
-    height: 50px;
+    height: 80px;
   }
 }

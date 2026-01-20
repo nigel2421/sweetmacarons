@@ -31,6 +31,11 @@
   border: none;
   font-size: 1.5rem;
   cursor: pointer;
+  z-index: 10;
+}
+
+.modal-close-button:hover {
+    transform: scale(1.1);
 }
 
 .product-modal-image-container {
@@ -59,7 +64,7 @@
   margin-bottom: 1rem;
 }
 
-.product-modal-description {
+.product-model-description {
   font-size: 1.1rem;
   margin-bottom: 1.5rem;
   line-height: 1.6;
@@ -98,4 +103,29 @@
   margin-top: 2rem;
   border-top: 1px solid #eee;
   padding-top: 2rem;
+}
+
+.see-all-reviews-container {
+  text-align: center;
+  margin-top: 1.5rem;
+}
+
+.see-all-reviews-button {
+  background-color: transparent;
+  border: 2px solid #4A90E2;
+  color: #4A90E2;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 1rem;
+  font-weight: bold;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.see-all-reviews-button:hover {
+  background-color: #4A90E2;
+  color: white;
 }

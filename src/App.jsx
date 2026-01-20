@@ -31,6 +31,7 @@ import './pages/PrivacyPolicy.css';
 import './pages/TermsOfService.css';
 import './pages/DataDeletion.css';
 import './pages/MyAccount.css';
+import AllReviewsPage from './pages/AllReviewsPage';
 
 const About = lazy(() => import('./pages/About'));
 const Contact = lazy(() => import('./pages/Contact'));
@@ -128,7 +129,7 @@ function App() {
         )
       );
     } else {
-      setCart([...cart, { ...macaron, option, quantity, id: cartItemId }]);
+      setCart([...cart, { macaron, option, quantity, id: cartItemId }]);
     }
     toast.success(`${macaron.name} (Box of ${option.box}) added to cart!`);
   };
@@ -136,7 +137,7 @@ function App() {
   const handleReorder = (order) => {
     clearCart();
     order.cart.forEach(item => {
-      const macaron = macarons.find(m => m.id === item.id.split('-')[0]);
+      const macaron = macarons.find(m => m.id.split('-')[0] === item.id.split('-')[0]);
       if (macaron) {
         addToCart(macaron, item.option, item.quantity);
       }
@@ -146,7 +147,7 @@ function App() {
 
   const removeItemFromCart = (itemToRemove) => {
     setCart(cart.filter((item) => item.id !== itemToRemove.id));
-    toast.error(`${itemToRemove.name} removed from cart.`);
+    toast.error(`${itemToRemove.macaron.name} removed from cart.`);
   };
 
   const clearCart = () => {
@@ -227,6 +228,7 @@ function App() {
               <Route path="/my-orders" element={<ProtectedRoute isAuthenticated={!!user}><MyOrders onLogout={handleLogout} onReorder={handleReorder} /></ProtectedRoute>} />
               <Route path="/admin/orders" element={<ProtectedRoute isAuthenticated={!!user} adminOnly={true}><Orders onLogout={handleLogout} /></ProtectedRoute>} />
               <Route path="/admin/analytics" element={<ProtectedRoute isAuthenticated={!!user} adminOnly={true}><Analytics orders={orders} /></ProtectedRoute>} />
+              <Route path="/all-reviews" element={<AllReviewsPage />} />
               <Route path="*" element={<NotFoundPage />} />
             </Routes>
           </Suspense>
@@ -239,6 +241,9 @@ function App() {
         onClose={() => setShowCart(false)}
         onRemoveItem={removeItemFromCart}
         onClearCart={clearCart}
+        onCheckout={() => { 
+          setShowCart(false);
+        }}
       />
       <ProductModal
         product={selectedProduct}

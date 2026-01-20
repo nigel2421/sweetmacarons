@@ -12,11 +12,15 @@ const DisclaimerPage = () => {
     window.scrollTo(0, 0);
   }, []);
 
-  const { orderId, cart, deliveryFee, macaronsTotal, depositAmount: stateDeposit, balance } = location.state || { orderId: null, cart: [], deliveryFee: 0, macaronsTotal: 0 };
+  const { cart, deliveryOption, deliveryAddress, deliveryFee, macaronsTotal, grandTotal } = location.state || { cart: [], deliveryFee: 0, macaronsTotal: 0 };
 
-  const depositAmount = stateDeposit || macaronsTotal * 0.3;
+  const depositAmount = macaronsTotal * 0.3;
   const orderWhatsAppNumber = '254723734211';
   const paymentNumber = '0769456153';
+
+  const generateOrderId = () => {
+    return `LTM-${Date.now()}`;
+  };
 
   const handleCopyToClipboard = () => {
     navigator.clipboard.writeText(paymentNumber);
@@ -24,8 +28,15 @@ const DisclaimerPage = () => {
   };
 
   const handleCheckout = () => {
-    const orderItems = cart.map(item => `• *${item.name}* (Box of ${item.option.box}) x ${item.quantity}: Ksh ${(item.option.price * item.quantity).toLocaleString()}`).join('\n');
-    const message = `*Hello Los Tres Macarons!* 👋\n\nI would like to place an order for the following:\n\n${orderItems}\n\n*Subtotal:* Ksh ${macaronsTotal.toLocaleString()}\n*Delivery Fee:* Ksh ${deliveryFee.toLocaleString()}\n*Total:* Ksh ${(macaronsTotal + deliveryFee).toLocaleString()}\n\n*Deposit Required (30%):* Ksh ${depositAmount.toLocaleString()}\n\n*Order ID:* ${orderId}\n\nI will share the payment confirmation shortly. Thank you!`;
+    const orderId = generateOrderId();
+    const orderItems = cart.map(item => `• *${item.macaron.name}* (Box of ${item.option.box}) x ${item.quantity}: Ksh ${(item.option.price * item.quantity).toLocaleString()}`).join('\n');
+    
+    let deliveryMessage = '';
+    if (deliveryOption !== 'pickup') {
+      deliveryMessage = `\n*Delivery Address:* ${deliveryAddress}`;
+    }
+
+    const message = `*Hello Los Tres Macarons!* 👋\n\nI would like to place an order for the following:\n\n${orderItems}${deliveryMessage}\n\n*Subtotal:* Ksh ${macaronsTotal.toLocaleString()}\n*Delivery Fee:* Ksh ${deliveryFee.toLocaleString()}\n*Total:* Ksh ${grandTotal.toLocaleString()}\n\n*Deposit Required (30%):* Ksh ${depositAmount.toLocaleString()}\n\n*Order ID:* ${orderId}\n\nI will share the payment confirmation shortly. Thank you!`;
     window.open(`https://wa.me/${orderWhatsAppNumber}?text=${encodeURIComponent(message)}`, '_blank');
   };
 
@@ -63,7 +74,7 @@ const DisclaimerPage = () => {
             <h2>Cart Review</h2>
             {cart.map(item => (
               <div key={item.id} className="cart-item-review">
-                <span>{item.name} (Box of ${item.option.box})</span>
+                <span>{item.macaron.name} (Box of ${item.option.box})</span>
                 <span>Ksh {item.option.price.toLocaleString()}</span>
               </div>
             ))}
@@ -71,7 +82,7 @@ const DisclaimerPage = () => {
             <div className="cart-totals-review">
               <p>Subtotal: Ksh {macaronsTotal.toLocaleString()}</p>
               <p>Delivery Fee: Ksh {deliveryFee.toLocaleString()}</p>
-              <p>Total: Ksh {(macaronsTotal + deliveryFee).toLocaleString()}</p>
+              <p>Total: Ksh {grandTotal.toLocaleString()}</p>
             </div>
           </div>
         )}

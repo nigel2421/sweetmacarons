@@ -103,6 +103,12 @@ const OrderDetailsModal = ({ order, show, onClose, onUpdateStatus, onReorder }) 
             </div>
           </div>
           <p className="delivery-info"><strong>Delivery Option:</strong> {order.deliveryOption || 'N/A'}</p>
+          {order.deliveryOption !== 'pickup' && order.deliveryAddress && (
+            <div className="delivery-address-details">
+              <h4>Delivery Address</h4>
+              <p>{order.deliveryAddress}</p>
+            </div>
+          )}
         </div>
         {onReorder && (
           <div className="modal-footer">

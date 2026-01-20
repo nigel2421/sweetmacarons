@@ -1,8 +1,9 @@
 
 import { useState, useEffect } from 'react';
 import { FiX } from 'react-icons/fi';
-import Reviews from './Reviews'; // Import the new Reviews component
-import { auth } from './firebase'; // Import auth
+import { Link } from 'react-router-dom';
+import Reviews from './Reviews';
+import { auth } from './firebase';
 import './ProductModal.css';
 
 const ProductModal = ({ product, show, onClose, onAddToCart }) => {
@@ -34,11 +35,9 @@ const ProductModal = ({ product, show, onClose, onAddToCart }) => {
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-        <div className="product-modal-header">
-          <button onClick={onClose} className="modal-close-button">
-            <FiX />
-          </button>
-        </div>
+        <button onClick={onClose} className="modal-close-button">
+          <FiX />
+        </button>
         <div className="product-modal-body">
           <div className="product-modal-image-container">
             <img
@@ -80,9 +79,17 @@ const ProductModal = ({ product, show, onClose, onAddToCart }) => {
             </div>
           </div>
         </div>
-        {/* Add the Reviews component here */}
         <div className="product-modal-reviews">
           <Reviews productId={macaron.id} user={user} />
+          <div className="see-all-reviews-container">
+            <Link
+              to="/all-reviews"
+              state={{ productId: macaron.id, productName: macaron.name }}
+              className="see-all-reviews-button"
+            >
+              See All Reviews
+            </Link>
+          </div>
         </div>
       </div>
     </div>

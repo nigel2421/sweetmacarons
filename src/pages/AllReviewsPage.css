@@ -1,0 +1,103 @@
+.all-reviews-page {
+  padding: 2rem;
+  max-width: 900px;
+  margin: 2rem auto;
+  background-color: #333;
+  color: white;
+  border-radius: 10px;
+  font-family: 'Fredoka', sans-serif;
+  min-height: 50vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.all-reviews-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid #555;
+}
+
+.all-reviews-header h1 {
+  font-size: 2.5rem;
+  font-weight: 600;
+  background: linear-gradient(135deg, #FF6B6B 0%, #FFB88C 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.back-to-store-button {
+  background-color: #5CBA47;
+  color: white;
+  padding: 12px 24px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 1rem;
+  font-weight: bold;
+  border-radius: 8px;
+  cursor: pointer;
+  border: none;
+  transition: background-color 0.3s ease;
+}
+
+.back-to-store-button:hover {
+  background-color: #4a9e3a;
+}
+
+.reviews-list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+.review-card {
+  background-color: #444;
+  border: 1px solid #555;
+  border-radius: 12px;
+  padding: 1.5rem;
+  transition: transform 0.2s;
+}
+
+.review-card:hover {
+    transform: translateY(-5px);
+}
+
+.review-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #666;
+}
+
+.review-author {
+  font-weight: bold;
+  font-size: 1.1rem;
+  color: #eee;
+}
+
+.review-date {
+  font-size: 0.9rem;
+  color: #ccc;
+}
+
+.review-text {
+  margin-top: 1rem;
+  line-height: 1.6;
+  color: #ddd;
+}
+
+.star-rating {
+    color: #fcc419;
+}
+
+.all-reviews-page > p {
+    text-align: center;
+    font-size: 1.2rem;
+    padding: 3rem 0;
+}

@@ -215,6 +215,28 @@
   font-style: italic;
 }
 
+.delivery-address-details {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  background: #F4F8FA;
+  border-radius: 16px;
+  text-align: left;
+}
+
+.delivery-address-details h4 {
+  font-family: 'Fredoka', sans-serif;
+  color: #4A5568;
+  margin: 0 0 1rem;
+  font-size: 1.2rem;
+}
+
+.delivery-address-details p {
+  margin: 0;
+  font-size: 1rem;
+  color: #2D3748;
+  white-space: pre-wrap;
+}
+
 .modal-footer {
   text-align: center;
   margin-top: 2rem;

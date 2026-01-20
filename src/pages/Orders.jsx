@@ -86,6 +86,7 @@ const Orders = ({ onLogout, onReorder }) => {
       'Deposit Amount': order.depositAmount || 0,
       'Balance': order.balance || 0,
       'Delivery Option': order.deliveryOption || 'N/A',
+      'Delivery Address': order.deliveryAddress || 'N/A',
       'Status': order.status,
       'Cart Items': order.cart.map(item => `${item.quantity} x ${item.name} (Box of ${item.option.box})`).join(', ')
     }));

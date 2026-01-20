@@ -1,14 +1,12 @@
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import StarRating from './components/StarRating';
-import { auth } from './firebase';
 import './Macarons.css';
 
 const MacaronCard = ({ macaron, onSelect, onAddToCart }) => {
   const [selectedOption, setSelectedOption] = useState(macaron.options[0]);
-  const navigate = useNavigate();
 
   const handleAddToCart = (e) => {
     e.stopPropagation();
@@ -21,17 +19,6 @@ const MacaronCard = ({ macaron, onSelect, onAddToCart }) => {
       (option) => JSON.stringify(option) === e.target.value
     );
     setSelectedOption(selected);
-  };
-
-  const handleViewReviews = (e) => {
-    e.stopPropagation();
-    if (auth.currentUser) {
-      // Navigate to reviews page if logged in
-      navigate(`/macarons/${macaron.id}/reviews`);
-    } else {
-      // Redirect to login page if not logged in
-      navigate('/login');
-    }
   };
 
   return (
@@ -82,10 +69,15 @@ const MacaronCard = ({ macaron, onSelect, onAddToCart }) => {
           <button className="macaron-card-button" onClick={handleAddToCart}>
             Add to Cart
           </button>
+          <Link 
+            to="/all-reviews"
+            state={{ productId: macaron.id, productName: macaron.name }}
+            className="view-reviews-button"
+            onClick={(e) => e.stopPropagation()}
+            >
+            View Reviews
+          </Link>
         </div>
-        <button className="view-reviews-button" onClick={handleViewReviews}>
-          View Reviews
-        </button>
       </div>
     </motion.div>
   );
