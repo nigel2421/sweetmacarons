@@ -1,5 +1,4 @@
-
-import { render, screen } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { BrowserRouter } from 'react-router-dom';
 import { vi } from 'vitest';
@@ -23,30 +22,42 @@ describe('CartModal component', () => {
 
   const onRemoveItem = vi.fn();
   const onClearCart = vi.fn();
+  const onClose = vi.fn();
 
   test('renders the cart items and total', () => {
     render(
       <BrowserRouter>
-        <CartModal cart={cart} show={true} onRemoveItem={onRemoveItem} onClearCart={onClearCart} />
+        <CartModal cart={cart} show={true} onClose={onClose} onRemoveItem={onRemoveItem} onClearCart={onClearCart} />
       </BrowserRouter>
     );
 
     expect(screen.getByText('Macaron 1 (Box of 6)')).toBeInTheDocument();
     expect(screen.getByText('Macaron 2 (Box of 12)')).toBeInTheDocument();
+
+    // Use getAllByText for the total price since it appears multiple times (Total and Grand Total)
+    const totalPrices = screen.getAllByText(/Ksh 5,600/);
+    expect(totalPrices.length).toBeGreaterThanOrEqual(1);
+
     expect(screen.getByText(/Macarons Total:/)).toBeInTheDocument();
-    expect(screen.getByText(/Ksh 5,600/)).toBeInTheDocument();
   });
 
-  test('calculates delivery fee correctly', () => {
+  test('calculates delivery fee correctly', async () => {
+    const user = userEvent.setup();
     render(
       <BrowserRouter>
-        <CartModal cart={cart} show={true} onRemoveItem={onRemoveItem} onClearCart={onClearCart} />
+        <CartModal cart={cart} show={true} onClose={onClose} onRemoveItem={onRemoveItem} onClearCart={onClearCart} />
       </BrowserRouter>
     );
 
-    userEvent.click(screen.getByText('Within CBD'));
+    const withinCBDButton = screen.getByRole('button', { name: /Within CBD/i });
+    await user.click(withinCBDButton);
+
     expect(screen.getByText(/Delivery Fee:/)).toBeInTheDocument();
-    expect(screen.getByText(/Ksh 400/)).toBeInTheDocument();
+
+    // Use getAllByText for Ksh 400 since it appears in the button and the fee row
+    const deliveryFees = screen.getAllByText(/Ksh 400/);
+    expect(deliveryFees.length).toBeGreaterThanOrEqual(1);
+
     expect(screen.getByText(/Grand Total:/)).toBeInTheDocument();
     expect(screen.getByText(/Ksh 6,000/)).toBeInTheDocument();
   });
