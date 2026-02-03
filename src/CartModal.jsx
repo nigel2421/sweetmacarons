@@ -70,13 +70,15 @@ const CartModal = ({ cart, show, onClose, onRemoveItem, onClearCart }) => {
     <>
       <div className="cart-modal-overlay" onClick={onClose}>
         <div className="cart-modal" onClick={(e) => e.stopPropagation()}>
-            <>
-              <div className="cart-modal-header">
-                <h2>Shopping Cart</h2>
-                <button onClick={onClose} className="cart-modal-close">
-                  <FiX />
-                </button>
-              </div>
+          <>
+            <div className="cart-modal-header">
+              <h2>Shopping Cart</h2>
+              <button onClick={onClose} className="cart-modal-close" aria-label="Close cart">
+                <FiX size={20} style={{ strokeWidth: '4' }} />
+                <span>CLOSE</span>
+              </button>
+            </div>
+            <div className="cart-modal-scrollable">
               <div className="cart-modal-body">
                 {cart.length > 0 ? (
                   <>
@@ -138,7 +140,7 @@ const CartModal = ({ cart, show, onClose, onRemoveItem, onClearCart }) => {
                       )}
                     </div>
 
-                     <div className="cart-totals">
+                    <div className="cart-totals">
                       <div>
                         <span>Macarons Total:</span>
                         <span>Ksh {macaronsTotal.toLocaleString()}</span>
@@ -165,17 +167,18 @@ const CartModal = ({ cart, show, onClose, onRemoveItem, onClearCart }) => {
                   <p>Your cart is empty.</p>
                 )}
               </div>
-              {cart.length > 0 && (
-                <div className="cart-modal-footer">
-                  <button
-                    onClick={handleProceedToCheckout}
-                    className="cart-modal-checkout"
-                  >
-                    Proceed to Checkout
-                  </button>
-                </div>
-              )}
-            </>
+            </div>
+            {cart.length > 0 && (
+              <div className="cart-modal-footer">
+                <button
+                  onClick={handleProceedToCheckout}
+                  className="cart-modal-checkout"
+                >
+                  Proceed to Checkout
+                </button>
+              </div>
+            )}
+          </>
         </div>
       </div>
       <ConfirmationModal

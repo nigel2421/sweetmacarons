@@ -12,8 +12,9 @@ const ConfirmationModal = ({ show, onClose, onConfirm, title, message }) => {
       <div className="confirmation-modal">
         <div className="confirmation-modal-header">
           <h2>{title}</h2>
-          <button onClick={onClose} className="confirmation-modal-close">
-            <FiX />
+          <button onClick={onClose} className="confirmation-modal-close" aria-label="Close">
+            <FiX size={18} style={{ strokeWidth: '4' }} />
+            <span>CLOSE</span>
           </button>
         </div>
         <div className="confirmation-modal-body">
