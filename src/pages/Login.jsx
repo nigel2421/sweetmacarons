@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
-import { auth, googleProvider, facebookProvider } from '../firebase';
+import { auth, googleProvider } from '../firebase';
 import './Login.css';
 
 const Login = () => {
@@ -59,9 +59,6 @@ const Login = () => {
         <div className="social-login">
           <button onClick={() => handleSocialLogin(googleProvider)} className="social-button google">
             Login with Google
-          </button>
-          <button onClick={() => handleSocialLogin(facebookProvider)} className="social-button facebook">
-            Login with Facebook
           </button>
         </div>
       </div>

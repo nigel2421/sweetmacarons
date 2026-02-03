@@ -93,11 +93,11 @@ export const macarons = [
   {
     id: 8,
     name: "Vegan Macarons",
-    price: 350,
+    price: 400,
     options: [
-      { box: 6, price: 2100 },
-      { box: 10, price: 3500 },
-      { box: 20, price: 6300, discount: "10%" },
+      { box: 6, price: 2400 },
+      { box: 10, price: 4000 },
+      { box: 20, price: 7200, discount: "10%" },
     ],
     image: "images/vegan.png",
     description: "A delicious and cruelty-free macaron, made with plant-based ingredients.",
