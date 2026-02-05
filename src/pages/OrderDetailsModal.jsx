@@ -16,15 +16,15 @@ const OrderDetailsModal = ({ order, show, onClose, onUpdateStatus, onReorder }) 
   const macaronsTotal = order.macaronsTotal || 0;
   const deliveryFee = order.deliveryFee || 0;
   const grandTotal = macaronsTotal + deliveryFee;
-  const depositAmount = order.depositAmount || 0;
-  const balance = order.balance || 0;
+  const depositAmount = (macaronsTotal * 0.3) || 0;
+  const balance = grandTotal - depositAmount;
 
   const handleStatusChange = async (newStatus) => {
     setIsUpdating(true);
     try {
       const orderRef = doc(db, 'orders', order.id);
       await updateDoc(orderRef, { status: newStatus });
-      onUpdateStatus(order.id, newStatus);
+      if(onUpdateStatus) onUpdateStatus(order.id, newStatus);
       toast.success("Order status updated successfully!");
     } catch (error) {
       console.error("Error updating order status: ", error);
@@ -46,7 +46,7 @@ const OrderDetailsModal = ({ order, show, onClose, onUpdateStatus, onReorder }) 
         </div>
         <div className="order-details-scrollable">
           <div className="modal-body">
-            <h3>Order #{order.id}</h3>
+            <h3>Order #{order.orderId}</h3>
             <p><strong>Date:</strong> {new Date(order.createdAt?.toDate()).toLocaleString()}</p>
             <div className="status-selector">
               <strong>Status:</strong>
@@ -57,11 +57,12 @@ const OrderDetailsModal = ({ order, show, onClose, onUpdateStatus, onReorder }) 
                     onChange={(e) => handleStatusChange(e.target.value)}
                     disabled={isUpdating}
                   >
-                    <option value="new">New</option>
-                    <option value="deposit-paid">Deposit Paid</option>
-                    <option value="confirmed">Confirmed</option>
-                    <option value="processed">Processed</option>
+                    <option value="pending">Pending</option>
+                    <option value="paid">Paid</option>
+                    <option value="in-progress">In Progress</option>
+                    <option value="shipped">Shipped</option>
                     <option value="delivered">Delivered</option>
+                    <option value="cancelled">Cancelled</option>
                   </select>
                   {isUpdating && <div className="status-spinner"></div>}
                 </div>
@@ -72,10 +73,10 @@ const OrderDetailsModal = ({ order, show, onClose, onUpdateStatus, onReorder }) 
             <hr />
             <h4>Items</h4>
             <div className="order-items-list">
-              {order.cart.map(item => (
+              {order.items.map(item => (
                 <div key={item.id} className="order-item">
                   <div className="item-info">
-                    <span className="item-name">{item.name}</span>
+                    <span className="item-name">{item.macaron.name}</span>
                     <span className="item-details">{item.quantity} x Box of {item.option.box}</span>
                   </div>
                   <span className="item-price">Ksh {(item.option.price * item.quantity).toLocaleString()}</span>

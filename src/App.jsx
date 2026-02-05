@@ -1,270 +1,198 @@
 
-import { useState, useEffect, lazy, Suspense } from 'react';
-import { Routes, Route, Link, useNavigate, useLocation } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { FiShoppingCart, FiX, FiMenu } from 'react-icons/fi';
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth } from './firebase';
+import Header from './Header';
+import HeroSlider from './HeroSlider';
 import Macarons from './Macarons';
+import Reviews from './Reviews';
+import Footer from './Footer';
 import CartModal from './CartModal';
 import ProductModal from './ProductModal';
-import HeroSlider from './HeroSlider';
-import Footer from './Footer';
-import ProtectedRoute from './ProtectedRoute';
-import AdminNav from './pages/AdminNav';
 import ScrollToTop from './ScrollToTop';
-import ScrollToTopButton from './components/ScrollToTopButton';
-import { FiShoppingCart, FiUser } from 'react-icons/fi';
-import { ToastContainer, toast } from 'react-toastify';
-import { auth, db } from './firebase'; // Correctly import auth and db
-import { collection, getDocs } from "firebase/firestore";
-import { onAuthStateChanged } from 'firebase/auth';
-import { macarons as macaronsData } from './data'; // Import local macaron data
-import 'react-toastify/dist/ReactToastify.css';
-import './App.css';
-import './HeroSlider.css';
-import './Footer.css';
-import './pages/About.css';
-import './pages/Contact.css';
-import './pages/Orders.css';
-import './pages/Login.css';
-import './pages/OrderDetailsModal.css';
-import './pages/Analytics.css';
-import './pages/AdminNav.css';
-import './pages/PrivacyPolicy.css';
-import './pages/TermsOfService.css';
-import './pages/DataDeletion.css';
-import './pages/MyAccount.css';
+import DisclaimerPage from './DisclaimerPage';
+import About from './pages/About';
+import Contact from './pages/Contact';
+import Login from './pages/Login';
+import MyAccount from './pages/MyAccount';
+import MyOrders from './pages/MyOrders';
+import Dashboard from './pages/Dashboard';
 import AllReviewsPage from './pages/AllReviewsPage';
-
-const About = lazy(() => import('./pages/About'));
-const Contact = lazy(() => import('./pages/Contact'));
-const Orders = lazy(() => import('./pages/Orders'));
-const MyOrders = lazy(() => import('./pages/MyOrders'));
-const Login = lazy(() => import('./pages/Login'));
-const Analytics = lazy(() => import('./pages/Analytics'));
-const DisclaimerPage = lazy(() => import('./DisclaimerPage'));
-const NotFoundPage = lazy(() => import('./pages/NotFoundPage'));
-const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy'));
-const TermsOfService = lazy(() => import('./pages/TermsOfService'));
-const DataDeletion = lazy(() => import('./pages/DataDeletion'));
-const MyAccount = lazy(() => import('./pages/MyAccount'));
+import Analytics from './pages/Analytics';
+import Orders from './pages/Orders';
+import DataDeletion from './pages/DataDeletion';
+import TermsOfService from './pages/TermsOfService';
+import PrivacyPolicy from './pages/PrivacyPolicy';
+import NotFoundPage from './pages/NotFoundPage';
+import ProtectedRoute from './ProtectedRoute';
+import { macaronFlavors, macaronData } from './data';
 
 const slides = [
   {
-    image: '/images/macaron-slider-1.png',
-    title: 'Delicious Macarons',
-    subtitle: 'A taste of heaven in every bite.',
-  },
-  {
-    image: '/images/macaron-slider-10.png',
-    title: 'Perfect for Any Occasion',
-    subtitle: 'Weddings, birthdays, or just a treat for yourself.',
-  },
-  {
-    image: '/images/macaron-slider-5.png',
+    image: 'https://via.placeholder.com/1200x500/E75480/FFFFFF?text=Delicious+Macarons',
     title: 'Made with Love',
-    subtitle: 'Using only the finest ingredients.',
+    subtitle: 'The finest ingredients for the finest treats.',
+  },
+  {
+    image: 'https://via.placeholder.com/1200x500/FFB6C1/333333?text=Perfect+for+any+Occasion',
+    title: 'A Treat for Every Occasion',
+    subtitle: 'Birthdays, weddings, or just because.',
+  },
+  {
+    image: 'https://via.placeholder.com/1200x500/D4AF37/FFFFFF?text=Custom+Orders+Available',
+    title: 'Your Dream Macarons',
+    subtitle: 'Contact us for custom orders and flavors.',
   },
 ];
 
-function App() {
-  const [macarons, setMacarons] = useState([]);
-  const [cart, setCart] = useState(() => {
-    const savedCart = localStorage.getItem('cart');
-    return savedCart ? JSON.parse(savedCart) : [];
-  });
-  const [showCart, setShowCart] = useState(false);
+const App = () => {
+  const [cart, setCart] = useState([]);
+  const [isCartVisible, setIsCartVisible] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [user, setUser] = useState(null);
-  const [authLoading, setAuthLoading] = useState(true);
-  const [orders, setOrders] = useState([]);
-
-  const navigate = useNavigate();
-  const location = useLocation();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setUser(user);
-      setAuthLoading(false);
+      setLoading(false);
     });
     return () => unsubscribe();
   }, []);
 
-  useEffect(() => {
-    const fetchMacaronsWithReviews = async () => {
-      const reviewsCollection = collection(db, 'reviews');
-      const reviewSnapshot = await getDocs(reviewsCollection);
-      const reviews = reviewSnapshot.docs.map(doc => doc.data());
-
-      const macaronsWithReviews = macaronsData.map(macaron => {
-        const productReviews = reviews.filter(review => review.productId === macaron.id);
-        const averageRating = productReviews.length > 0
-          ? productReviews.reduce((acc, review) => acc + review.rating, 0) / productReviews.length
-          : 0;
-        return { ...macaron, averageRating, reviewCount: productReviews.length };
-      });
-
-      setMacarons(macaronsWithReviews);
-    };
-
-    fetchMacaronsWithReviews();
-  }, []);
-
-  useEffect(() => {
-    localStorage.setItem('cart', JSON.stringify(cart));
-  }, [cart]);
-
-  const handleLogout = () => {
-    auth.signOut();
-    navigate('/login');
-  };
-
-  const addToCart = (macaron, option, quantity = 1) => {
-    const cartItemId = `${macaron.id}-${option.box}`;
-    const existingItem = cart.find((item) => item.id === cartItemId);
-
-    if (existingItem) {
-      setCart(
-        cart.map((item) =>
-          item.id === cartItemId
+  const addToCart = (product, quantity, option) => {
+    setCart((prevCart) => {
+      const existingItem = prevCart.find(
+        (item) => item.id === `${product.id}-${option.box}`
+      );
+      if (existingItem) {
+        return prevCart.map((item) =>
+          item.id === `${product.id}-${option.box}`
             ? { ...item, quantity: item.quantity + quantity }
             : item
-        )
-      );
-    } else {
-      setCart([...cart, { macaron, option, quantity, id: cartItemId }]);
-    }
-    toast.success(`${macaron.name} (Box of ${option.box}) added to cart!`);
-  };
-
-  const handleReorder = (order) => {
-    clearCart();
-    order.cart.forEach(item => {
-      const macaron = macarons.find(m => m.id.split('-')[0] === item.id.split('-')[0]);
-      if (macaron) {
-        addToCart(macaron, item.option, item.quantity);
+        );
+      } else {
+        return [
+          ...prevCart,
+          {
+            ...product,
+            id: `${product.id}-${option.box}`,
+            macaron: product,
+            quantity,
+            option,
+          },
+        ];
       }
     });
-    setShowCart(true);
+    setIsCartVisible(true);
   };
 
-  const removeItemFromCart = (itemToRemove) => {
-    setCart(cart.filter((item) => item.id !== itemToRemove.id));
-    toast.error(`${itemToRemove.macaron.name} removed from cart.`);
+  const removeFromCart = (itemToRemove) => {
+    setCart((prevCart) =>
+      prevCart.filter((item) => item.id !== itemToRemove.id)
+    );
   };
 
   const clearCart = () => {
     setCart([]);
   };
 
-  const handleSelectMacaron = (macaron, option) => {
-    setSelectedProduct({ macaron, option });
+  const openProductModal = (product) => {
+    setSelectedProduct(product);
   };
 
-  const handleCloseProductModal = () => {
+  const closeProductModal = () => {
     setSelectedProduct(null);
   };
 
-  const cartCount = cart.reduce((total, item) => total + item.quantity, 0);
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
 
-  const isAdminPage = location.pathname.startsWith('/admin');
+  const closeMenu = () => {
+    setIsMenuOpen(false);
+  };
+
+  const MainContent = () => {
+    const location = useLocation();
+    const isLegalPage = [
+      '/login',
+      '/my-account',
+      '/my-orders',
+      '/dashboard',
+      '/all-reviews',
+      '/analytics',
+      '/orders',
+      '/about',
+      '/contact',
+      '/data-deletion',
+      '/terms-of-service',
+      '/privacy-policy',
+      '/disclaimer',
+    ].includes(location.pathname);
+
+    return (
+      <div className={`app-container ${isMenuOpen ? 'menu-open' : ''}`}>
+        {!isLegalPage && <HeroSlider slides={slides} />}
+        {!isLegalPage && <Macarons macaronFlavors={macaronFlavors} onAddToCart={addToCart} onProductClick={openProductModal} />}
+        {!isLegalPage && <Reviews />}
+        <Routes>
+          <Route path="/about" element={<About />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/my-account" element={<ProtectedRoute user={user}><MyAccount user={user} /></ProtectedRoute>} />
+          <Route path="/my-orders" element={<ProtectedRoute user={user}><MyOrders user={user} /></ProtectedRoute>} />
+          <Route path="/dashboard" element={<ProtectedRoute user={user} adminOnly><Dashboard /></ProtectedRoute>} />
+          <Route path="/all-reviews" element={<ProtectedRoute user={user} adminOnly><AllReviewsPage /></ProtectedRoute>} />
+          <Route path="/analytics" element={<ProtectedRoute user={user} adminOnly><Analytics /></ProtectedRoute>} />
+          <Route path="/orders" element={<ProtectedRoute user={user} adminOnly><Orders /></ProtectedRoute>} />
+          <Route path="/data-deletion" element={<DataDeletion />} />
+          <Route path="/terms-of-service" element={<TermsOfService />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+          <Route path="/disclaimer" element={<DisclaimerPage user={user} />} />
+          <Route path="*" element={<NotFoundPage />} />
+        </Routes>
+      </div>
+    );
+  };
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   return (
-    <div className="App">
+    <Router>
       <ScrollToTop />
-      <header className="App-header">
-        <div className="header-left">
-          <Link to="/">
-            <img src="/images/logo.jpeg" alt="Los Tres Macarons" className="logo" />
-          </Link>
-        </div>
-        <div className="header-center">
-          {user && isAdminPage ? (
-            <AdminNav />
-          ) : (
-            <h1 className="header-title">Los Tres Macarons</h1>
-          )}
-        </div>
-        <div className="header-right">
-          <div className="cart-icon" onClick={() => setShowCart(true)}>
-            <FiShoppingCart />
-            {cartCount > 0 && <span className="cart-count">{cartCount}</span>}
-          </div>
-          {user ? (
-            <Link to="/my-account" className="user-icon">
-              <FiUser />
-            </Link>
-          ) : (
-            <Link to="/login" className="user-icon">
-              <FiUser />
-            </Link>
-          )}
-        </div>
-      </header>
-      <main>
-        {authLoading ? (
-          <div className="loading-overlay">
-            <div className="loading-spinner"></div>
-            <p>Checking authentication...</p>
-          </div>
-        ) : (
-          <Suspense fallback={<div>Loading...</div>}>
-            <Routes>
-              <Route
-                path="/"
-                element={
-                  <>
-                    <HeroSlider slides={slides} />
-                    <h2 className="explore-macarons">Explore Macarons</h2>
-                    <Macarons macarons={macarons} onSelectMacaron={handleSelectMacaron} onAddToCart={addToCart} />
-                  </>
-                }
-              />
-              <Route path="/about" element={<About />} />
-              <Route path="/contact" element={<Contact />} />
-              <Route path="/disclaimer" element={<DisclaimerPage />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-              <Route path="/terms-of-service" element={<TermsOfService />} />
-              <Route path="/data-deletion" element={<DataDeletion />} />
-              <Route path="/my-account" element={<ProtectedRoute isAuthenticated={!!user}><MyAccount onLogout={handleLogout} /></ProtectedRoute>} />
-              <Route path="/my-orders" element={<ProtectedRoute isAuthenticated={!!user}><MyOrders onLogout={handleLogout} onReorder={handleReorder} /></ProtectedRoute>} />
-              <Route path="/admin/orders" element={<ProtectedRoute isAuthenticated={!!user} adminOnly={true}><Orders onLogout={handleLogout} /></ProtectedRoute>} />
-              <Route path="/admin/analytics" element={<ProtectedRoute isAuthenticated={!!user} adminOnly={true}><Analytics orders={orders} /></ProtectedRoute>} />
-              <Route path="/all-reviews" element={<AllReviewsPage />} />
-              <Route path="*" element={<NotFoundPage />} />
-            </Routes>
-          </Suspense>
+      <div className="app">
+        <Header 
+          user={user} 
+          cart={cart} 
+          toggleMenu={toggleMenu} 
+          isMenuOpen={isMenuOpen} 
+          setIsCartVisible={setIsCartVisible} 
+        />
+        <MainContent />
+        <Footer />
+        <CartModal
+          cart={cart}
+          show={isCartVisible}
+          onClose={() => setIsCartVisible(false)}
+          onRemoveItem={removeFromCart}
+          onClearCart={clearCart}
+        />
+        {selectedProduct && (
+          <ProductModal
+            product={selectedProduct}
+            onClose={closeProductModal}
+            onAddToCart={addToCart}
+          />
         )}
-      </main>
-      <Footer />
-      <CartModal
-        cart={cart}
-        show={showCart}
-        onClose={() => setShowCart(false)}
-        onRemoveItem={removeItemFromCart}
-        onClearCart={clearCart}
-        onCheckout={() => { 
-          setShowCart(false);
-        }}
-      />
-      <ProductModal
-        product={selectedProduct}
-        show={!!selectedProduct}
-        onClose={handleCloseProductModal}
-        onAddToCart={addToCart}
-      />
-      <ToastContainer
-        position="bottom-right"
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-      />
-      <ScrollToTopButton />
-    </div>
+      </div>
+    </Router>
   );
-}
+};
 
 export default App;

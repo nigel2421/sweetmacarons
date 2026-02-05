@@ -1,12 +1,19 @@
 
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
+import { db } from './firebase';
+import { generateOrderId } from './utils';
+import ConfirmationModal from './ConfirmationModal';
 import './DisclaimerPage.css';
 
-const DisclaimerPage = () => {
+const DisclaimerPage = ({ user }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const [agree, setAgree] = useState(false);
+  const [isOrderSuccessful, setIsOrderSuccessful] = useState(false);
+  const [newOrderId, setNewOrderId] = useState('');
+  const [whatsappMessage, setWhatsappMessage] = useState('');
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -18,17 +25,15 @@ const DisclaimerPage = () => {
   const orderWhatsAppNumber = '254723734211';
   const paymentNumber = '0769456153';
 
-  const generateOrderId = () => {
-    return `LTM-${Date.now()}`;
-  };
-
   const handleCopyToClipboard = () => {
     navigator.clipboard.writeText(paymentNumber);
     alert('Payment number copied to clipboard');
   };
 
-  const handleCheckout = () => {
-    const orderId = generateOrderId();
+  const handleCheckout = async () => {
+    const orderId = generateOrderId(user);
+    setNewOrderId(orderId);
+
     const orderItems = cart.map(item => `• *${item.macaron.name}* (Box of ${item.option.box}) x ${item.quantity}: Ksh ${(item.option.price * item.quantity).toLocaleString()}`).join('\n');
     
     let deliveryMessage = '';
@@ -37,60 +42,97 @@ const DisclaimerPage = () => {
     }
 
     const message = `*Hello Los Tres Macarons!* 👋\n\nI would like to place an order for the following:\n\n${orderItems}${deliveryMessage}\n\n*Subtotal:* Ksh ${macaronsTotal.toLocaleString()}\n*Delivery Fee:* Ksh ${deliveryFee.toLocaleString()}\n*Total:* Ksh ${grandTotal.toLocaleString()}\n\n*Deposit Required (30%):* Ksh ${depositAmount.toLocaleString()}\n\n*Order ID:* ${orderId}\n\nI will share the payment confirmation shortly. Thank you!`;
-    window.open(`https://wa.me/${orderWhatsAppNumber}?text=${encodeURIComponent(message)}`, '_blank');
+    setWhatsappMessage(message);
+
+    try {
+      await addDoc(collection(db, 'orders'), {
+        orderId: orderId,
+        userId: user ? user.uid : 'guest',
+        items: cart,
+        total: grandTotal,
+        status: 'pending',
+        createdAt: serverTimestamp(),
+        deliveryOption,
+        deliveryAddress,
+        deliveryFee,
+        macaronsTotal,
+      });
+
+      setIsOrderSuccessful(true);
+
+      setTimeout(() => {
+        window.open(`https://wa.me/${orderWhatsAppNumber}?text=${encodeURIComponent(message)}`, '_blank');
+        // You can clear the cart here if needed
+        setIsOrderSuccessful(false);
+      }, 4000);
+
+    } catch (error) {
+      console.error("Error placing order: ", error);
+      alert("There was an error placing your order. Please try again.");
+    }
   };
 
   return (
-    <div className="disclaimer-page">
-      <nav className="disclaimer-nav">
-        <button onClick={() => navigate('/')}>Continue Shopping</button>
-      </nav>
-      <div className="disclaimer-content">
-        <h1>Disclaimer</h1>
-        <p>Macarons ordered will take up to 3 days before delivery as they are hand made to perfection.</p>
-        <h2>Deposit</h2>
-        <p>
-          <b>To begin work, a deposit of 30% of the total cost for the macarons is required.</b>
-        </p>
-        <div className="deposit-info">
-          <p>30% Deposit Amount: <strong>Ksh {depositAmount.toLocaleString()}</strong></p>
-        </div>
-        <div className="payment-info">
-          <p>You can pay via Lipa Na MPESA or to Pochi la Biashara on the number provided below.</p>
-          <div className="whatsapp-number">
-            <span>{paymentNumber}</span>
-            <button onClick={handleCopyToClipboard} title="Copy payment number">
-              <i className="fas fa-copy" style={{ color: '#2D3748' }}></i>
-            </button>
+    <>
+      <div className="disclaimer-page">
+        <nav className="disclaimer-nav">
+          <button onClick={() => navigate('/')}>Continue Shopping</button>
+        </nav>
+        <div className="disclaimer-content">
+          <h1>Disclaimer</h1>
+          <p>Macarons ordered will take up to 3 days before delivery as they are hand made to perfection.</p>
+          <h2>Deposit</h2>
+          <p>
+            <b>To begin work, a deposit of 30% of the total cost for the macarons is required.</b>
+          </p>
+          <div className="deposit-info">
+            <p>30% Deposit Amount: <strong>Ksh {depositAmount.toLocaleString()}</strong></p>
           </div>
-          <p className="whatsapp-instruction">Please share the deposit confirmation message via WhatsApp.</p>
-        </div>
-        <div className="consent-checkbox">
-          <input type="checkbox" id="agree" checked={agree} onChange={() => setAgree(!agree)} />
-          <label htmlFor="agree">I agree to these terms and conditions.</label>
-        </div>
-        {agree && (
-          <div className="cart-review">
-            <h2>Cart Review</h2>
-            {cart.map(item => (
-              <div key={item.id} className="cart-item-review">
-                <span>{item.macaron.name} (Box of ${item.option.box})</span>
-                <span>Ksh {item.option.price.toLocaleString()}</span>
-              </div>
-            ))}
-            <hr />
-            <div className="cart-totals-review">
-              <p>Subtotal: Ksh {macaronsTotal.toLocaleString()}</p>
-              <p>Delivery Fee: Ksh {deliveryFee.toLocaleString()}</p>
-              <p>Total: Ksh {grandTotal.toLocaleString()}</p>
+          <div className="payment-info">
+            <p>You can pay via Lipa Na MPESA or to Pochi la Biashara on the number provided below.</p>
+            <div className="whatsapp-number">
+              <span>{paymentNumber}</span>
+              <button onClick={handleCopyToClipboard} title="Copy payment number">
+                <i className="fas fa-copy" style={{ color: '#2D3748' }}></i>
+              </button>
             </div>
+            <p className="whatsapp-instruction">Please share the deposit confirmation message via WhatsApp.</p>
           </div>
-        )}
-        <button className="checkout-button" onClick={handleCheckout} disabled={!agree}>
-          Checkout via WhatsApp
-        </button>
+          <div className="consent-checkbox">
+            <input type="checkbox" id="agree" checked={agree} onChange={() => setAgree(!agree)} />
+            <label htmlFor="agree">I agree to these terms and conditions.</label>
+          </div>
+          {agree && (
+            <div className="cart-review">
+              <h2>Cart Review</h2>
+              {cart.map(item => (
+                <div key={item.id} className="cart-item-review">
+                  <span>{item.macaron.name} (Box of ${item.option.box})</span>
+                  <span>Ksh {item.option.price.toLocaleString()}</span>
+                </div>
+              ))}
+              <hr />
+              <div className="cart-totals-review">
+                <p>Subtotal: Ksh {macaronsTotal.toLocaleString()}</p>
+                <p>Delivery Fee: Ksh {deliveryFee.toLocaleString()}</p>
+                <p>Total: Ksh {grandTotal.toLocaleString()}</p>
+              </div>
+            </div>
+          )}
+          <button className="checkout-button" onClick={handleCheckout} disabled={!agree}>
+            Checkout via WhatsApp
+          </button>
+        </div>
       </div>
-    </div>
+      <ConfirmationModal
+        show={isOrderSuccessful}
+        onClose={() => setIsOrderSuccessful(false)}
+        title="Order Successful!"
+        message="Please send the following message on WhatsApp to confirm your order. You will be redirected shortly."
+        additionalInfo={whatsappMessage}
+        isOrderSuccess={true}
+      />
+    </>
   );
 };
 

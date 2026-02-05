@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import Papa from 'papaparse';
 import OrderDetailsModal from './OrderDetailsModal';
 import { auth, db } from '../firebase';
-import { collection, getDocs, query, where } from 'firebase/firestore';
+import { collection, query, where, onSnapshot, orderBy } from 'firebase/firestore';
 import { adminEmails } from '../admin';
 import './Orders.css';
 import { Link } from 'react-router-dom';
@@ -23,7 +23,20 @@ const Orders = ({ onLogout, onReorder }) => {
       if (user) {
         const userIsAdmin = adminEmails.includes(user.email);
         setIsAdmin(userIsAdmin);
-        fetchOrders(userIsAdmin, user.uid);
+        const ordersQuery = isAdmin
+          ? query(collection(db, 'orders'), orderBy('createdAt', 'desc'))
+          : query(collection(db, 'orders'), where('userId', '==', user.uid), orderBy('createdAt', 'desc'));
+
+        const unsubscribeFirestore = onSnapshot(ordersQuery, (querySnapshot) => {
+          const ordersData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+          setOrders(ordersData);
+          setLoading(false);
+        }, (error) => {
+          console.error("Error fetching orders: ", error);
+          setLoading(false);
+        });
+
+        return () => unsubscribeFirestore();
       } else {
         setIsAdmin(false);
         setOrders([]);
@@ -31,26 +44,7 @@ const Orders = ({ onLogout, onReorder }) => {
       }
     });
     return () => unsubscribe();
-  }, []);
-
-  const fetchOrders = async (isAdmin, uid) => {
-    setLoading(true);
-    try {
-      let ordersQuery;
-      if (isAdmin) {
-        ordersQuery = collection(db, 'orders');
-      } else {
-        ordersQuery = query(collection(db, 'orders'), where('userId', '==', uid));
-      }
-      const querySnapshot = await getDocs(ordersQuery);
-      const ordersData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      setOrders(ordersData);
-    } catch (error) {
-      console.error("Error fetching orders: ", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  }, [isAdmin]);
 
   const handleLogout = () => {
     auth.signOut().then(() => {
@@ -78,7 +72,7 @@ const Orders = ({ onLogout, onReorder }) => {
 
   const handleDownloadCsv = () => {
     const csvData = orders.map(order => ({
-      'Order ID': order.id,
+      'Order ID': order.orderId,
       'Date': new Date(order.createdAt?.toDate()).toLocaleString(),
       'Macarons Total': order.macaronsTotal || 0,
       'Delivery Fee': order.deliveryFee || 0,
@@ -88,7 +82,7 @@ const Orders = ({ onLogout, onReorder }) => {
       'Delivery Option': order.deliveryOption || 'N/A',
       'Delivery Address': order.deliveryAddress || 'N/A',
       'Status': order.status,
-      'Cart Items': order.cart.map(item => `${item.quantity} x ${item.name} (Box of ${item.option.box})`).join(', ')
+      'Cart Items': order.items.map(item => `${item.quantity} x ${item.macaron.name} (Box of ${item.option.box})`).join(', ')
     }));
 
     const csv = Papa.unparse(csvData);
@@ -102,7 +96,7 @@ const Orders = ({ onLogout, onReorder }) => {
   };
 
   const filteredOrders = orders.filter(order =>
-    order.id.toLowerCase().includes(searchTerm.toLowerCase())
+    order.orderId.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   // Pagination logic
@@ -120,10 +114,6 @@ const Orders = ({ onLogout, onReorder }) => {
 
   if (!auth.currentUser) {
     return <p>Please login to view this page.</p>;
-  }
-
-  if (!isAdmin && location.pathname.startsWith('/admin')) {
-    return <p>You do not have permission to view this page.</p>;
   }
 
   return (
@@ -154,8 +144,6 @@ const Orders = ({ onLogout, onReorder }) => {
                   <th>Order ID</th>
                   <th>Date</th>
                   <th>Total</th>
-                  <th>Deposit</th>
-                  <th>Balance</th>
                   <th>Status</th>
                   <th>Actions</th>
                 </tr>
@@ -165,11 +153,9 @@ const Orders = ({ onLogout, onReorder }) => {
                   const grandTotal = (order.macaronsTotal || 0) + (order.deliveryFee || 0);
                   return (
                     <tr key={order.id}>
-                      <td data-label="Order ID">{order.id}</td>
+                      <td data-label="Order ID">{order.orderId}</td>
                       <td data-label="Date">{order.createdAt ? new Date(order.createdAt.toDate()).toLocaleString() : 'Pending...'}</td>
                       <td data-label="Total">Ksh {grandTotal.toLocaleString()}</td>
-                      <td data-label="Deposit">Ksh {order.depositAmount?.toLocaleString() || '0'}</td>
-                      <td data-label="Balance">Ksh {order.balance?.toLocaleString() || '0'}</td>
                       <td data-label="Status"><span className={`order-status ${order.status.toLowerCase().replace('-', '')}`}>{order.status}</span></td>
                       <td data-label="Actions">
                         <button onClick={() => handleViewMore(order)} className="view-more-button">View More</button>
