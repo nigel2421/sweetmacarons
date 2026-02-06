@@ -23,7 +23,8 @@ const Orders = ({ onLogout, onReorder }) => {
       if (user) {
         const userIsAdmin = adminEmails.includes(user.email);
         setIsAdmin(userIsAdmin);
-        const ordersQuery = isAdmin
+
+        const ordersQuery = userIsAdmin
           ? query(collection(db, 'orders'), orderBy('createdAt', 'desc'))
           : query(collection(db, 'orders'), where('userId', '==', user.uid), orderBy('createdAt', 'desc'));
 
@@ -38,13 +39,14 @@ const Orders = ({ onLogout, onReorder }) => {
 
         return () => unsubscribeFirestore();
       } else {
+        console.log('No user authenticated');
         setIsAdmin(false);
         setOrders([]);
         setLoading(false);
       }
     });
     return () => unsubscribe();
-  }, [isAdmin]);
+  }, []);
 
   const handleLogout = () => {
     auth.signOut().then(() => {

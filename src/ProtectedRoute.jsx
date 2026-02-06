@@ -2,10 +2,8 @@
 import { Navigate } from 'react-router-dom';
 import { auth } from './firebase';
 
-const ProtectedRoute = ({ isAuthenticated, adminOnly, children }) => {
-  const user = auth.currentUser;
-
-  if (!isAuthenticated) {
+const ProtectedRoute = ({ user, adminOnly, children }) => {
+  if (!user) {
     return <Navigate to="/login" replace />;
   }
 

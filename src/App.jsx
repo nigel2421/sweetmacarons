@@ -2,6 +2,9 @@
 import { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { FiShoppingCart, FiX, FiMenu } from 'react-icons/fi';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import './App.css';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from './firebase';
 import Header from './Header';
@@ -22,26 +25,27 @@ import Dashboard from './pages/Dashboard';
 import AllReviewsPage from './pages/AllReviewsPage';
 import Analytics from './pages/Analytics';
 import Orders from './pages/Orders';
+import Users from './pages/Users';
 import DataDeletion from './pages/DataDeletion';
 import TermsOfService from './pages/TermsOfService';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import NotFoundPage from './pages/NotFoundPage';
 import ProtectedRoute from './ProtectedRoute';
-import { macaronFlavors, macaronData } from './data';
+import { macaronFlavors } from './data';
 
 const slides = [
   {
-    image: 'https://via.placeholder.com/1200x500/E75480/FFFFFF?text=Delicious+Macarons',
+    image: '/images/macaron-slider-1.png',
     title: 'Made with Love',
     subtitle: 'The finest ingredients for the finest treats.',
   },
   {
-    image: 'https://via.placeholder.com/1200x500/FFB6C1/333333?text=Perfect+for+any+Occasion',
+    image: '/images/macaron-slider-5.png',
     title: 'A Treat for Every Occasion',
     subtitle: 'Birthdays, weddings, or just because.',
   },
   {
-    image: 'https://via.placeholder.com/1200x500/D4AF37/FFFFFF?text=Custom+Orders+Available',
+    image: '/images/macaron-slider-10.png',
     title: 'Your Dream Macarons',
     subtitle: 'Contact us for custom orders and flavors.',
   },
@@ -63,14 +67,18 @@ const App = () => {
     return () => unsubscribe();
   }, []);
 
-  const addToCart = (product, quantity, option) => {
+  const addToCart = (product, option, quantity = 1) => {
+    if (!product || !option) return;
+
+    let isUpdated = false;
     setCart((prevCart) => {
-      const existingItem = prevCart.find(
-        (item) => item.id === `${product.id}-${option.box}`
-      );
+      const cartItemId = `${product.id}-${option.box}`;
+      const existingItem = prevCart.find((item) => item.id === cartItemId);
+
       if (existingItem) {
+        isUpdated = true;
         return prevCart.map((item) =>
-          item.id === `${product.id}-${option.box}`
+          item.id === cartItemId
             ? { ...item, quantity: item.quantity + quantity }
             : item
         );
@@ -78,8 +86,8 @@ const App = () => {
         return [
           ...prevCart,
           {
-            ...product,
-            id: `${product.id}-${option.box}`,
+            ...product, // Keep spread to clone properties
+            id: cartItemId,
             macaron: product,
             quantity,
             option,
@@ -87,7 +95,21 @@ const App = () => {
         ];
       }
     });
-    setIsCartVisible(true);
+
+    // Show toast notification instead of opening cart
+    toast.success(
+      isUpdated
+        ? `Updated ${product.name} in cart! 🛒`
+        : `${product.name} added to cart! 🎉`,
+      {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      }
+    );
   };
 
   const removeFromCart = (itemToRemove) => {
@@ -100,8 +122,8 @@ const App = () => {
     setCart([]);
   };
 
-  const openProductModal = (product) => {
-    setSelectedProduct(product);
+  const openProductModal = (product, option) => {
+    setSelectedProduct({ macaron: product, option });
   };
 
   const closeProductModal = () => {
@@ -126,6 +148,7 @@ const App = () => {
       '/all-reviews',
       '/analytics',
       '/orders',
+      '/users',
       '/about',
       '/contact',
       '/data-deletion',
@@ -137,8 +160,8 @@ const App = () => {
     return (
       <div className={`app-container ${isMenuOpen ? 'menu-open' : ''}`}>
         {!isLegalPage && <HeroSlider slides={slides} />}
-        {!isLegalPage && <Macarons macaronFlavors={macaronFlavors} onAddToCart={addToCart} onProductClick={openProductModal} />}
-        {!isLegalPage && <Reviews />}
+        {!isLegalPage && <h1 className="explore-macarons-title">Explore Macarons</h1>}
+        {!isLegalPage && <Macarons macarons={macaronFlavors} onAddToCart={addToCart} onSelectMacaron={openProductModal} />}
         <Routes>
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
@@ -149,10 +172,12 @@ const App = () => {
           <Route path="/all-reviews" element={<ProtectedRoute user={user} adminOnly><AllReviewsPage /></ProtectedRoute>} />
           <Route path="/analytics" element={<ProtectedRoute user={user} adminOnly><Analytics /></ProtectedRoute>} />
           <Route path="/orders" element={<ProtectedRoute user={user} adminOnly><Orders /></ProtectedRoute>} />
+          <Route path="/users" element={<ProtectedRoute user={user} adminOnly><Users /></ProtectedRoute>} />
           <Route path="/data-deletion" element={<DataDeletion />} />
           <Route path="/terms-of-service" element={<TermsOfService />} />
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-          <Route path="/disclaimer" element={<DisclaimerPage user={user} />} />
+          <Route path="/disclaimer" element={<DisclaimerPage user={user} onClearCart={clearCart} />} />
+          <Route path="/" element={null} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </div>
@@ -164,15 +189,15 @@ const App = () => {
   }
 
   return (
-    <Router>
+    <div className="app-wrapper">
       <ScrollToTop />
       <div className="app">
-        <Header 
-          user={user} 
-          cart={cart} 
-          toggleMenu={toggleMenu} 
-          isMenuOpen={isMenuOpen} 
-          setIsCartVisible={setIsCartVisible} 
+        <Header
+          user={user}
+          cart={cart}
+          toggleMenu={toggleMenu}
+          isMenuOpen={isMenuOpen}
+          setIsCartVisible={setIsCartVisible}
         />
         <MainContent />
         <Footer />
@@ -186,12 +211,25 @@ const App = () => {
         {selectedProduct && (
           <ProductModal
             product={selectedProduct}
+            show={true}
             onClose={closeProductModal}
             onAddToCart={addToCart}
           />
         )}
+        <ToastContainer
+          position="top-right"
+          autoClose={2000}
+          hideProgressBar={false}
+          newestOnTop
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="light"
+        />
       </div>
-    </Router>
+    </div>
   );
 };
 

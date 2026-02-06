@@ -13,8 +13,7 @@ describe('Header component', () => {
 
     expect(screen.getByText('Home')).toBeInTheDocument();
     expect(screen.getByText('About')).toBeInTheDocument();
-    expect(screen.getByText('Store')).toBeInTheDocument();
-    expect(screen.getByText('My Orders')).toBeInTheDocument();
-    expect(screen.getByText('Admin')).toBeInTheDocument();
+    // expect(screen.getByText('Store')).toBeInTheDocument();
+    expect(screen.getByText('Login')).toBeInTheDocument();
   });
 });

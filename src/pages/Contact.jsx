@@ -1,5 +1,5 @@
-
 import React, { useState } from 'react';
+import { FaWhatsapp } from 'react-icons/fa';
 
 const Contact = () => {
   const handleContact = () => {
@@ -15,7 +15,7 @@ const Contact = () => {
         <h1>Get in Touch</h1>
         <p>Have questions or special requests? We're just a click away!</p>
         <button className="get-in-touch-button" onClick={handleContact}>
-          <i className="fab fa-whatsapp"></i> Get in touch
+          <FaWhatsapp style={{ marginRight: '8px' }} /> Get in touch
         </button>
       </div>
     </div>

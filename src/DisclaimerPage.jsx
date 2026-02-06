@@ -1,13 +1,14 @@
 
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { FiCopy } from 'react-icons/fi';
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import { db } from './firebase';
 import { generateOrderId } from './utils';
 import ConfirmationModal from './ConfirmationModal';
 import './DisclaimerPage.css';
 
-const DisclaimerPage = ({ user }) => {
+const DisclaimerPage = ({ user, onClearCart }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const [agree, setAgree] = useState(false);
@@ -15,11 +16,29 @@ const DisclaimerPage = ({ user }) => {
   const [newOrderId, setNewOrderId] = useState('');
   const [whatsappMessage, setWhatsappMessage] = useState('');
 
+  // Store cart data in state to prevent loss on re-renders
+  const [cartData, setCartData] = useState(() => {
+    const state = location.state || {};
+    return {
+      cart: state.cart || [],
+      deliveryOption: state.deliveryOption || 'pickup',
+      deliveryAddress: state.deliveryAddress || '',
+      deliveryFee: state.deliveryFee || 0,
+      macaronsTotal: state.macaronsTotal || 0,
+      grandTotal: state.grandTotal || 0
+    };
+  });
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
-  const { cart, deliveryOption, deliveryAddress, deliveryFee, macaronsTotal, grandTotal } = location.state || { cart: [], deliveryFee: 0, macaronsTotal: 0 };
+  useEffect(() => {
+    console.log('isOrderSuccessful changed to:', isOrderSuccessful);
+    console.log('whatsappMessage length:', whatsappMessage.length);
+  }, [isOrderSuccessful, whatsappMessage]);
+
+  const { cart, deliveryOption, deliveryAddress, deliveryFee, macaronsTotal, grandTotal } = cartData;
 
   const depositAmount = macaronsTotal * 0.3;
   const orderWhatsAppNumber = '254723734211';
@@ -35,7 +54,7 @@ const DisclaimerPage = ({ user }) => {
     setNewOrderId(orderId);
 
     const orderItems = cart.map(item => `• *${item.macaron.name}* (Box of ${item.option.box}) x ${item.quantity}: Ksh ${(item.option.price * item.quantity).toLocaleString()}`).join('\n');
-    
+
     let deliveryMessage = '';
     if (deliveryOption !== 'pickup') {
       deliveryMessage = `\n*Delivery Address:* ${deliveryAddress}`;
@@ -58,18 +77,37 @@ const DisclaimerPage = ({ user }) => {
         macaronsTotal,
       });
 
+      console.log('Order saved successfully!');
+      console.log('Setting isOrderSuccessful to true...');
       setIsOrderSuccessful(true);
 
+      // Open WhatsApp after 4 seconds, then navigate home
       setTimeout(() => {
         window.open(`https://wa.me/${orderWhatsAppNumber}?text=${encodeURIComponent(message)}`, '_blank');
-        // You can clear the cart here if needed
-        setIsOrderSuccessful(false);
+
+        // Navigate to home after opening WhatsApp
+        setTimeout(() => {
+          console.log('Timeout: Clearing cart and navigating home...');
+          setIsOrderSuccessful(false);
+          if (onClearCart) {
+            onClearCart();
+          }
+          navigate('/');
+        }, 1000);
       }, 4000);
 
     } catch (error) {
       console.error("Error placing order: ", error);
       alert("There was an error placing your order. Please try again.");
     }
+  };
+
+  const handleModalClose = () => {
+    setIsOrderSuccessful(false);
+    if (onClearCart) {
+      onClearCart();
+    }
+    navigate('/');
   };
 
   return (
@@ -93,7 +131,7 @@ const DisclaimerPage = ({ user }) => {
             <div className="whatsapp-number">
               <span>{paymentNumber}</span>
               <button onClick={handleCopyToClipboard} title="Copy payment number">
-                <i className="fas fa-copy" style={{ color: '#2D3748' }}></i>
+                <FiCopy style={{ color: '#2D3748' }} />
               </button>
             </div>
             <p className="whatsapp-instruction">Please share the deposit confirmation message via WhatsApp.</p>
@@ -107,7 +145,7 @@ const DisclaimerPage = ({ user }) => {
               <h2>Cart Review</h2>
               {cart.map(item => (
                 <div key={item.id} className="cart-item-review">
-                  <span>{item.macaron.name} (Box of ${item.option.box})</span>
+                  <span>{item.macaron.name} (Box of {item.option.box})</span>
                   <span>Ksh {item.option.price.toLocaleString()}</span>
                 </div>
               ))}
@@ -126,9 +164,9 @@ const DisclaimerPage = ({ user }) => {
       </div>
       <ConfirmationModal
         show={isOrderSuccessful}
-        onClose={() => setIsOrderSuccessful(false)}
-        title="Order Successful!"
-        message="Please send the following message on WhatsApp to confirm your order. You will be redirected shortly."
+        onClose={handleModalClose}
+        title="Order Placed Successfully! 🎉"
+        message="Your order has been saved. Please follow the instructions below to complete your order via WhatsApp."
         additionalInfo={whatsappMessage}
         isOrderSuccess={true}
       />

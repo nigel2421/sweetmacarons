@@ -1,5 +1,5 @@
 
-export const macarons = [
+export const macaronFlavors = [
   {
     id: 1,
     name: "White Chocolate Raspberry Macarons",

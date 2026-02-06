@@ -10,7 +10,7 @@ vi.mock('../firebase', () => ({
 }));
 
 vi.mock('firebase/firestore', () => ({
-    doc: vi.fn(),
+    doc: vi.fn(() => ({})), // Return empty object as ref
     updateDoc: vi.fn(),
 }));
 
@@ -25,6 +25,7 @@ vi.mock('react-toastify', () => ({
 describe('OrderDetailsModal Component', () => {
     const mockOrder = {
         id: 'LTM-1',
+        orderId: 'LTM-1',
         status: 'pending',
         macaronsTotal: 1200,
         deliveryFee: 400,
@@ -32,7 +33,7 @@ describe('OrderDetailsModal Component', () => {
         balance: 1240,
         deliveryOption: 'cbd',
         deliveryAddress: '123 CBD Street',
-        cart: [{ id: 'item1', name: 'Vanilla', quantity: 2, option: { box: 6, price: 600 } }],
+        items: [{ id: 'item1', macaron: { name: 'Vanilla' }, quantity: 2, option: { box: 6, price: 600 } }],
         createdAt: { toDate: () => new Date('2024-01-01T03:00:00') },
     };
 
@@ -89,11 +90,11 @@ describe('OrderDetailsModal Component', () => {
         );
 
         const select = screen.getByRole('combobox');
-        fireEvent.change(select, { target: { value: 'confirmed' } });
+        fireEvent.change(select, { target: { value: 'paid' } });
 
         await waitFor(() => {
             expect(updateDoc).toHaveBeenCalled();
-            expect(onUpdateStatus).toHaveBeenCalledWith('LTM-1', 'confirmed');
+            expect(onUpdateStatus).toHaveBeenCalledWith('LTM-1', 'paid');
         });
     });
 
