@@ -98,7 +98,7 @@ const Orders = ({ onLogout, onReorder }) => {
   };
 
   const filteredOrders = orders.filter(order =>
-    order.orderId.toLowerCase().includes(searchTerm.toLowerCase())
+    (order.orderId || '').toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   // Pagination logic
