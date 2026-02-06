@@ -3,46 +3,41 @@
 
 ## Overview
 
-This document outlines the plan for fixing order visibility issues, implementing a custom order ID format, and refining the WhatsApp checkout flow for the Macaron Shop e-commerce application.
+This document outlines the project structure, features, and recent changes implemented in the Macaron Shop e-commerce application. The application is a modern, responsive React web app designed to provide a seamless and visually appealing user experience for purchasing macarons.
 
-## Current Implementation
+## Project Outline
 
-The application is a React-based e-commerce store for a macaron shop. It uses Firebase for backend services, including Firestore for the database. Users can browse products, add them to a cart, and "check out" by sending a pre-formatted WhatsApp message.
+### Styling & Design
+*   **Component Library**: The application uses a custom-built component library, ensuring a unique and branded look and feel. Key components from `shadcn/ui` like `Card` and `Button` were used as a base and customized.
+*   **CSS Structure**: A combination of global styles (`index.css`), component-specific styles (`App.css`), and utility classes from Tailwind CSS is used for a modular and maintainable styling architecture.
+*   **Design**: The application features a visually balanced layout with clean spacing, a custom color palette (featuring `--primary-color: #e75480`), and a strong focus on creating an intuitive and delightful user experience. Interactive elements are designed to be engaging, and the overall aesthetic is modern and polished.
 
-### Key Components:
-- **`src/CartModal.jsx`**: Manages the shopping cart and the checkout process.
-- **`src/pages/Orders.jsx`**: Displays a list of orders for both admins and regular users.
-- **`src/firebase.js`**: Firebase configuration.
-- **`dataconnect/example/queries.gql`**: Contains GraphQL mutations and queries for interacting with the backend.
+### Features Implemented
+*   **Routing**: Client-side routing is managed by `react-router-dom`, providing seamless navigation between different pages.
+*   **Core Components**:
+    *   `App.jsx`: The main application component that orchestrates routing and global state.
+    *   `Header.jsx`, `Footer.jsx`: Reusable layout components that provide consistent branding and navigation.
+    *   `Home.jsx`: The primary landing page, featuring product displays and interactive elements.
+    *   `About.jsx`, `Contact.jsx`: Static pages providing additional information about the shop.
+    *   `LegalInfo.jsx`: A component that displays the privacy policy and other legal information.
+    *   A comprehensive set of components for the shopping cart, product modals, user accounts, and an admin dashboard.
+*   **Backend & Authentication**: Firebase is used for backend services, including user authentication (Firebase Auth) and database management (Firestore).
+*   **Checkout Flow**: The application features a unique checkout process that redirects users to WhatsApp with a pre-formatted order message.
 
-### The Problem
-1.  **Order Visibility**: New orders are not showing up in the admin dashboard or the user's "My Orders" page. This is likely due to an issue in how the order data is being written to Firestore, or with the status being assigned to new orders.
-2.  **Generic Order ID**: The current order IDs are generic and don't provide much context.
-3.  **Subpar Checkout UX**: The checkout process is abrupt and doesn't give the user clear confirmation or instructions before redirecting to WhatsApp.
+## Recent Change: Bug Fix
 
-## Plan for Enhancement
+### Problem: Blank Screen due to Ad Blocker
+The application was failing to render and instead showed a blank screen for users who had ad-blocking browser extensions enabled. An investigation of the browser's developer console revealed a `net::ERR_BLOCKED_BY_CLIENT` error. This error indicated that the resource at `src/pages/PrivacyPolicy.jsx` was being blocked. Ad blockers commonly flag files containing keywords like "Privacy" or "Policy" in their names, as they are often associated with tracking scripts.
 
-### 1. Fix Order Visibility and Implement Custom Order ID
+### Solution: Renaming the Component and Associated Files
+To circumvent the ad blocker and ensure the application renders correctly for all users, the following steps were taken:
 
-- **Generate Custom Order ID**:
-    - Create a new utility function `generateOrderId(user)` in a new file `src/utils.js`.
-    - This function will generate an order ID with the format `[AccountName]-[DDMMYY]-[HHMM]-[4 Unique Digits]`.
-    - It will use the user's display name or "GUEST" if the user is not logged in.
-- **Update Order Creation Logic**:
-    - In `src/CartModal.jsx`, modify the `handleCheckout` function.
-    - Use the new `generateOrderId` function to create a custom ID for each new order.
-    - Ensure that the order object saved to Firestore includes the custom order ID, a `status` of `"pending"`, and the `userId`.
+1.  **File Renaming**:
+    *   The component file `src/pages/PrivacyPolicy.jsx` was renamed to `src/pages/LegalInfo.jsx`.
+    *   The corresponding stylesheet `src/pages/PrivacyPolicy.css` was renamed to `src/pages/LegalInfo.css`.
 
-### 2. Refine WhatsApp Checkout Flow
+2.  **Component Renaming**: The `PrivacyPolicy` React component was refactored and renamed to `LegalInfo`.
 
-- **Create a Confirmation Modal**:
-    - I will use the existing `ConfirmationModal.jsx` and adapt it to display the "Order Successful" message.
-- **Update Checkout Process in `src/CartModal.jsx`**:
-    - On clicking "Place Order", the new confirmation modal will be displayed.
-    - The modal will show the formatted WhatsApp message, including the new custom order ID.
-    - A 3-4 second delay will be implemented using `setTimeout`.
-    - After the delay, the user will be redirected to the `whatsapp://` API link.
-- **Cart Management**:
-    - The shopping cart will be cleared *after* the order is successfully submitted and the confirmation modal is shown, but before the redirect.
+3.  **Code Updates**: All references, including imports and route definitions in `App.jsx`, were updated to use the new `LegalInfo` component and its associated CSS file.
 
-By implementing these changes, I will resolve the order visibility issue, improve the checkout experience, and provide more meaningful order IDs.
+This solution effectively resolves the issue by removing the keyword that triggered the ad blocker, allowing the component to be loaded and the application to function as intended.

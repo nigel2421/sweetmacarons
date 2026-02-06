@@ -1,16 +1,12 @@
 
 import { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
-import { FiShoppingCart, FiX, FiMenu } from 'react-icons/fi';
+import { Routes, Route } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './App.css';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from './firebase';
 import Header from './Header';
-import HeroSlider from './HeroSlider';
-import Macarons from './Macarons';
-import Reviews from './Reviews';
 import Footer from './Footer';
 import CartModal from './CartModal';
 import ProductModal from './ProductModal';
@@ -28,28 +24,10 @@ import Orders from './pages/Orders';
 import Users from './pages/Users';
 import DataDeletion from './pages/DataDeletion';
 import TermsOfService from './pages/TermsOfService';
-import PrivacyPolicy from './pages/PrivacyPolicy';
+import LegalInfo from './pages/LegalInfo';
 import NotFoundPage from './pages/NotFoundPage';
 import ProtectedRoute from './ProtectedRoute';
-import { macaronFlavors } from './data';
-
-const slides = [
-  {
-    image: '/images/macaron-slider-1.png',
-    title: 'Made with Love',
-    subtitle: 'The finest ingredients for the finest treats.',
-  },
-  {
-    image: '/images/macaron-slider-5.png',
-    title: 'A Treat for Every Occasion',
-    subtitle: 'Birthdays, weddings, or just because.',
-  },
-  {
-    image: '/images/macaron-slider-10.png',
-    title: 'Your Dream Macarons',
-    subtitle: 'Contact us for custom orders and flavors.',
-  },
-];
+import Home from './pages/Home';
 
 const App = () => {
   const [cart, setCart] = useState([]);
@@ -86,7 +64,7 @@ const App = () => {
         return [
           ...prevCart,
           {
-            ...product, // Keep spread to clone properties
+            ...product,
             id: cartItemId,
             macaron: product,
             quantity,
@@ -96,7 +74,6 @@ const App = () => {
       }
     });
 
-    // Show toast notification instead of opening cart
     toast.success(
       isUpdated
         ? `Updated ${product.name} in cart! 🛒`
@@ -134,62 +111,12 @@ const App = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
-  const closeMenu = () => {
-    setIsMenuOpen(false);
-  };
-
-  const MainContent = () => {
-    const location = useLocation();
-    const isLegalPage = [
-      '/login',
-      '/my-account',
-      '/my-orders',
-      '/dashboard',
-      '/all-reviews',
-      '/analytics',
-      '/orders',
-      '/users',
-      '/about',
-      '/contact',
-      '/data-deletion',
-      '/terms-of-service',
-      '/privacy-policy',
-      '/disclaimer',
-    ].includes(location.pathname);
-
-    return (
-      <div className={`app-container ${isMenuOpen ? 'menu-open' : ''}`}>
-        {!isLegalPage && <HeroSlider slides={slides} />}
-        {!isLegalPage && <h1 className="explore-macarons-title">Explore Macarons</h1>}
-        {!isLegalPage && <Macarons macarons={macaronFlavors} onAddToCart={addToCart} onSelectMacaron={openProductModal} />}
-        <Routes>
-          <Route path="/about" element={<About />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/my-account" element={<ProtectedRoute user={user}><MyAccount user={user} /></ProtectedRoute>} />
-          <Route path="/my-orders" element={<ProtectedRoute user={user}><MyOrders user={user} /></ProtectedRoute>} />
-          <Route path="/dashboard" element={<ProtectedRoute user={user} adminOnly><Dashboard /></ProtectedRoute>} />
-          <Route path="/all-reviews" element={<ProtectedRoute user={user} adminOnly><AllReviewsPage /></ProtectedRoute>} />
-          <Route path="/analytics" element={<ProtectedRoute user={user} adminOnly><Analytics /></ProtectedRoute>} />
-          <Route path="/orders" element={<ProtectedRoute user={user} adminOnly><Orders /></ProtectedRoute>} />
-          <Route path="/users" element={<ProtectedRoute user={user} adminOnly><Users /></ProtectedRoute>} />
-          <Route path="/data-deletion" element={<DataDeletion />} />
-          <Route path="/terms-of-service" element={<TermsOfService />} />
-          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-          <Route path="/disclaimer" element={<DisclaimerPage user={user} onClearCart={clearCart} />} />
-          <Route path="/" element={null} />
-          <Route path="*" element={<NotFoundPage />} />
-        </Routes>
-      </div>
-    );
-  };
-
   if (loading) {
     return <div>Loading...</div>;
   }
 
   return (
-    <div className="app-wrapper">
+    <div className={`app-wrapper ${isMenuOpen ? 'menu-open' : ''}`}>
       <ScrollToTop />
       <div className="app">
         <Header
@@ -199,7 +126,26 @@ const App = () => {
           isMenuOpen={isMenuOpen}
           setIsCartVisible={setIsCartVisible}
         />
-        <MainContent />
+        <main className="app-container">
+          <Routes>
+            <Route path="/" element={<Home onAddToCart={addToCart} onSelectMacaron={openProductModal}/>} />
+            <Route path="/about" element={<About />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/my-account" element={<ProtectedRoute user={user}><MyAccount user={user} /></ProtectedRoute>} />
+            <Route path="/my-orders" element={<ProtectedRoute user={user}><MyOrders user={user} /></ProtectedRoute>} />
+            <Route path="/dashboard" element={<ProtectedRoute user={user} adminOnly><Dashboard /></ProtectedRoute>} />
+            <Route path="/all-reviews" element={<ProtectedRoute user={user} adminOnly><AllReviewsPage /></ProtectedRoute>} />
+            <Route path="/analytics" element={<ProtectedRoute user={user} adminOnly><Analytics /></ProtectedRoute>} />
+            <Route path="/orders" element={<ProtectedRoute user={user} adminOnly><Orders /></ProtectedRoute>} />
+            <Route path="/users" element={<ProtectedRoute user={user} adminOnly><Users /></ProtectedRoute>} />
+            <Route path="/data-deletion" element={<DataDeletion />} />
+            <Route path="/terms-of-service" element={<TermsOfService />} />
+            <Route path="/privacy-policy" element={<LegalInfo />} />
+            <Route path="/disclaimer" element={<DisclaimerPage user={user} onClearCart={clearCart} />} />
+            <Route path="*" element={<NotFoundPage />} />
+          </Routes>
+        </main>
         <Footer />
         <CartModal
           cart={cart}
