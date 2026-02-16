@@ -20,13 +20,23 @@ const Users = ({ orders = [] }) => {
         const fetchAuthUsers = async () => {
             const currentUser = auth.currentUser;
             if (currentUser) {
-                const isAdmin = await checkIsAdmin(currentUser);
-                if (!isAdmin) {
-                    setError("Access denied. Admin privileges required.");
-                    setLoading(false);
-                    return;
-                }
                 try {
+                    let isAdmin = await checkIsAdmin(currentUser);
+
+                    // If the user is the designated admin but doesn't have the claim yet, grant it.
+                    if (currentUser.email === 'lostresmacarons@gmail.com' && !isAdmin) {
+                        const grantAdminRole = httpsCallable(functions, 'grantAdminRole');
+                        await grantAdminRole({ email: currentUser.email });
+                        await currentUser.getIdToken(true); // Force refresh the token
+                        isAdmin = await checkIsAdmin(currentUser); // Re-check admin status
+                    }
+
+                    if (!isAdmin) {
+                        setError("Access denied. Admin privileges required.");
+                        setLoading(false);
+                        return;
+                    }
+
                     const listUsers = httpsCallable(functions, 'listUsers');
                     const result = await listUsers();
                     const authUsers = result.data.users || [];
@@ -67,19 +77,24 @@ const Users = ({ orders = [] }) => {
                     });
 
                     setUsers(mergedUsers);
-                    setLoading(false);
                 } catch (err) {
-                    console.error("Error calling listUsers: ", err);
-                    setError("Failed to fetch user list. Check Cloud Function deployment.");
+                    console.error("Error in fetchAuthUsers: ", err);
+                    if (err.code === 'permission-denied') {
+                         setError("Access denied. You do not have permission to view this page.");
+                    } else {
+                         setError("Failed to fetch user list. Please try again later.");
+                    }
+                } finally {
                     setLoading(false);
                 }
             } else {
                 setLoading(false);
+                 setError("You must be logged in to view this page.");
             }
         };
 
         fetchAuthUsers();
-    }, [orders]); // Re-run if orders change
+    }, [orders]);
 
 
     const handleExportCSV = async () => {
