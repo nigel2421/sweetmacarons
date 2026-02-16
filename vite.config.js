@@ -14,6 +14,24 @@ export default defineConfig({
       output: {
         manualChunks(id) {
           if (id.includes('node_modules')) {
+            if (id.includes('react') || id.includes('react-dom') || id.includes('react-router-dom') || id.includes('scheduler')) {
+              return 'framework';
+            }
+            if (id.includes('firebase')) {
+              return 'firebase';
+            }
+            if (id.includes('recharts')) {
+              return 'recharts';
+            }
+            if (id.includes('jspdf')) {
+              return 'jspdf';
+            }
+            if (id.includes('html2canvas')) {
+              return 'html2canvas';
+            }
+            if (id.includes('react-toastify') || id.includes('react-slick') || id.includes('slick-carousel')) {
+              return 'ui-libs';
+            }
             return 'vendor';
           }
         },

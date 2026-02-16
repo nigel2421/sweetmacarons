@@ -32,7 +32,7 @@
 - **User & Admin Roles:** The application distinguishes between regular users and administrators, with administrators having access to a protected dashboard.
 - **Orders Page:** Displays a table of the user's past orders, with real-time status updates.
 - **User Management Page:** An admin-only page that currently displays a list of users who have placed orders.
-- **Code Splitting:** `React.lazy` is used to lazy-load page components, improving initial load times.
+- **Code Splitting:** `React.lazy` is used for page components. Granular `manualChunks` configuration in `vite.config.js` splits large dependencies (Firebase, Recharts, jsPDF) into separate chunks to optimize initial load times.
 
 ## 4. Current Task: Fix User Management & Ensure Real-time Updates
 
