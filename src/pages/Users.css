@@ -13,6 +13,33 @@
     gap: 1rem;
 }
 
+.users-header-top {
+    margin-bottom: 1.5rem;
+}
+
+.back-to-account-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #4A5568;
+    text-decoration: none;
+    font-weight: 600;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    background-color: #fff;
+    border: 1px solid #e2e8f0;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.back-to-account-link:hover {
+    background-color: #f7fafc;
+    border-color: #e75480;
+    color: #e75480;
+    transform: translateX(-5px);
+}
+
+
 .users-header h1 {
     font-size: 2rem;
     color: #2d3748;

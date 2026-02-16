@@ -3,24 +3,37 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
+    function isAdmin() {
+      return request.auth != null && (
+        request.auth.token.admin == true || 
+        request.auth.token.email == 'lostresmacarons@gmail.com'
+      );
+    }
+
     // Macarons can be read by anyone
     match /macarons/{macaronId} {
       allow read: if true;
-      allow write: if request.auth != null; // Only authenticated users can write
+      allow write: if isAdmin();
     }
 
     // Reviews can be read by anyone
     match /reviews/{reviewId} {
       allow read: if true;
       allow create: if request.auth != null;
-      allow update, delete: if request.auth != null && request.auth.uid == resource.data.author_uid;
+      allow update, delete: if request.auth != null && (request.auth.uid == resource.data.author_uid || isAdmin());
     }
 
-    // Orders can be created by anyone
+    // Orders security
     match /orders/{orderId} {
       allow create: if true;
-      allow read: if true; // Temporary allow read for all to debug
-      allow update, delete: if request.auth != null && (request.auth.uid == resource.data.userId || request.auth.token.email == 'lostresmacarons@gmail.com');
+      allow read: if isAdmin() || (request.auth != null && request.auth.uid == resource.data.userId);
+      allow update, delete: if isAdmin() || (request.auth != null && request.auth.uid == resource.data.userId);
+    }
+
+    // Audit logs for admin tracking
+    match /auditLogs/{logId} {
+      allow read, create: if isAdmin();
+      allow update, delete: if false; // Audit logs should be immutable
     }
   }
 }

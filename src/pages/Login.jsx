@@ -15,7 +15,8 @@ const Login = () => {
     e.preventDefault();
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      navigate('/admin/orders');
+      // Redirect to my-account. Role-based redirection can also happen in App.jsx or ProtectedRoute
+      navigate('/my-account');
     } catch (err) {
       setError(err.message);
     }
@@ -24,7 +25,7 @@ const Login = () => {
   const handleSocialLogin = async (provider) => {
     try {
       await signInWithPopup(auth, provider);
-      navigate('/my-orders');
+      navigate('/my-account');
     } catch (err) {
       setError(err.message);
     }

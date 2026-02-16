@@ -1,0 +1,330 @@
+
+[1m[46m RUN [49m[22m [36mv4.0.18 [39m[90mC:/Users/USER/Music/WEBSITES/sweetmacarons[39m
+
+ [31mÔØ»[39m src/__tests__/OrderDetailsModal.test.jsx [2m([22m[2m6 tests[22m[2m | [22m[31m1 failed[39m[2m)[22m[33m 822[2mms[22m[39m
+     [32mÔ£ô[39m renders order details correctly[32m 153[2mms[22m[39m
+     [33m[2mÔ£ô[22m[39m calls onClose when close button is clicked [33m 480[2mms[22m[39m
+     [32mÔ£ô[39m handles status update for admin[32m 117[2mms[22m[39m
+     [32mÔ£ô[39m displays reorder button for non-admin[32m 15[2mms[22m[39m
+     [32mÔ£ô[39m triggers PDF download when receipt button is clicked[32m 15[2mms[22m[39m
+[31m     [31m├ù[31m renders status history correctly[39m[32m 38[2mms[22m[39m
+
+ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ» Failed Tests 1 ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»
+
+ FAIL  src/__tests__/OrderDetailsModal.test.jsx > OrderDetailsModal Component > renders status history correctly
+TestingLibraryElementError: Found multiple elements with the text: /paid/i
+
+Here are the matching elements:
+
+Ignored nodes: comments, script, style
+<strong>
+  Deposit Paid:
+</strong>
+
+Ignored nodes: comments, script, style
+<span
+  class="history-status"
+>
+  paid
+</span>
+
+(If this is intentional, then use the `*AllBy*` variant of the query (like `queryAllByText`, `getAllByText`, or `findAllByText`)).
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <div
+      class="modal-overlay"
+    >
+      <div
+        class="modal-content"
+      >
+        <div
+          class="modal-header"
+        >
+          <h2>
+            Order Details
+          </h2>
+          <button
+            aria-label="Close modal"
+            class="modal-close-button"
+            title="Close"
+          >
+            <svg
+              fill="none"
+              height="20"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              style="stroke-width: 4;"
+              viewBox="0 0 24 24"
+              width="20"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <line
+                x1="18"
+                x2="6"
+                y1="6"
+                y2="18"
+              />
+              <line
+                x1="6"
+                x2="18"
+                y1="6"
+                y2="18"
+              />
+            </svg>
+            <span>
+              CLOSE
+            </span>
+          </button>
+        </div>
+        <div
+          class="order-details-scrollable"
+        >
+          <div
+            class="modal-body"
+          >
+            <div
+              class="order-title-row"
+            >
+              <h3>
+                Order #
+                LTM-1
+              </h3>
+              <button
+                class="download-pdf-btn"
+                title="Download Receipt as PDF"
+              >
+                <svg
+                  fill="none"
+                  height="1em"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"
+                  />
+                  <polyline
+                    points="7 10 12 15 17 10"
+                  />
+                  <line
+                    x1="12"
+                    x2="12"
+                    y1="15"
+                    y2="3"
+                  />
+                </svg>
+                 Receipt (PDF)
+              </button>
+            </div>
+            <p>
+              <strong>
+                Date:
+              </strong>
+               
+              01/01/2024, 03:00:00
+            </p>
+            <div
+              class="status-selector"
+            >
+              <strong>
+                Status:
+              </strong>
+              <span
+                class="order-status pending"
+              >
+                pending
+              </span>
+            </div>
+            <hr />
+            <h4>
+              Items
+            </h4>
+            <div
+              class="order-items-list"
+            >
+              <div
+                class="order-item"
+              >
+                <div
+                  class="item-info"
+                >
+                  <span
+                    class="item-name"
+                  >
+                    Vanilla
+                  </span>
+                  <span
+                    class="item-details"
+                  >
+                    2
+                     x Box of 
+                    6
+                  </span>
+                </div>
+                <span
+                  class="item-price"
+                >
+                  Ksh 
+                  1,200
+                </span>
+              </div>
+            </div>
+            <div
+              class="order-totals"
+            >
+              <div
+                class="total-row"
+              >
+                <strong>
+                  Macarons Total:
+                </strong>
+                <span>
+                  Ksh 
+                  1,200
+                </span>
+              </div>
+              <div
+                class="total-row"
+              >
+                <strong>
+                  Delivery Fee:
+                </strong>
+                <span>
+                  Ksh 
+                  400
+                </span>
+              </div>
+              <div
+                class="total-row grand-total"
+              >
+                <strong>
+                  Grand Total:
+                </strong>
+                <strong>
+                  Ksh 
+                  1,600
+                </strong>
+              </div>
+              <div
+                class="total-row financials"
+              >
+                <strong>
+                  Deposit Paid:
+                </strong>
+                <span>
+                  Ksh 
+                  360
+                </span>
+              </div>
+              <div
+                class="total-row financials"
+              >
+                <strong>
+                  Balance Due:
+                </strong>
+                <span
+                  class=""
+                >
+                  Ksh 
+                  1,240
+                </span>
+              </div>
+            </div>
+            <p
+              class="delivery-info"
+            >
+              <strong>
+                Delivery Option:
+              </strong>
+               
+              cbd
+            </p>
+            <div
+              class="delivery-address-details"
+            >
+              <h4>
+                Delivery Address
+              </h4>
+              <p>
+                123 CBD Street
+              </p>
+            </div>
+            <div
+              class="order-history-section"
+            >
+              <hr />
+              <h4>
+                Status History
+              </h4>
+              <ul
+                class="history-list"
+              >
+                <li
+                  class="history-item"
+                >
+                  <span
+                    class="history-status"
+                  >
+                    paid
+                  </span>
+                  <span
+                    class="history-meta"
+                  >
+                    01/01/2024, 14:00:00
+                     by 
+                    Admin
+                  </span>
+                </li>
+                <li
+                  class="history-item"
+                >
+                  <span
+                    class="history-status"
+                  >
+                    pending
+                  </span>
+                  <span
+                    class="history-meta"
+                  >
+                    01/01/2024, 13:00:00
+                     by 
+                    System
+                  </span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+ ÔØ» Object.getElementError node_modules/@testing-library/dom/dist/config.js:37:19
+ ÔØ» getElementError node_modules/@testing-library/dom/dist/query-helpers.js:20:35
+ ÔØ» getMultipleElementsFoundError node_modules/@testing-library/dom/dist/query-helpers.js:23:10
+ ÔØ» node_modules/@testing-library/dom/dist/query-helpers.js:55:13
+ ÔØ» node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ÔØ» src/__tests__/OrderDetailsModal.test.jsx:164:23
+    162| 
+    163|         expect(screen.getByText(/Status History/i)).toBeInTheDocument(ÔÇª
+    164|         expect(screen.getByText(/paid/i)).toBeInTheDocument();
+       |                       ^
+    165|         expect(screen.getByText(/Admin/i)).toBeInTheDocument();
+    166|     });
+
+ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»[1/1]ÔÄ»
+
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m5 passed[39m[22m[90m (6)[39m
+[2m   Start at [22m 10:46:17
+[2m   Duration [22m 6.18s[2m (transform 435ms, setup 511ms, import 878ms, tests 822ms, environment 3.46s)[22m
+

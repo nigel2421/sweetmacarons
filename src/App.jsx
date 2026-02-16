@@ -130,7 +130,7 @@ const App = () => {
         <main className="app-container">
           <Suspense fallback={<div>Loading page...</div>}>
             <Routes>
-              <Route path="/" element={<Home onAddToCart={addToCart} onSelectMacaron={openProductModal}/>} />
+              <Route path="/" element={<Home onAddToCart={addToCart} onSelectMacaron={openProductModal} />} />
               <Route path="/about" element={<About />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/login" element={<Login />} />
@@ -138,7 +138,6 @@ const App = () => {
               <Route path="/my-orders" element={<ProtectedRoute user={user}><MyOrders user={user} /></ProtectedRoute>} />
               <Route path="/dashboard" element={<ProtectedRoute user={user} adminOnly><Dashboard /></ProtectedRoute>} />
               <Route path="/all-reviews" element={<ProtectedRoute user={user} adminOnly><AllReviewsPage /></ProtectedRoute>} />
-              <Route path="/analytics" element={<ProtectedRoute user={user} adminOnly><Analytics /></ProtectedRoute>} />
               <Route path="/orders" element={<ProtectedRoute user={user} adminOnly><Orders /></ProtectedRoute>} />
               <Route path="/users" element={<ProtectedRoute user={user} adminOnly><Users /></ProtectedRoute>} />
               <Route path="/data-deletion" element={<DataDeletion />} />

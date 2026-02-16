@@ -1,0 +1,250 @@
+
+[1m[46m RUN [49m[22m [36mv4.0.18 [39m[90mC:/Users/USER/Music/WEBSITES/sweetmacarons[39m
+
+ [31mÔØ»[39m src/__tests__/Dashboard.test.jsx [2m([22m[2m6 tests[22m[2m | [22m[31m1 failed[39m[2m | [22m[33m5 skipped[39m[2m)[22m[32m 186[2mms[22m[39m
+[31m     [31m├ù[31m calculates and displays stats correctly[39m[32m 182[2mms[22m[39m
+     [2m[90mÔåô[39m[22m displays top 3 macarons correctly
+     [2m[90mÔåô[39m[22m filters orders by today
+     [2m[90mÔåô[39m[22m filters orders by all time
+     [2m[90mÔåô[39m[22m renders back to account link
+     [2m[90mÔåô[39m[22m renders all chart containers
+
+ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ» Failed Tests 1 ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»
+
+ FAIL  src/__tests__/Dashboard.test.jsx > Dashboard Component > calculates and displays stats correctly
+TestingLibraryElementError: Found multiple elements with the text: /Ksh 1,600/
+
+Here are the matching elements:
+
+Ignored nodes: comments, script, style
+<p
+  class="stat-value"
+>
+  Ksh 
+  1,600
+</p>
+
+Ignored nodes: comments, script, style
+<p
+  class="stat-value"
+>
+  Ksh 
+  1,600
+</p>
+
+(If this is intentional, then use the `*AllBy*` variant of the query (like `queryAllByText`, `getAllByText`, or `findAllByText`)).
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <div
+      class="dashboard"
+    >
+      <div
+        class="dashboard-header-top"
+      >
+        <a
+          href="/my-account"
+        >
+          <svg
+            fill="currentColor"
+            height="1em"
+            stroke="currentColor"
+            stroke-width="0"
+            viewBox="0 0 448 512"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M257.5 445.1l-22.2 22.2c-9.4 9.4-24.6 9.4-33.9 0L7 273c-9.4-9.4-9.4-24.6 0-33.9L201.4 44.7c9.4-9.4 24.6-9.4 33.9 0l22.2 22.2c9.5 9.5 9.3 25-.4 34.3L136.6 216H424c13.3 0 24 10.7 24 24v32c0 13.3-10.7 24-24 24H136.6l120.5 114.8c9.8 9.3 10 24.8.4 34.3z"
+            />
+          </svg>
+           Back to Account
+        </a>
+      </div>
+      <div
+        class="dashboard-header-row"
+      >
+        <h2>
+          Performance Dashboard
+        </h2>
+        <div
+          class="dashboard-filters"
+        >
+          <button
+            class="active"
+          >
+            All Time
+          </button>
+          <button
+            class=""
+          >
+            This Month
+          </button>
+          <button
+            class=""
+          >
+            This Week
+          </button>
+          <button
+            class=""
+          >
+            Today
+          </button>
+          <div
+            class="custom-date-filter"
+          >
+            <div
+              data-testid="date-picker"
+            />
+            <div
+              data-testid="date-picker"
+            />
+          </div>
+        </div>
+      </div>
+      <div
+        class="dashboard-stats"
+      >
+        <div
+          class="stat-card"
+        >
+          <h3>
+            Total Orders
+          </h3>
+          <p
+            class="stat-value"
+          >
+            2
+          </p>
+        </div>
+        <div
+          class="stat-card"
+        >
+          <h3>
+            Settled Revenue
+          </h3>
+          <p
+            class="stat-value"
+          >
+            Ksh 
+            1,600
+          </p>
+          <span
+            class="stat-sub"
+          >
+            Delivered orders
+          </span>
+        </div>
+        <div
+          class="stat-card"
+        >
+          <h3>
+            Pending Revenue
+          </h3>
+          <p
+            class="stat-value"
+          >
+            Ksh 
+            2,200
+          </p>
+          <span
+            class="stat-sub"
+          >
+            Active invoices
+          </span>
+        </div>
+        <div
+          class="stat-card"
+        >
+          <h3>
+            Avg. Order
+          </h3>
+          <p
+            class="stat-value"
+          >
+            Ksh 
+            1,600
+          </p>
+        </div>
+      </div>
+      <div
+        class="dashboard-charts-grid"
+      >
+        <div
+          class="chart-container-card main-chart"
+        >
+          <div
+            data-testid="revenue-chart"
+          />
+        </div>
+        <div
+          class="chart-container-card"
+        >
+          <div
+            data-testid="status-pie-chart"
+          />
+        </div>
+        <div
+          class="chart-container-card"
+        >
+          <div
+            data-testid="order-volume-chart"
+          />
+        </div>
+        <div
+          class="stat-card top-macarons card-fixed-height"
+        >
+          <h3>
+            Top 3 Flavors
+          </h3>
+          <ol>
+            <li>
+              Vanilla
+               
+              <span
+                class="top-flavor-count"
+              >
+                (
+                3
+                )
+              </span>
+            </li>
+            <li>
+              Chocolate
+               
+              <span
+                class="top-flavor-count"
+              >
+                (
+                1
+                )
+              </span>
+            </li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+ ÔØ» Object.getElementError node_modules/@testing-library/dom/dist/config.js:37:19
+ ÔØ» getElementError node_modules/@testing-library/dom/dist/query-helpers.js:20:35
+ ÔØ» getMultipleElementsFoundError node_modules/@testing-library/dom/dist/query-helpers.js:23:10
+ ÔØ» node_modules/@testing-library/dom/dist/query-helpers.js:55:13
+ ÔØ» node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ÔØ» src/__tests__/Dashboard.test.jsx:52:23
+     50|         // Settled Revenue (only delivered) -> 1200 + 400 = 1600
+     51|         expect(screen.getByText('Settled Revenue')).toBeInTheDocument(ÔÇª
+     52|         expect(screen.getByText(/Ksh 1,600/)).toBeInTheDocument();
+       |                       ^
+     53| 
+     54|         // Pending Revenue (status !== delivered) -> 2200 + 0 = 2200
+
+ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»[1/1]ÔÄ»
+
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[31m1 failed[39m[22m[2m | [22m[33m5 skipped[39m[90m (6)[39m
+[2m   Start at [22m 10:38:21
+[2m   Duration [22m 4.86s[2m (transform 905ms, setup 560ms, import 1.30s, tests 186ms, environment 2.26s)[22m
+

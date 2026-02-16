@@ -3,11 +3,13 @@ import { useState, useEffect } from 'react';
 import Papa from 'papaparse';
 import OrderDetailsModal from './OrderDetailsModal';
 import { auth, db } from '../firebase';
-import { collection, query, where, onSnapshot, orderBy } from 'firebase/firestore';
-import { adminEmails } from '../admin';
+import { collection, query, where, onSnapshot, orderBy, doc, updateDoc } from 'firebase/firestore';
+import { adminEmails, checkIsAdmin } from '../admin';
+import { logAdminAction } from '../lib/audit';
+import { toast } from 'react-toastify';
 import './Orders.css';
 import { Link } from 'react-router-dom';
-import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import { FaChevronLeft, FaChevronRight, FaArrowLeft } from 'react-icons/fa';
 
 const Orders = ({ onLogout, onReorder }) => {
   const [orders, setOrders] = useState([]);
@@ -15,14 +17,15 @@ const Orders = ({ onLogout, onReorder }) => {
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const [ordersPerPage] = useState(10);
+  const [ordersPerPage, setOrdersPerPage] = useState(10);
   const [searchTerm, setSearchTerm] = useState('');
   const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged(user => {
+    const initAdmin = async () => {
+      const user = auth.currentUser;
       if (user) {
-        const userIsAdmin = adminEmails.includes(user.email);
+        const userIsAdmin = await checkIsAdmin(user);
         setIsAdmin(userIsAdmin);
 
         const ordersQuery = userIsAdmin
@@ -38,15 +41,30 @@ const Orders = ({ onLogout, onReorder }) => {
           setLoading(false);
         });
 
-        return () => unsubscribeFirestore();
+        return unsubscribeFirestore;
       } else {
-        console.log('No user authenticated');
+        setIsAdmin(false);
+        setOrders([]);
+        setLoading(false);
+      }
+    };
+
+    let unsubscribeFirestore;
+    const unsubscribeAuth = auth.onAuthStateChanged(async user => {
+      if (unsubscribeFirestore) unsubscribeFirestore();
+      if (user) {
+        unsubscribeFirestore = await initAdmin();
+      } else {
         setIsAdmin(false);
         setOrders([]);
         setLoading(false);
       }
     });
-    return () => unsubscribe();
+
+    return () => {
+      unsubscribeAuth();
+      if (unsubscribeFirestore) unsubscribeFirestore();
+    };
   }, []);
 
   const handleLogout = () => {
@@ -65,12 +83,21 @@ const Orders = ({ onLogout, onReorder }) => {
     setSelectedOrder(null);
   };
 
-  const handleUpdateStatus = (orderId, newStatus) => {
-    // In a real app, you would update this in Firestore
-    const updatedOrders = orders.map(order =>
-      order.id === orderId ? { ...order, status: newStatus } : order
-    );
-    setOrders(updatedOrders);
+  const handleUpdateStatus = async (orderId, newStatus) => {
+    try {
+      const orderRef = doc(db, 'orders', orderId);
+      await updateDoc(orderRef, { status: newStatus });
+
+      await logAdminAction('UPDATE_ORDER_STATUS_QUICK', {
+        orderId,
+        newStatus
+      });
+
+      toast.success(`Order status updated to ${newStatus}`);
+    } catch (error) {
+      console.error("Error updating order status: ", error);
+      toast.error("Failed to update status.");
+    }
   };
 
   const handleDownloadCsv = () => {
@@ -111,6 +138,11 @@ const Orders = ({ onLogout, onReorder }) => {
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
+  const handleOrdersPerPageChange = (e) => {
+    setOrdersPerPage(Number(e.target.value));
+    setCurrentPage(1); // Reset to first page when page size changes
+  };
+
   if (loading) {
     return <p>Loading...</p>;
   }
@@ -121,6 +153,11 @@ const Orders = ({ onLogout, onReorder }) => {
 
   return (
     <div className="orders-page">
+      <div className="orders-header-top">
+        <Link to="/my-account" className="back-to-account-link">
+          <FaArrowLeft /> Back to Account
+        </Link>
+      </div>
       <div className="orders-header">
         <h1>{isAdmin ? 'All Orders' : 'My Orders'}</h1>
         <div className="header-actions">
@@ -132,6 +169,17 @@ const Orders = ({ onLogout, onReorder }) => {
             onChange={(e) => setSearchTerm(e.target.value)}
           />
           <div className="admin-actions">
+            <select
+              value={ordersPerPage}
+              onChange={handleOrdersPerPageChange}
+              className="page-size-selector"
+              title="Items per page"
+            >
+              <option value={10}>10 per page</option>
+              <option value={20}>20 per page</option>
+              <option value={50}>50 per page</option>
+              <option value={100}>100 per page</option>
+            </select>
             {isAdmin && <button onClick={handleDownloadCsv} className="download-csv-button">Download as CSV</button>}
             <Link to="/" className="visit-store-button">Visit Store</Link>
             <button onClick={handleLogout} className="logout-button">Logout</button>

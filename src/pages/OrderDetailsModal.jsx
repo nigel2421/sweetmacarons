@@ -1,31 +1,103 @@
 
 import React from 'react';
 import { FiX } from 'react-icons/fi';
-import { db } from '../firebase';
-import { doc, updateDoc } from 'firebase/firestore';
+import { db, auth } from '../firebase';
+import { doc, updateDoc, arrayUnion, serverTimestamp } from 'firebase/firestore';
+import { logAdminAction } from '../lib/audit';
+import { generateOrderReceipt } from '../lib/pdf';
 import { toast } from 'react-toastify';
+import { FiDownload } from 'react-icons/fi';
 import './OrderDetailsModal.css';
 
 const OrderDetailsModal = ({ order, show, onClose, onUpdateStatus, onReorder }) => {
   const [isUpdating, setIsUpdating] = React.useState(false);
+  const [isEditingDeposit, setIsEditingDeposit] = React.useState(false);
+  const [tempDeposit, setTempDeposit] = React.useState(0);
 
-  if (!show) {
+  React.useEffect(() => {
+    if (order?.depositAmount !== undefined) {
+      setTempDeposit(order.depositAmount);
+    } else if (order?.macaronsTotal) {
+      setTempDeposit(Math.round(order.macaronsTotal * 0.3));
+    }
+  }, [order?.id, order?.depositAmount, order?.macaronsTotal]);
+
+  if (!show || !order) {
     return null;
   }
 
   const macaronsTotal = order.macaronsTotal || 0;
   const deliveryFee = order.deliveryFee || 0;
   const grandTotal = macaronsTotal + deliveryFee;
-  const depositAmount = (macaronsTotal * 0.3) || 0;
+  const depositAmount = order.depositAmount !== undefined ? order.depositAmount : (macaronsTotal * 0.3);
   const balance = grandTotal - depositAmount;
+
+  const handleDepositUpdate = async () => {
+    if (!order) return;
+    setIsUpdating(true);
+    try {
+      const orderRef = doc(db, 'orders', order.id);
+      const newStatus = order.status === 'pending' ? 'in-progress' : order.status;
+
+      const updateData = {
+        depositAmount: tempDeposit,
+        balance: grandTotal - tempDeposit
+      };
+
+      // Auto-update status to in-progress if it was pending
+      if (order.status === 'pending') {
+        updateData.status = 'in-progress';
+        updateData.statusHistory = arrayUnion({
+          status: 'in-progress',
+          timestamp: new Date().toISOString(),
+          updatedBy: auth.currentUser?.email || 'System (Deposit Set)'
+        });
+      }
+
+      await updateDoc(orderRef, updateData);
+
+      await logAdminAction('UPDATE_DEPOSIT', {
+        orderId: order.orderId,
+        oldDeposit: order.depositAmount || 0,
+        newDeposit: tempDeposit,
+        statusChanged: order.status === 'pending'
+      });
+
+      if (onUpdateStatus) onUpdateStatus(order.id, updateData.status || order.status);
+      setIsEditingDeposit(false);
+      toast.success("Deposit updated and status set to in-progress");
+    } catch (error) {
+      console.error("Error updating deposit:", error);
+      toast.error("Failed to update deposit");
+    } finally {
+      setIsUpdating(false);
+    }
+  };
 
   const handleStatusChange = async (newStatus) => {
     setIsUpdating(true);
     try {
       const orderRef = doc(db, 'orders', order.id);
-      await updateDoc(orderRef, { status: newStatus });
-      if(onUpdateStatus) onUpdateStatus(order.id, newStatus);
-      toast.success("Order status updated successfully!");
+      const previousStatus = order.status;
+
+      await updateDoc(orderRef, {
+        status: newStatus,
+        statusHistory: arrayUnion({
+          status: newStatus,
+          timestamp: new Date().toISOString(),
+          updatedBy: auth.currentUser?.email || 'System'
+        })
+      });
+
+      await logAdminAction('UPDATE_ORDER_STATUS', {
+        orderId: order.orderId,
+        firestoreId: order.id,
+        newStatus,
+        previousStatus
+      });
+
+      if (onUpdateStatus) onUpdateStatus(order.id, newStatus);
+      toast.success(`Order status updated to ${newStatus}`);
     } catch (error) {
       console.error("Error updating order status: ", error);
       toast.error("Failed to update order status.");
@@ -46,8 +118,17 @@ const OrderDetailsModal = ({ order, show, onClose, onUpdateStatus, onReorder }) 
         </div>
         <div className="order-details-scrollable">
           <div className="modal-body">
-            <h3>Order #{order.orderId}</h3>
-            <p><strong>Date:</strong> {new Date(order.createdAt?.toDate()).toLocaleString()}</p>
+            <div className="order-title-row">
+              <h3>Order #{order.orderId}</h3>
+              <button
+                className="download-pdf-btn"
+                onClick={() => generateOrderReceipt(order)}
+                title="Download Receipt as PDF"
+              >
+                <FiDownload /> Receipt (PDF)
+              </button>
+            </div>
+            <p><strong>Date:</strong> {new Date(order.createdAt?.toDate?.() || order.createdAt).toLocaleString()}</p>
             <div className="status-selector">
               <strong>Status:</strong>
               {onUpdateStatus ? (
@@ -97,12 +178,61 @@ const OrderDetailsModal = ({ order, show, onClose, onUpdateStatus, onReorder }) 
                 <strong>Ksh {grandTotal.toLocaleString()}</strong>
               </div>
               <div className="total-row financials">
-                <strong>Deposit (30%):</strong>
-                <span>Ksh {depositAmount.toLocaleString()}</span>
+                <strong>Deposit Paid:</strong>
+                {onUpdateStatus ? (
+                  isEditingDeposit ? (
+                    <div className="deposit-manage-box">
+                      <div className="deposit-input-wrapper">
+                        <span className="ksy-prefix">Ksh</span>
+                        <input
+                          type="number"
+                          value={tempDeposit}
+                          onChange={(e) => setTempDeposit(Number(e.target.value))}
+                          className="deposit-input"
+                          autoFocus
+                        />
+                      </div>
+                      <div className="deposit-actions">
+                        <button
+                          className="btn-set-30"
+                          onClick={() => setTempDeposit(Math.round(macaronsTotal * 0.3))}
+                          title="Calculate 30% of macarons total"
+                        >
+                          Set 30%
+                        </button>
+                        <button
+                          className="btn-save-deposit"
+                          onClick={handleDepositUpdate}
+                          disabled={isUpdating}
+                        >
+                          {isUpdating ? 'Saving...' : 'Save'}
+                        </button>
+                        <button
+                          className="btn-cancel-edit"
+                          onClick={() => {
+                            setIsEditingDeposit(false);
+                            setTempDeposit(order.depositAmount || Math.round(macaronsTotal * 0.3));
+                          }}
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="deposit-view-box">
+                      <span>Ksh {depositAmount.toLocaleString()}</span>
+                      <button className="btn-edit-deposit" onClick={() => setIsEditingDeposit(true)}>Edit</button>
+                    </div>
+                  )
+                ) : (
+                  <span>Ksh {depositAmount.toLocaleString()}</span>
+                )}
               </div>
               <div className="total-row financials">
                 <strong>Balance Due:</strong>
-                <span>Ksh {balance.toLocaleString()}</span>
+                <span className={balance <= 0 ? 'balance-cleared' : ''}>
+                  Ksh {balance.toLocaleString()}
+                </span>
               </div>
             </div>
             <p className="delivery-info"><strong>Delivery Option:</strong> {order.deliveryOption || 'N/A'}</p>
@@ -110,6 +240,23 @@ const OrderDetailsModal = ({ order, show, onClose, onUpdateStatus, onReorder }) 
               <div className="delivery-address-details">
                 <h4>Delivery Address</h4>
                 <p>{order.deliveryAddress}</p>
+              </div>
+            )}
+
+            {order.statusHistory && order.statusHistory.length > 0 && (
+              <div className="order-history-section">
+                <hr />
+                <h4>Status History</h4>
+                <ul className="history-list">
+                  {order.statusHistory.slice().reverse().map((entry, index) => (
+                    <li key={index} className="history-item">
+                      <span className="history-status">{entry.status}</span>
+                      <span className="history-meta">
+                        {new Date(entry.timestamp).toLocaleString()} by {entry.updatedBy}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
               </div>
             )}
           </div>

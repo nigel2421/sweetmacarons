@@ -66,7 +66,9 @@ const DisclaimerPage = ({ user, onClearCart }) => {
     try {
       await addDoc(collection(db, 'orders'), {
         orderId: orderId,
-        userId: user ? user.uid : 'guest',
+        userId: user ? user.uid : 'anonymous',
+        userEmail: user ? user.email : 'Anonymous',
+        userName: user ? user.displayName : 'Anonymous',
         items: cart,
         total: grandTotal,
         status: 'pending',

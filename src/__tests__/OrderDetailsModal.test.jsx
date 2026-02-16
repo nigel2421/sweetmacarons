@@ -1,17 +1,31 @@
 
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor, within } from '@testing-library/react';
 import { describe, test, expect, vi, beforeEach } from 'vitest';
 import OrderDetailsModal from '../pages/OrderDetailsModal';
 import { updateDoc } from 'firebase/firestore';
+import { generateOrderReceipt } from '../lib/pdf';
 
 // Mock Firebase
 vi.mock('../firebase', () => ({
     db: {},
+    auth: {
+        currentUser: { email: 'admin@example.com', uid: 'admin-uid' }
+    }
 }));
 
 vi.mock('firebase/firestore', () => ({
     doc: vi.fn(() => ({})), // Return empty object as ref
     updateDoc: vi.fn(),
+    arrayUnion: vi.fn(val => val),
+    serverTimestamp: vi.fn(() => new Date()),
+}));
+
+vi.mock('../lib/pdf', () => ({
+    generateOrderReceipt: vi.fn(),
+}));
+
+vi.mock('../lib/audit', () => ({
+    logAdminAction: vi.fn(),
 }));
 
 // Mock react-toastify
@@ -112,5 +126,43 @@ describe('OrderDetailsModal Component', () => {
         fireEvent.click(reorderButton);
 
         expect(onReorder).toHaveBeenCalledWith(mockOrder);
+    });
+
+    test('triggers PDF download when receipt button is clicked', () => {
+        render(
+            <OrderDetailsModal
+                show={true}
+                order={mockOrder}
+                onClose={onClose}
+            />
+        );
+
+        const downloadBtn = screen.getByText(/Receipt \(PDF\)/i);
+        fireEvent.click(downloadBtn);
+
+        expect(generateOrderReceipt).toHaveBeenCalledWith(mockOrder);
+    });
+
+    test('renders status history correctly', () => {
+        const orderWithHistory = {
+            ...mockOrder,
+            statusHistory: [
+                { status: 'pending', timestamp: '2024-01-01T10:00:00Z', updatedBy: 'System' },
+                { status: 'paid', timestamp: '2024-01-01T11:00:00Z', updatedBy: 'Admin' }
+            ]
+        };
+
+        render(
+            <OrderDetailsModal
+                show={true}
+                order={orderWithHistory}
+                onClose={onClose}
+            />
+        );
+
+        expect(screen.getByText(/Status History/i)).toBeInTheDocument();
+        const historyList = screen.getByRole('list');
+        expect(within(historyList).getByText(/paid/i)).toBeInTheDocument();
+        expect(within(historyList).getByText(/Admin/i)).toBeInTheDocument();
     });
 });

@@ -5,6 +5,16 @@ import { vi, describe, test, expect, beforeEach } from 'vitest';
 import Orders from '../pages/Orders';
 import { auth, db } from '../firebase';
 import * as firestore from 'firebase/firestore';
+import { checkIsAdmin } from '../admin';
+
+vi.mock('../admin', () => ({
+    checkIsAdmin: vi.fn(),
+    adminEmails: ['lostresmacarons@gmail.com'],
+}));
+
+vi.mock('../lib/audit', () => ({
+    logAdminAction: vi.fn(),
+}));
 
 const mockOrders = [
     {
@@ -55,6 +65,7 @@ vi.mock('papaparse', () => ({
 describe('Orders Component', () => {
     beforeEach(() => {
         vi.clearAllMocks();
+        checkIsAdmin.mockResolvedValue(false);
         auth.onAuthStateChanged.mockImplementation((cb) => {
             cb({ email: 'user@example.com', uid: '123' });
             return () => { };
@@ -89,6 +100,7 @@ describe('Orders Component', () => {
     });
 
     test('renders all orders for admin', async () => {
+        checkIsAdmin.mockResolvedValue(true);
         auth.onAuthStateChanged.mockImplementation((cb) => {
             cb({ email: 'lostresmacarons@gmail.com', uid: 'admin-uid' });
             return () => { };
@@ -133,5 +145,44 @@ describe('Orders Component', () => {
         const logoutButton = screen.getByRole('button', { name: /Logout/i });
         fireEvent.click(logoutButton);
         expect(auth.signOut).toHaveBeenCalled();
+    });
+
+    test('renders back to account link', async () => {
+        render(
+            <BrowserRouter>
+                <Orders />
+            </BrowserRouter>
+        );
+        await waitFor(() => {
+            expect(screen.getByText(/Back to Account/i)).toBeInTheDocument();
+        });
+    });
+
+    test('handles page size selection', async () => {
+        render(
+            <BrowserRouter>
+                <Orders />
+            </BrowserRouter>
+        );
+        await waitFor(() => {
+            expect(screen.getByText('LTM-1')).toBeInTheDocument();
+        });
+        const selector = screen.getByTitle(/Items per page/i);
+        fireEvent.change(selector, { target: { value: '20' } });
+        expect(selector.value).toBe('20');
+    });
+
+    test('renders pagination navigation buttons', async () => {
+        render(
+            <BrowserRouter>
+                <Orders />
+            </BrowserRouter>
+        );
+        await waitFor(() => {
+            expect(screen.getByText('LTM-1')).toBeInTheDocument();
+        });
+        // Navigation buttons use FaChevronLeft/Right icons which are svg
+        const navButtons = screen.getAllByRole('button').filter(btn => btn.querySelector('svg'));
+        expect(navButtons.length).toBeGreaterThanOrEqual(2);
     });
 });

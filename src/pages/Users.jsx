@@ -1,9 +1,13 @@
 import { useState, useEffect } from 'react';
 import Papa from 'papaparse';
-import { auth, db, functions } from '../firebase'; // Import functions
-import { httpsCallable } from "firebase/functions"; // Import httpsCallable
+import { auth, db, functions } from '../firebase';
+import { httpsCallable } from "firebase/functions";
 import { collection, query, onSnapshot, orderBy } from 'firebase/firestore';
-import { adminEmails } from '../admin';
+import { adminEmails, checkIsAdmin } from '../admin';
+import { logAdminAction } from '../lib/audit';
+import { Link } from 'react-router-dom';
+import { FaArrowLeft } from 'react-icons/fa';
+import { toast } from 'react-toastify';
 import './Users.css';
 
 const Users = () => {
@@ -16,7 +20,12 @@ const Users = () => {
     useEffect(() => {
         const fetchUsersAndOrders = async () => {
             const currentUser = auth.currentUser;
-            if (currentUser && adminEmails.includes(currentUser.email)) {
+            if (currentUser) {
+                const isAdmin = await checkIsAdmin(currentUser);
+                if (!isAdmin) {
+                    setLoading(false);
+                    return;
+                }
                 try {
                     // Fetch all users from the cloud function
                     const listUsers = httpsCallable(functions, 'listUsers');
@@ -27,7 +36,7 @@ const Users = () => {
                     const ordersQuery = query(collection(db, 'orders'), orderBy('createdAt', 'desc'));
                     const unsubscribeOrders = onSnapshot(ordersQuery, (querySnapshot) => {
                         const ordersData = querySnapshot.docs.map(doc => doc.data());
-                        
+
                         // Create a map for easy lookup of order data by user ID
                         const orderMap = new Map();
                         ordersData.forEach(order => {
@@ -83,7 +92,12 @@ const Users = () => {
     }, []);
 
 
-    const handleExportCSV = () => {
+    const handleExportCSV = async () => {
+        await logAdminAction('EXPORT_USERS_CSV', {
+            userCount: users.length,
+            timestamp: new Date().toISOString()
+        });
+
         const csvData = users.map(user => ({
             'User ID': user.uid,
             'Email': user.email,
@@ -124,6 +138,11 @@ const Users = () => {
 
     return (
         <div className="users-page">
+            <div className="users-header-top">
+                <Link to="/my-account" className="back-to-account-link">
+                    <FaArrowLeft /> Back to Account
+                </Link>
+            </div>
             <div className="users-header">
                 <h1>User Management</h1>
                 <div className="users-actions">
