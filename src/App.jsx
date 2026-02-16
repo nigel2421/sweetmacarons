@@ -6,7 +6,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import './App.css';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth, db } from './firebase';
-import { collection, query, onSnapshot, orderBy } from 'firebase/firestore';
+import { collection, query, onSnapshot, orderBy, where } from 'firebase/firestore';
 import { checkIsAdmin } from './admin';
 import Header from './Header';
 import Footer from './Footer';
@@ -50,15 +50,16 @@ const App = () => {
         const userIsAdmin = await checkIsAdmin(user);
         setIsAdmin(userIsAdmin);
 
-        if (userIsAdmin) {
-          const ordersQuery = query(collection(db, 'orders'), orderBy('createdAt', 'desc'));
-          unsubscribeOrders = onSnapshot(ordersQuery, (querySnapshot) => {
-            const ordersData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-            setOrders(ordersData);
-          }, (error) => {
-            console.error("Error fetching orders in App: ", error);
-          });
-        }
+        const ordersQuery = userIsAdmin
+          ? query(collection(db, 'orders'), orderBy('createdAt', 'desc'))
+          : query(collection(db, 'orders'), where('userId', '==', user.uid), orderBy('createdAt', 'desc'));
+
+        unsubscribeOrders = onSnapshot(ordersQuery, (querySnapshot) => {
+          const ordersData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+          setOrders(ordersData);
+        }, (error) => {
+          console.error("Error fetching orders in App: ", error);
+        });
       } else {
         setIsAdmin(false);
         setOrders([]);
@@ -154,14 +155,25 @@ const App = () => {
           setIsCartVisible={setIsCartVisible}
         />
         <main className="app-container">
-          <Suspense fallback={<div>Loading page...</div>}>
+          <Suspense fallback={
+            <div style={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              minHeight: '60vh',
+              fontSize: '1.2rem',
+              color: '#e75480'
+            }}>
+              Loading...
+            </div>
+          }>
             <Routes>
               <Route path="/" element={<Home onAddToCart={addToCart} onSelectMacaron={openProductModal} />} />
               <Route path="/about" element={<About />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/login" element={<Login />} />
               <Route path="/my-account" element={<ProtectedRoute user={user}><MyAccount user={user} /></ProtectedRoute>} />
-              <Route path="/my-orders" element={<ProtectedRoute user={user}><MyOrders user={user} /></ProtectedRoute>} />
+              <Route path="/my-orders" element={<ProtectedRoute user={user}><MyOrders user={user} orders={orders} isAdmin={isAdmin} /></ProtectedRoute>} />
               <Route path="/dashboard" element={<ProtectedRoute user={user} adminOnly><Dashboard orders={orders} /></ProtectedRoute>} />
               <Route path="/all-reviews" element={<ProtectedRoute user={user} adminOnly><AllReviewsPage /></ProtectedRoute>} />
               <Route path="/orders" element={<ProtectedRoute user={user} adminOnly><Orders orders={orders} isAdmin={isAdmin} /></ProtectedRoute>} />

@@ -1,0 +1,26 @@
+
+C:\Users\USER\Music\WEBSITES\sweetmacarons\src\__tests__\AdminLogic.test.jsx
+  5:10  error  'db' is defined but never used. Allowed unused vars must match /^[A-Z_]/u          no-unused-vars
+  6:18  error  'collection' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\Users\USER\Music\WEBSITES\sweetmacarons\src\__tests__\CartModal.test.jsx
+  1:26  error  'within' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\Users\USER\Music\WEBSITES\sweetmacarons\src\__tests__\DisclaimerPage.test.jsx
+  2:37  error  'waitFor' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\Users\USER\Music\WEBSITES\sweetmacarons\src\__tests__\OrderVisibility.test.jsx
+  7:17  error  'collection' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+  7:48  error  'orderBy' is defined but never used. Allowed unused vars must match /^[A-Z_]/u     no-unused-vars
+
+C:\Users\USER\Music\WEBSITES\sweetmacarons\src\__tests__\Orders.test.jsx
+  6:16  error  'db' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\Users\USER\Music\WEBSITES\sweetmacarons\src\pages\OrderDetailsModal.jsx
+  40:13  error  'newStatus' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\Users\USER\Music\WEBSITES\sweetmacarons\src\pages\Orders.jsx
+  2:20  error  'useEffect' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+Ô£û 9 problems (9 errors, 0 warnings)
+

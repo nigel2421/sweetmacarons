@@ -2,8 +2,8 @@
 import { describe, test, expect, vi, beforeEach } from 'vitest';
 import { checkIsAdmin } from '../admin';
 import { logAdminAction } from '../lib/audit';
-import { db, auth } from '../firebase';
-import { addDoc, collection } from 'firebase/firestore';
+import { auth } from '../firebase';
+import { addDoc } from 'firebase/firestore';
 
 // Mock Firebase
 vi.mock('../firebase', () => ({

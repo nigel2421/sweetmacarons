@@ -88,27 +88,28 @@ export const generateOrderReceipt = async (order) => {
 
     // Financial Summary
     doc.setFontSize(11);
-    const summaryX = 140;
+    const labelX = 120;
+    const valueX = 190;
 
-    doc.text(`Subtotal:`, summaryX, finalY);
-    doc.text(`Ksh ${order.macaronsTotal?.toLocaleString() || '0'}`, 180, finalY, { align: 'right' });
+    doc.text(`Subtotal:`, labelX, finalY);
+    doc.text(`Ksh ${order.macaronsTotal?.toLocaleString() || '0'}`, valueX, finalY, { align: 'right' });
 
-    doc.text(`Delivery Fee:`, summaryX, finalY + 7);
-    doc.text(`Ksh ${order.deliveryFee?.toLocaleString() || '0'}`, 180, finalY + 7, { align: 'right' });
+    doc.text(`Delivery Fee:`, labelX, finalY + 7);
+    doc.text(`Ksh ${order.deliveryFee?.toLocaleString() || '0'}`, valueX, finalY + 7, { align: 'right' });
 
-    doc.line(summaryX, finalY + 10, 190, finalY + 10);
+    doc.line(labelX, finalY + 10, valueX, finalY + 10);
 
     doc.setFont('helvetica', 'bold');
-    doc.text(`Grand Total:`, summaryX, finalY + 17);
-    doc.text(`Ksh ${((order.macaronsTotal || 0) + (order.deliveryFee || 0)).toLocaleString()}`, 180, finalY + 17, { align: 'right' });
+    doc.text(`Grand Total:`, labelX, finalY + 17);
+    doc.text(`Ksh ${((order.macaronsTotal || 0) + (order.deliveryFee || 0)).toLocaleString()}`, valueX, finalY + 17, { align: 'right' });
 
     doc.setTextColor(200, 0, 0);
-    doc.text(`Deposit Paid:`, summaryX, finalY + 24);
-    doc.text(`- Ksh ${order.depositAmount?.toLocaleString() || '0'}`, 180, finalY + 24, { align: 'right' });
+    doc.text(`Deposit Paid:`, labelX, finalY + 24);
+    doc.text(`Ksh ${order.depositAmount?.toLocaleString() || '0'}`, valueX, finalY + 24, { align: 'right' });
 
     doc.setTextColor(0);
-    doc.text(`Balance Due:`, summaryX, finalY + 31);
-    doc.text(`Ksh ${order.balance?.toLocaleString() || '0'}`, 180, finalY + 31, { align: 'right' });
+    doc.text(`Balance Due:`, labelX, finalY + 31);
+    doc.text(`Ksh ${order.balance?.toLocaleString() || '0'}`, valueX, finalY + 31, { align: 'right' });
 
     // Footer
     const pageHeight = doc.internal.pageSize.height;

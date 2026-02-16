@@ -1,8 +1,8 @@
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Papa from 'papaparse';
 import OrderDetailsModal from './OrderDetailsModal';
-import { auth } from '../firebase';
+import { auth, db } from '../firebase';
 import { doc, updateDoc } from 'firebase/firestore';
 import { logAdminAction } from '../lib/audit';
 import { toast } from 'react-toastify';

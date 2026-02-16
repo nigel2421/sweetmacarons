@@ -3,7 +3,7 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import { vi, describe, test, expect, beforeEach } from 'vitest';
 import Orders from '../pages/Orders';
-import { auth, db } from '../firebase';
+import { auth } from '../firebase';
 import * as firestore from 'firebase/firestore';
 import { checkIsAdmin } from '../admin';
 

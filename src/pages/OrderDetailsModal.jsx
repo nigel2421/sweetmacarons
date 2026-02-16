@@ -37,7 +37,6 @@ const OrderDetailsModal = ({ order, show, onClose, onUpdateStatus, onReorder }) 
     setIsUpdating(true);
     try {
       const orderRef = doc(db, 'orders', order.id);
-      const newStatus = order.status === 'pending' ? 'in-progress' : order.status;
 
       const updateData = {
         depositAmount: tempDeposit,
