@@ -1,7 +1,24 @@
 
 import { render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
+import { vi } from 'vitest';
 import App from '../App';
+
+// Mock Firebase
+vi.mock('../firebase', () => ({
+  auth: {
+    currentUser: null,
+  },
+}));
+
+vi.mock('firebase/auth', () => ({
+  onAuthStateChanged: vi.fn((auth, callback) => {
+    callback(null); // Simulate no user logged in
+    return () => { };
+  }),
+  getAuth: vi.fn(() => ({})),
+}));
+
 
 describe('App component routing', () => {
   test('renders the landing page by default', async () => {
@@ -10,7 +27,12 @@ describe('App component routing', () => {
         <App />
       </MemoryRouter>
     );
-    expect(await screen.findByText('Explore Macarons')).toBeInTheDocument();
+    // screen.debug(); // Uncomment if needed, but findBy* already waits
+    expect(await screen.findByRole('heading', { name: /Explore Macarons/i }, { timeout: 3000 })).toBeInTheDocument();
+
+
+
+
   });
 
   test('navigates to the about page', async () => {

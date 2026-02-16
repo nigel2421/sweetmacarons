@@ -33,7 +33,7 @@ describe('MyAccount Component', () => {
             </BrowserRouter>
         );
 
-        const logoutButton = screen.getByRole('button', { name: /Logout/i });
+        const logoutButton = screen.getByRole('button', { name: /Sign Out/i });
         fireEvent.click(logoutButton);
 
         expect(auth.signOut).toHaveBeenCalled();
