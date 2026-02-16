@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, lazy, Suspense } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -11,23 +11,24 @@ import Footer from './Footer';
 import CartModal from './CartModal';
 import ProductModal from './ProductModal';
 import ScrollToTop from './ScrollToTop';
-import DisclaimerPage from './DisclaimerPage';
-import About from './pages/About';
-import Contact from './pages/Contact';
-import Login from './pages/Login';
-import MyAccount from './pages/MyAccount';
-import MyOrders from './pages/MyOrders';
-import Dashboard from './pages/Dashboard';
-import AllReviewsPage from './pages/AllReviewsPage';
-import Analytics from './pages/Analytics';
-import Orders from './pages/Orders';
-import Users from './pages/Users';
-import DataDeletion from './pages/DataDeletion';
-import TermsOfService from './pages/TermsOfService';
-import LegalInfo from './pages/LegalInfo';
-import NotFoundPage from './pages/NotFoundPage';
 import ProtectedRoute from './ProtectedRoute';
-import Home from './pages/Home';
+
+const Home = lazy(() => import('./pages/Home'));
+const About = lazy(() => import('./pages/About'));
+const Contact = lazy(() => import('./pages/Contact'));
+const Login = lazy(() => import('./pages/Login'));
+const MyAccount = lazy(() => import('./pages/MyAccount'));
+const MyOrders = lazy(() => import('./pages/MyOrders'));
+const Dashboard = lazy(() => import('./pages/Dashboard'));
+const AllReviewsPage = lazy(() => import('./pages/AllReviewsPage'));
+const Analytics = lazy(() => import('./pages/Analytics'));
+const Orders = lazy(() => import('./pages/Orders'));
+const Users = lazy(() => import('./pages/Users'));
+const DataDeletion = lazy(() => import('./pages/DataDeletion'));
+const TermsOfService = lazy(() => import('./pages/TermsOfService'));
+const LegalInfo = lazy(() => import('./pages/LegalInfo'));
+const DisclaimerPage = lazy(() => import('./DisclaimerPage'));
+const NotFoundPage = lazy(() => import('./pages/NotFoundPage'));
 
 const App = () => {
   const [cart, setCart] = useState([]);
@@ -127,24 +128,26 @@ const App = () => {
           setIsCartVisible={setIsCartVisible}
         />
         <main className="app-container">
-          <Routes>
-            <Route path="/" element={<Home onAddToCart={addToCart} onSelectMacaron={openProductModal}/>} />
-            <Route path="/about" element={<About />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/my-account" element={<ProtectedRoute user={user}><MyAccount user={user} /></ProtectedRoute>} />
-            <Route path="/my-orders" element={<ProtectedRoute user={user}><MyOrders user={user} /></ProtectedRoute>} />
-            <Route path="/dashboard" element={<ProtectedRoute user={user} adminOnly><Dashboard /></ProtectedRoute>} />
-            <Route path="/all-reviews" element={<ProtectedRoute user={user} adminOnly><AllReviewsPage /></ProtectedRoute>} />
-            <Route path="/analytics" element={<ProtectedRoute user={user} adminOnly><Analytics /></ProtectedRoute>} />
-            <Route path="/orders" element={<ProtectedRoute user={user} adminOnly><Orders /></ProtectedRoute>} />
-            <Route path="/users" element={<ProtectedRoute user={user} adminOnly><Users /></ProtectedRoute>} />
-            <Route path="/data-deletion" element={<DataDeletion />} />
-            <Route path="/terms-of-service" element={<TermsOfService />} />
-            <Route path="/privacy-policy" element={<LegalInfo />} />
-            <Route path="/disclaimer" element={<DisclaimerPage user={user} onClearCart={clearCart} />} />
-            <Route path="*" element={<NotFoundPage />} />
-          </Routes>
+          <Suspense fallback={<div>Loading page...</div>}>
+            <Routes>
+              <Route path="/" element={<Home onAddToCart={addToCart} onSelectMacaron={openProductModal}/>} />
+              <Route path="/about" element={<About />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/my-account" element={<ProtectedRoute user={user}><MyAccount user={user} /></ProtectedRoute>} />
+              <Route path="/my-orders" element={<ProtectedRoute user={user}><MyOrders user={user} /></ProtectedRoute>} />
+              <Route path="/dashboard" element={<ProtectedRoute user={user} adminOnly><Dashboard /></ProtectedRoute>} />
+              <Route path="/all-reviews" element={<ProtectedRoute user={user} adminOnly><AllReviewsPage /></ProtectedRoute>} />
+              <Route path="/analytics" element={<ProtectedRoute user={user} adminOnly><Analytics /></ProtectedRoute>} />
+              <Route path="/orders" element={<ProtectedRoute user={user} adminOnly><Orders /></ProtectedRoute>} />
+              <Route path="/users" element={<ProtectedRoute user={user} adminOnly><Users /></ProtectedRoute>} />
+              <Route path="/data-deletion" element={<DataDeletion />} />
+              <Route path="/terms-of-service" element={<TermsOfService />} />
+              <Route path="/privacy-policy" element={<LegalInfo />} />
+              <Route path="/disclaimer" element={<DisclaimerPage user={user} onClearCart={clearCart} />} />
+              <Route path="*" element={<NotFoundPage />} />
+            </Routes>
+          </Suspense>
         </main>
         <Footer />
         <CartModal

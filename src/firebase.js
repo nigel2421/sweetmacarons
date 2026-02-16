@@ -3,6 +3,7 @@
 import { initializeApp } from "firebase/app";
 import { getFirestore, collection, addDoc, getDocs, query, where } from "firebase/firestore";
 import { getAuth, GoogleAuthProvider, setPersistence, browserLocalPersistence } from "firebase/auth"; // Import providers
+import { getFunctions } from "firebase/functions"; // Import getFunctions
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -19,6 +20,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app); // Initialize and export auth
+const functions = getFunctions(app); // Initialize functions
 setPersistence(auth, browserLocalPersistence);
 
 // Initialize providers
@@ -46,4 +48,4 @@ const addReview = async (review) => {
   }
 };
 
-export { db, auth, googleProvider, getReviews, addReview }; // Export auth and providers
+export { db, auth, functions, googleProvider, getReviews, addReview }; // Export auth, functions and providers

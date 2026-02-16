@@ -1,3 +1,4 @@
+
 :root {
   --primary-color: #e75480;
   --secondary-color: #ffb6c1;
@@ -280,6 +281,9 @@ main {
 
 /* Hide elements on desktop */
 @media (min-width: 769px) {
+  .header-nav {
+    display: none;
+  }
   .mobile-only-nav-item {
     display: none !important;
   }

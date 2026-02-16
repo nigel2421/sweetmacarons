@@ -1,43 +1,52 @@
 
-# Blueprint: Macaron Shop E-Commerce Application
+# Application Blueprint
 
-## Overview
+## 1. Overview
 
-This document outlines the project structure, features, and recent changes implemented in the Macaron Shop e-commerce application. The application is a modern, responsive React web app designed to provide a seamless and visually appealing user experience for purchasing macarons.
+**Purpose:** A modern, responsive e-commerce web application for a macaron business named "Los Tres Macarons." The application allows users to browse products, place orders, and manage their accounts. Administrators have access to a dashboard for managing users, orders, and viewing analytics.
 
-## Project Outline
+**Key Features:**
+- User authentication (Google & Email)
+- Product catalog with details
+- Shopping cart and checkout
+- Order history and reordering
+- Admin dashboard with user and order management
+- Real-time data updates with Firestore
 
-### Styling & Design
-*   **Component Library**: The application uses a custom-built component library, ensuring a unique and branded look and feel. Key components from `shadcn/ui` like `Card` and `Button` were used as a base and customized.
-*   **CSS Structure**: A combination of global styles (`index.css`), component-specific styles (`App.css`), and utility classes from Tailwind CSS is used for a modular and maintainable styling architecture.
-*   **Design**: The application features a visually balanced layout with clean spacing, a custom color palette (featuring `--primary-color: #e75480`), and a strong focus on creating an intuitive and delightful user experience. Interactive elements are designed to be engaging, and the overall aesthetic is modern and polished.
+## 2. Architecture & Design Choices
 
-### Features Implemented
-*   **Routing**: Client-side routing is managed by `react-router-dom`, providing seamless navigation between different pages.
-*   **Core Components**:
-    *   `App.jsx`: The main application component that orchestrates routing and global state.
-    *   `Header.jsx`, `Footer.jsx`: Reusable layout components that provide consistent branding and navigation.
-    *   `Home.jsx`: The primary landing page, featuring product displays and interactive elements.
-    *   `About.jsx`, `Contact.jsx`: Static pages providing additional information about the shop.
-    *   `LegalInfo.jsx`: A component that displays the privacy policy and other legal information.
-    *   A comprehensive set of components for the shopping cart, product modals, user accounts, and an admin dashboard.
-*   **Backend & Authentication**: Firebase is used for backend services, including user authentication (Firebase Auth) and database management (Firestore).
-*   **Checkout Flow**: The application features a unique checkout process that redirects users to WhatsApp with a pre-formatted order message.
+- **Frontend:** React (Vite)
+- **Backend:** Firebase (Authentication, Firestore, Cloud Functions)
+- **Styling:** CSS with a focus on modern, responsive design
+- **Routing:** `react-router-dom` for client-side navigation
+- **Real-time Data:** Firestore `onSnapshot` for live updates to orders.
 
-## Recent Change: Bug Fix
+## 3. Implemented Features & Styles
 
-### Problem: Blank Screen due to Ad Blocker
-The application was failing to render and instead showed a blank screen for users who had ad-blocking browser extensions enabled. An investigation of the browser's developer console revealed a `net::ERR_BLOCKED_BY_CLIENT` error. This error indicated that the resource at `src/pages/PrivacyPolicy.jsx` was being blocked. Ad blockers commonly flag files containing keywords like "Privacy" or "Policy" in their names, as they are often associated with tracking scripts.
+- **Header:** A sticky header with the logo, site title, navigation links, cart icon, and user profile icon.
+- **Footer:** A simple footer with navigation links and social media icons.
+- **Home Page:** Displays a hero section and a grid of macaron products.
+- **Product Cards:** Each card shows the macaron's name, image, and price, with a button to add it to the cart.
+- **Cart:** A modal that displays the items in the cart, with options to remove items or clear the cart.
+- **User Authentication:** A login page with options for Google Sign-In and email/password authentication.
+- **User & Admin Roles:** The application distinguishes between regular users and administrators, with administrators having access to a protected dashboard.
+- **Orders Page:** Displays a table of the user's past orders, with real-time status updates.
+- **User Management Page:** An admin-only page that currently displays a list of users who have placed orders.
+- **Code Splitting:** `React.lazy` is used to lazy-load page components, improving initial load times.
 
-### Solution: Renaming the Component and Associated Files
-To circumvent the ad blocker and ensure the application renders correctly for all users, the following steps were taken:
+## 4. Current Task: Fix User Management & Ensure Real-time Updates
 
-1.  **File Renaming**:
-    *   The component file `src/pages/PrivacyPolicy.jsx` was renamed to `src/pages/LegalInfo.jsx`.
-    *   The corresponding stylesheet `src/pages/PrivacyPolicy.css` was renamed to `src/pages/LegalInfo.css`.
+**Problem:** The User Management page (`/users`) does not display all registered users; it only shows users who have placed at least one order. Additionally, the user wants to ensure that all data, including orders, is refreshed in real-time.
 
-2.  **Component Renaming**: The `PrivacyPolicy` React component was refactored and renamed to `LegalInfo`.
+**Plan:**
 
-3.  **Code Updates**: All references, including imports and route definitions in `App.jsx`, were updated to use the new `LegalInfo` component and its associated CSS file.
+1.  **Confirm Real-time Order Updates:** The application already uses Firestore's `onSnapshot` for real-time updates on the `Orders` page, so this functionality is already implemented.
 
-This solution effectively resolves the issue by removing the keyword that triggered the ad blocker, allowing the component to be loaded and the application to function as intended.
+2.  **Create a Firebase Cloud Function:**
+    - A new HTTP-callable Cloud Function named `listUsers` will be created.
+    - This function will use the Firebase Admin SDK to fetch the complete list of users from Firebase Authentication.
+    - The function will be secured to ensure that only authenticated admin users can call it.
+
+3.  **Update the User Management Page (`Users.jsx`):**
+    - The `Users.jsx` component will be modified to call the new `listUsers` Cloud Function.
+    - The component will then merge the complete user list from the function with the existing order data from Firestore to provide a comprehensive view of all users and their order history.

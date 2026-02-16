@@ -7,6 +7,7 @@ import { collection, query, where, onSnapshot, orderBy } from 'firebase/firestor
 import { adminEmails } from '../admin';
 import './Orders.css';
 import { Link } from 'react-router-dom';
+import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 
 const Orders = ({ onLogout, onReorder }) => {
   const [orders, setOrders] = useState([]);
@@ -98,7 +99,7 @@ const Orders = ({ onLogout, onReorder }) => {
   };
 
   const filteredOrders = orders.filter(order =>
-    order.orderId.toLowerCase().includes(searchTerm.toLowerCase())
+    (order.orderId || '').toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   // Pagination logic
@@ -158,7 +159,7 @@ const Orders = ({ onLogout, onReorder }) => {
                       <td data-label="Order ID">{order.orderId}</td>
                       <td data-label="Date">{order.createdAt ? new Date(order.createdAt.toDate()).toLocaleString() : 'Pending...'}</td>
                       <td data-label="Total">Ksh {grandTotal.toLocaleString()}</td>
-                      <td data-label="Status"><span className={`order-status ${order.status.toLowerCase().replace('-', '')}`}>{order.status}</span></td>
+                      <td data-label="Status"><span className={`order-status ${(order.status || '').toLowerCase().replace(/\s+/g, '-')}`}>{order.status}</span></td>
                       <td data-label="Actions">
                         <button onClick={() => handleViewMore(order)} className="view-more-button">View More</button>
                         {!isAdmin && <button onClick={() => onReorder(order)} className="reorder-button">Order Again</button>}
@@ -170,10 +171,12 @@ const Orders = ({ onLogout, onReorder }) => {
             </table>
           </div>
           <div className="pagination">
-            <button onClick={() => paginate(currentPage - 1)} disabled={currentPage === 1}>              Previous
+            <button onClick={() => paginate(currentPage - 1)} disabled={currentPage === 1}>
+              <FaChevronLeft />
             </button>
             <span>Page {currentPage} of {totalPages}</span>
-            <button onClick={() => paginate(currentPage + 1)} disabled={currentPage === totalPages || totalPages === 0}>              Next
+            <button onClick={() => paginate(currentPage + 1)} disabled={currentPage === totalPages || totalPages === 0}>
+              <FaChevronRight />
             </button>
           </div>
         </>

@@ -1,5 +1,5 @@
 
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, act } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import { describe, test, expect, vi, beforeEach } from 'vitest';
 import ProductModal from '../ProductModal';
@@ -45,7 +45,7 @@ describe('ProductModal Component', () => {
         expect(screen.getByAltText('Snickers Macaron')).toBeInTheDocument();
     });
 
-    test('calls onClose when circular close button is clicked', () => {
+    test('calls onClose when circular close button is clicked', async () => {
         render(
             <BrowserRouter>
                 <ProductModal
@@ -58,12 +58,14 @@ describe('ProductModal Component', () => {
         );
 
         const closeButton = screen.getByRole('button', { name: /Close modal/i });
-        fireEvent.click(closeButton);
+        await act(async () => {
+            fireEvent.click(closeButton);
+        });
 
         expect(onClose).toHaveBeenCalled();
     });
 
-    test('calls onAddToCart with selected option', () => {
+    test('calls onAddToCart with selected option', async () => {
         render(
             <BrowserRouter>
                 <ProductModal
@@ -76,7 +78,9 @@ describe('ProductModal Component', () => {
         );
 
         const addToCartButton = screen.getByText(/Add to Cart/i);
-        fireEvent.click(addToCartButton);
+        await act(async () => {
+            fireEvent.click(addToCartButton);
+        });
 
         expect(onAddToCart).toHaveBeenCalledWith(mockProduct.macaron, mockProduct.option);
         expect(onClose).toHaveBeenCalled();

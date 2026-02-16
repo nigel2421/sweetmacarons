@@ -2,7 +2,7 @@
 import { render, screen } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import { describe, test, expect, vi } from 'vitest';
-import PrivacyPolicy from '../pages/PrivacyPolicy';
+import LegalInfo from '../pages/LegalInfo';
 import TermsOfService from '../pages/TermsOfService';
 import DataDeletion from '../pages/DataDeletion';
 
@@ -10,10 +10,10 @@ describe('Legal Pages', () => {
     // Mock scrollTo
     window.scrollTo = vi.fn();
 
-    test('renders PrivacyPolicy correctly', () => {
+    test('renders LegalInfo correctly', () => {
         render(
             <BrowserRouter>
-                <PrivacyPolicy />
+                <LegalInfo />
             </BrowserRouter>
         );
         expect(screen.getByRole('heading', { level: 1, name: /Privacy Policy/i })).toBeInTheDocument();

@@ -1,79 +1,93 @@
-
 import { useState, useEffect } from 'react';
 import Papa from 'papaparse';
-import { auth, db } from '../firebase';
+import { auth, db, functions } from '../firebase'; // Import functions
+import { httpsCallable } from "firebase/functions"; // Import httpsCallable
 import { collection, query, onSnapshot, orderBy } from 'firebase/firestore';
 import { adminEmails } from '../admin';
 import './Users.css';
 
 const Users = () => {
     const [users, setUsers] = useState([]);
-    const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
     const [usersPerPage] = useState(15);
 
     useEffect(() => {
-        // Fetch all orders to calculate order counts per user
-        const ordersQuery = query(collection(db, 'orders'), orderBy('createdAt', 'desc'));
-        const unsubscribeOrders = onSnapshot(ordersQuery, (querySnapshot) => {
-            const ordersData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-            setOrders(ordersData);
-        });
-
-        // Fetch users from Firebase Auth via a cloud function or use orders data
-        // For now, we'll extract unique users from orders
-        const unsubscribe = auth.onAuthStateChanged(currentUser => {
+        const fetchUsersAndOrders = async () => {
+            const currentUser = auth.currentUser;
             if (currentUser && adminEmails.includes(currentUser.email)) {
-                // Extract unique users from orders
-                const userMap = new Map();
+                try {
+                    // Fetch all users from the cloud function
+                    const listUsers = httpsCallable(functions, 'listUsers');
+                    const result = await listUsers();
+                    const authUsers = result.data.users;
 
-                ordersQuery && onSnapshot(ordersQuery, (querySnapshot) => {
-                    querySnapshot.docs.forEach(doc => {
-                        const order = doc.data();
-                        const userId = order.userId;
-
-                        if (userId && userId !== 'guest') {
-                            if (!userMap.has(userId)) {
-                                userMap.set(userId, {
-                                    userId: userId,
-                                    email: order.userEmail || 'N/A',
-                                    displayName: order.userName || 'N/A',
-                                    orderCount: 1,
-                                    totalSpent: order.total || 0,
-                                    lastOrderDate: order.createdAt
-                                });
-                            } else {
-                                const user = userMap.get(userId);
-                                user.orderCount += 1;
-                                user.totalSpent += order.total || 0;
-                                if (order.createdAt && (!user.lastOrderDate || order.createdAt > user.lastOrderDate)) {
-                                    user.lastOrderDate = order.createdAt;
+                    // Fetch all orders
+                    const ordersQuery = query(collection(db, 'orders'), orderBy('createdAt', 'desc'));
+                    const unsubscribeOrders = onSnapshot(ordersQuery, (querySnapshot) => {
+                        const ordersData = querySnapshot.docs.map(doc => doc.data());
+                        
+                        // Create a map for easy lookup of order data by user ID
+                        const orderMap = new Map();
+                        ordersData.forEach(order => {
+                            if (order.userId && order.userId !== 'guest') {
+                                if (!orderMap.has(order.userId)) {
+                                    orderMap.set(order.userId, {
+                                        orderCount: 0,
+                                        totalSpent: 0,
+                                        lastOrderDate: null
+                                    });
+                                }
+                                const userData = orderMap.get(order.userId);
+                                userData.orderCount++;
+                                userData.totalSpent += order.total || 0;
+                                if (!userData.lastOrderDate || order.createdAt > userData.lastOrderDate) {
+                                    userData.lastOrderDate = order.createdAt;
                                 }
                             }
-                        }
+                        });
+
+                        // Merge auth users with order data
+                        const mergedUsers = authUsers.map(user => {
+                            const userOrderData = orderMap.get(user.uid) || { orderCount: 0, totalSpent: 0, lastOrderDate: null };
+                            return {
+                                ...user,
+                                ...userOrderData
+                            };
+                        });
+
+                        setUsers(mergedUsers);
+                        setLoading(false);
                     });
 
-                    setUsers(Array.from(userMap.values()));
+                    return () => unsubscribeOrders();
+                } catch (error) {
+                    console.error("Error fetching users or orders: ", error);
                     setLoading(false);
-                });
+                }
+            } else {
+                setLoading(false);
+            }
+        };
+
+        const unsubscribeAuth = auth.onAuthStateChanged(user => {
+            if (user) {
+                fetchUsersAndOrders();
             } else {
                 setLoading(false);
             }
         });
 
-        return () => {
-            unsubscribe();
-            unsubscribeOrders();
-        };
+        return () => unsubscribeAuth();
     }, []);
+
 
     const handleExportCSV = () => {
         const csvData = users.map(user => ({
-            'User ID': user.userId,
+            'User ID': user.uid,
             'Email': user.email,
-            'Display Name': user.displayName,
+            'Display Name': user.displayName || 'N/A',
             'Order Count': user.orderCount,
             'Total Spent': `Ksh ${user.totalSpent.toLocaleString()}`,
             'Last Order': user.lastOrderDate ? new Date(user.lastOrderDate.toDate()).toLocaleDateString() : 'N/A'
@@ -92,9 +106,9 @@ const Users = () => {
     };
 
     const filteredUsers = users.filter(user =>
-        user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        user.displayName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        user.userId.toLowerCase().includes(searchTerm.toLowerCase())
+        (user.email || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (user.displayName || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (user.uid || '').toLowerCase().includes(searchTerm.toLowerCase())
     );
 
     const indexOfLastUser = currentPage * usersPerPage;
@@ -155,9 +169,9 @@ const Users = () => {
                     <tbody>
                         {currentUsers.length > 0 ? (
                             currentUsers.map((user) => (
-                                <tr key={user.userId}>
+                                <tr key={user.uid}>
                                     <td>{user.email}</td>
-                                    <td>{user.displayName}</td>
+                                    <td>{user.displayName || 'N/A'}</td>
                                     <td>{user.orderCount}</td>
                                     <td>Ksh {user.totalSpent.toLocaleString()}</td>
                                     <td>{user.lastOrderDate ? new Date(user.lastOrderDate.toDate()).toLocaleDateString() : 'N/A'}</td>
