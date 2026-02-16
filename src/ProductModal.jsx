@@ -7,19 +7,13 @@ import { auth } from './firebase';
 import './ProductModal.css';
 
 const ProductModal = ({ product, show, onClose, onAddToCart }) => {
-  const [selectedOption, setSelectedOption] = useState(null);
+  const [selectedOption, setSelectedOption] = useState(product?.option || null);
   const [user, setUser] = useState(null);
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(setUser);
     return unsubscribe;
   }, []);
-
-  useEffect(() => {
-    if (product) {
-      setSelectedOption(product.option);
-    }
-  }, [product]);
 
   if (!show || !product) {
     return null;

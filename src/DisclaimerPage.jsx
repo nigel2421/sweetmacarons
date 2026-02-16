@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { FiCopy } from 'react-icons/fi';
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
@@ -13,11 +13,10 @@ const DisclaimerPage = ({ user, onClearCart }) => {
   const location = useLocation();
   const [agree, setAgree] = useState(false);
   const [isOrderSuccessful, setIsOrderSuccessful] = useState(false);
-  const [newOrderId, setNewOrderId] = useState('');
   const [whatsappMessage, setWhatsappMessage] = useState('');
 
   // Store cart data in state to prevent loss on re-renders
-  const [cartData, setCartData] = useState(() => {
+  const [cartData] = useState(() => {
     const state = location.state || {};
     return {
       cart: state.cart || [],
@@ -51,7 +50,6 @@ const DisclaimerPage = ({ user, onClearCart }) => {
 
   const handleCheckout = async () => {
     const orderId = generateOrderId(user);
-    setNewOrderId(orderId);
 
     const orderItems = cart.map(item => `• *${item.macaron.name}* (Box of ${item.option.box}) x ${item.quantity}: Ksh ${(item.option.price * item.quantity).toLocaleString()}`).join('\n');
 
@@ -77,6 +75,8 @@ const DisclaimerPage = ({ user, onClearCart }) => {
         deliveryAddress,
         deliveryFee,
         macaronsTotal,
+        depositAmount: macaronsTotal * 0.3,
+        balance: grandTotal - (macaronsTotal * 0.3),
       });
 
       console.log('Order saved successfully!');

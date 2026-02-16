@@ -2,70 +2,28 @@
 import { useState, useEffect } from 'react';
 import Papa from 'papaparse';
 import OrderDetailsModal from './OrderDetailsModal';
-import { auth, db } from '../firebase';
-import { collection, query, where, onSnapshot, orderBy, doc, updateDoc } from 'firebase/firestore';
-import { adminEmails, checkIsAdmin } from '../admin';
+import { auth } from '../firebase';
+import { doc, updateDoc } from 'firebase/firestore';
 import { logAdminAction } from '../lib/audit';
 import { toast } from 'react-toastify';
 import './Orders.css';
 import { Link } from 'react-router-dom';
 import { FaChevronLeft, FaChevronRight, FaArrowLeft } from 'react-icons/fa';
 
-const Orders = ({ onLogout, onReorder }) => {
-  const [orders, setOrders] = useState([]);
-  const [loading, setLoading] = useState(true);
+const Orders = ({ orders: allOrders = [], isAdmin: userIsAdmin = false, onLogout, onReorder }) => {
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [ordersPerPage, setOrdersPerPage] = useState(10);
   const [searchTerm, setSearchTerm] = useState('');
-  const [isAdmin, setIsAdmin] = useState(false);
 
-  useEffect(() => {
-    const initAdmin = async () => {
-      const user = auth.currentUser;
-      if (user) {
-        const userIsAdmin = await checkIsAdmin(user);
-        setIsAdmin(userIsAdmin);
+  const orders = allOrders; // Use the passed orders
+  const isAdmin = userIsAdmin; // Use the passed isAdmin status
 
-        const ordersQuery = userIsAdmin
-          ? query(collection(db, 'orders'), orderBy('createdAt', 'desc'))
-          : query(collection(db, 'orders'), where('userId', '==', user.uid), orderBy('createdAt', 'desc'));
+  // No need for internal loading state if App handle it, 
+  // but we can add a check if orders is still empty and user is admin.
+  const loading = false;
 
-        const unsubscribeFirestore = onSnapshot(ordersQuery, (querySnapshot) => {
-          const ordersData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-          setOrders(ordersData);
-          setLoading(false);
-        }, (error) => {
-          console.error("Error fetching orders: ", error);
-          setLoading(false);
-        });
-
-        return unsubscribeFirestore;
-      } else {
-        setIsAdmin(false);
-        setOrders([]);
-        setLoading(false);
-      }
-    };
-
-    let unsubscribeFirestore;
-    const unsubscribeAuth = auth.onAuthStateChanged(async user => {
-      if (unsubscribeFirestore) unsubscribeFirestore();
-      if (user) {
-        unsubscribeFirestore = await initAdmin();
-      } else {
-        setIsAdmin(false);
-        setOrders([]);
-        setLoading(false);
-      }
-    });
-
-    return () => {
-      unsubscribeAuth();
-      if (unsubscribeFirestore) unsubscribeFirestore();
-    };
-  }, []);
 
   const handleLogout = () => {
     auth.signOut().then(() => {

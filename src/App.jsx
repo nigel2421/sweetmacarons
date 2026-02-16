@@ -5,7 +5,9 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './App.css';
 import { onAuthStateChanged } from 'firebase/auth';
-import { auth } from './firebase';
+import { auth, db } from './firebase';
+import { collection, query, onSnapshot, orderBy } from 'firebase/firestore';
+import { checkIsAdmin } from './admin';
 import Header from './Header';
 import Footer from './Footer';
 import CartModal from './CartModal';
@@ -36,14 +38,38 @@ const App = () => {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [user, setUser] = useState(null);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
+    let unsubscribeOrders;
+    const unsubscribeAuth = onAuthStateChanged(auth, async (user) => {
       setUser(user);
+      if (user) {
+        const userIsAdmin = await checkIsAdmin(user);
+        setIsAdmin(userIsAdmin);
+
+        if (userIsAdmin) {
+          const ordersQuery = query(collection(db, 'orders'), orderBy('createdAt', 'desc'));
+          unsubscribeOrders = onSnapshot(ordersQuery, (querySnapshot) => {
+            const ordersData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            setOrders(ordersData);
+          }, (error) => {
+            console.error("Error fetching orders in App: ", error);
+          });
+        }
+      } else {
+        setIsAdmin(false);
+        setOrders([]);
+        if (unsubscribeOrders) unsubscribeOrders();
+      }
       setLoading(false);
     });
-    return () => unsubscribe();
+    return () => {
+      unsubscribeAuth();
+      if (unsubscribeOrders) unsubscribeOrders();
+    };
   }, []);
 
   const addToCart = (product, option, quantity = 1) => {
@@ -136,10 +162,10 @@ const App = () => {
               <Route path="/login" element={<Login />} />
               <Route path="/my-account" element={<ProtectedRoute user={user}><MyAccount user={user} /></ProtectedRoute>} />
               <Route path="/my-orders" element={<ProtectedRoute user={user}><MyOrders user={user} /></ProtectedRoute>} />
-              <Route path="/dashboard" element={<ProtectedRoute user={user} adminOnly><Dashboard /></ProtectedRoute>} />
+              <Route path="/dashboard" element={<ProtectedRoute user={user} adminOnly><Dashboard orders={orders} /></ProtectedRoute>} />
               <Route path="/all-reviews" element={<ProtectedRoute user={user} adminOnly><AllReviewsPage /></ProtectedRoute>} />
-              <Route path="/orders" element={<ProtectedRoute user={user} adminOnly><Orders /></ProtectedRoute>} />
-              <Route path="/users" element={<ProtectedRoute user={user} adminOnly><Users /></ProtectedRoute>} />
+              <Route path="/orders" element={<ProtectedRoute user={user} adminOnly><Orders orders={orders} isAdmin={isAdmin} /></ProtectedRoute>} />
+              <Route path="/users" element={<ProtectedRoute user={user} adminOnly><Users orders={orders} /></ProtectedRoute>} />
               <Route path="/data-deletion" element={<DataDeletion />} />
               <Route path="/terms-of-service" element={<TermsOfService />} />
               <Route path="/privacy-policy" element={<LegalInfo />} />

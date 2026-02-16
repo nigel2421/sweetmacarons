@@ -2,7 +2,7 @@
 import React from 'react';
 import { FiX } from 'react-icons/fi';
 import { db, auth } from '../firebase';
-import { doc, updateDoc, arrayUnion, serverTimestamp } from 'firebase/firestore';
+import { doc, updateDoc, arrayUnion } from 'firebase/firestore';
 import { logAdminAction } from '../lib/audit';
 import { generateOrderReceipt } from '../lib/pdf';
 import { toast } from 'react-toastify';
@@ -74,16 +74,16 @@ const OrderDetailsModal = ({ order, show, onClose, onUpdateStatus, onReorder }) 
     }
   };
 
-  const handleStatusChange = async (newStatus) => {
+  const handleStatusChange = async (statusValue) => {
     setIsUpdating(true);
     try {
       const orderRef = doc(db, 'orders', order.id);
       const previousStatus = order.status;
 
       await updateDoc(orderRef, {
-        status: newStatus,
+        status: statusValue,
         statusHistory: arrayUnion({
-          status: newStatus,
+          status: statusValue,
           timestamp: new Date().toISOString(),
           updatedBy: auth.currentUser?.email || 'System'
         })
@@ -92,12 +92,12 @@ const OrderDetailsModal = ({ order, show, onClose, onUpdateStatus, onReorder }) 
       await logAdminAction('UPDATE_ORDER_STATUS', {
         orderId: order.orderId,
         firestoreId: order.id,
-        newStatus,
+        newStatus: statusValue,
         previousStatus
       });
 
-      if (onUpdateStatus) onUpdateStatus(order.id, newStatus);
-      toast.success(`Order status updated to ${newStatus}`);
+      if (onUpdateStatus) onUpdateStatus(order.id, statusValue);
+      toast.success(`Order status updated to ${statusValue}`);
     } catch (error) {
       console.error("Error updating order status: ", error);
       toast.error("Failed to update order status.");

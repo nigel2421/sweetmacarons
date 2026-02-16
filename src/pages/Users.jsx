@@ -1,78 +1,76 @@
 import { useState, useEffect } from 'react';
 import Papa from 'papaparse';
-import { auth, db, functions } from '../firebase';
+import { auth, functions } from '../firebase';
 import { httpsCallable } from "firebase/functions";
-import { collection, query, onSnapshot, orderBy } from 'firebase/firestore';
-import { adminEmails, checkIsAdmin } from '../admin';
+import { checkIsAdmin } from '../admin';
 import { logAdminAction } from '../lib/audit';
 import { Link } from 'react-router-dom';
 import { FaArrowLeft } from 'react-icons/fa';
-import { toast } from 'react-toastify';
 import './Users.css';
 
-const Users = () => {
+const Users = ({ orders = [] }) => {
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
     const [usersPerPage] = useState(15);
+    const [error, setError] = useState(null);
 
     useEffect(() => {
-        const fetchUsersAndOrders = async () => {
+        const fetchAuthUsers = async () => {
             const currentUser = auth.currentUser;
             if (currentUser) {
                 const isAdmin = await checkIsAdmin(currentUser);
                 if (!isAdmin) {
+                    setError("Access denied. Admin privileges required.");
                     setLoading(false);
                     return;
                 }
                 try {
-                    // Fetch all users from the cloud function
                     const listUsers = httpsCallable(functions, 'listUsers');
                     const result = await listUsers();
-                    const authUsers = result.data.users;
+                    const authUsers = result.data.users || [];
 
-                    // Fetch all orders
-                    const ordersQuery = query(collection(db, 'orders'), orderBy('createdAt', 'desc'));
-                    const unsubscribeOrders = onSnapshot(ordersQuery, (querySnapshot) => {
-                        const ordersData = querySnapshot.docs.map(doc => doc.data());
+                    if (authUsers.length === 0) {
+                        console.warn("No auth users returned from Cloud Function.");
+                    }
 
-                        // Create a map for easy lookup of order data by user ID
-                        const orderMap = new Map();
-                        ordersData.forEach(order => {
-                            if (order.userId && order.userId !== 'guest') {
-                                if (!orderMap.has(order.userId)) {
-                                    orderMap.set(order.userId, {
-                                        orderCount: 0,
-                                        totalSpent: 0,
-                                        lastOrderDate: null
-                                    });
-                                }
-                                const userData = orderMap.get(order.userId);
-                                userData.orderCount++;
-                                userData.totalSpent += order.total || 0;
-                                if (!userData.lastOrderDate || order.createdAt > userData.lastOrderDate) {
-                                    userData.lastOrderDate = order.createdAt;
-                                }
+                    // Create a map for easy lookup of order data by user ID
+                    const orderMap = new Map();
+                    orders.forEach(order => {
+                        if (order.userId && order.userId !== 'guest' && order.userId !== 'anonymous') {
+                            if (!orderMap.has(order.userId)) {
+                                orderMap.set(order.userId, {
+                                    orderCount: 0,
+                                    totalSpent: 0,
+                                    lastOrderDate: null
+                                });
                             }
-                        });
+                            const userData = orderMap.get(order.userId);
+                            userData.orderCount++;
+                            userData.totalSpent += (order.macaronsTotal || 0) + (order.deliveryFee || 0);
 
-                        // Merge auth users with order data
-                        const mergedUsers = authUsers.map(user => {
-                            const userOrderData = orderMap.get(user.uid) || { orderCount: 0, totalSpent: 0, lastOrderDate: null };
-                            return {
-                                ...user,
-                                ...userOrderData
-                            };
-                        });
-
-                        setUsers(mergedUsers);
-                        setLoading(false);
+                            const orderDate = order.createdAt?.toDate ? order.createdAt.toDate() : new Date(order.createdAt);
+                            if (!userData.lastOrderDate || orderDate > userData.lastOrderDate) {
+                                userData.lastOrderDate = order.createdAt;
+                            }
+                        }
                     });
 
-                    return () => unsubscribeOrders();
-                } catch (error) {
-                    console.error("Error fetching users or orders: ", error);
+                    // Merge auth users with order data
+                    const mergedUsers = authUsers.map(user => {
+                        const userOrderData = orderMap.get(user.uid) || { orderCount: 0, totalSpent: 0, lastOrderDate: null };
+                        return {
+                            ...user,
+                            ...userOrderData
+                        };
+                    });
+
+                    setUsers(mergedUsers);
+                    setLoading(false);
+                } catch (err) {
+                    console.error("Error calling listUsers: ", err);
+                    setError("Failed to fetch user list. Check Cloud Function deployment.");
                     setLoading(false);
                 }
             } else {
@@ -80,16 +78,8 @@ const Users = () => {
             }
         };
 
-        const unsubscribeAuth = auth.onAuthStateChanged(user => {
-            if (user) {
-                fetchUsersAndOrders();
-            } else {
-                setLoading(false);
-            }
-        });
-
-        return () => unsubscribeAuth();
-    }, []);
+        fetchAuthUsers();
+    }, [orders]); // Re-run if orders change
 
 
     const handleExportCSV = async () => {
@@ -134,6 +124,16 @@ const Users = () => {
 
     if (loading) {
         return <div className="users-loading">Loading users...</div>;
+    }
+
+    if (error) {
+        return <div className="users-error-container">
+            <div className="users-error-message">
+                <h2>Error</h2>
+                <p>{error}</p>
+                <button onClick={() => window.location.reload()} className="retry-button">Retry</button>
+            </div>
+        </div>;
     }
 
     return (

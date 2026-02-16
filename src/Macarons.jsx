@@ -1,6 +1,6 @@
 
 import { useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion as Motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import StarRating from './components/StarRating';
 import './Macarons.css';
@@ -22,7 +22,7 @@ const MacaronCard = ({ macaron, onSelect, onAddToCart }) => {
   };
 
   return (
-    <motion.div
+    <Motion.div
       className="macaron-card"
       onClick={() => onSelect(macaron, selectedOption)}
       initial={{ opacity: 0, y: 20 }}
@@ -39,7 +39,7 @@ const MacaronCard = ({ macaron, onSelect, onAddToCart }) => {
         <h3 className="macaron-card-name">{macaron.name}</h3>
         <div className="macaron-card-rating">
           <StarRating rating={macaron.averageRating || 0} />
-          {macaron.reviewCount > 0 && 
+          {macaron.reviewCount > 0 &&
             <span className="review-count">({macaron.reviewCount})</span>
           }
         </div>
@@ -69,17 +69,17 @@ const MacaronCard = ({ macaron, onSelect, onAddToCart }) => {
           <button className="macaron-card-button" onClick={handleAddToCart}>
             Add to Cart
           </button>
-          <Link 
+          <Link
             to="/all-reviews"
             state={{ productId: macaron.id, productName: macaron.name }}
             className="view-reviews-button"
             onClick={(e) => e.stopPropagation()}
-            >
+          >
             View Reviews
           </Link>
         </div>
       </div>
-    </motion.div>
+    </Motion.div>
   );
 };
 
