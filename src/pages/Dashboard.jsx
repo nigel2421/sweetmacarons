@@ -4,7 +4,7 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import './Dashboard.css';
 
-const Dashboard = ({ orders }) => {
+const Dashboard = ({ orders = [] }) => {
   const [filter, setFilter] = useState('all'); // 'all', 'today', 'week', 'month', 'custom'
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);

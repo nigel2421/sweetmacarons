@@ -16,8 +16,8 @@
   height: 100%;
   background-image: url('/images/logo.png');
   background-repeat: repeat;
-  background-size: 200px;
-  opacity: 0.1;
+  background-size: 150px;
+  opacity: 0.15;
   z-index: -1;
 }
 
@@ -55,7 +55,7 @@
   .about-card {
     padding: 2rem;
   }
-  
+
   .about-card h1 {
     font-size: 2.5rem;
   }
