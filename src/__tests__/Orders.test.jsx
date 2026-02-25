@@ -89,7 +89,7 @@ describe('Orders Component', () => {
     test('renders order listing for normal user', async () => {
         render(
             <BrowserRouter>
-                <Orders />
+                <Orders orders={mockOrders} />
             </BrowserRouter>
         );
         await waitFor(() => {
@@ -107,7 +107,7 @@ describe('Orders Component', () => {
         });
         render(
             <BrowserRouter>
-                <Orders />
+                <Orders orders={mockOrders} isAdmin={true} />
             </BrowserRouter>
         );
         await waitFor(() => {
@@ -120,7 +120,7 @@ describe('Orders Component', () => {
     test('filters orders based on search term', async () => {
         render(
             <BrowserRouter>
-                <Orders />
+                <Orders orders={mockOrders} />
             </BrowserRouter>
         );
         await waitFor(() => {
@@ -136,7 +136,7 @@ describe('Orders Component', () => {
         const onLogout = vi.fn();
         render(
             <BrowserRouter>
-                <Orders onLogout={onLogout} />
+                <Orders orders={mockOrders} onLogout={onLogout} />
             </BrowserRouter>
         );
         await waitFor(() => {
@@ -150,7 +150,7 @@ describe('Orders Component', () => {
     test('renders back to account link', async () => {
         render(
             <BrowserRouter>
-                <Orders />
+                <Orders orders={mockOrders} />
             </BrowserRouter>
         );
         await waitFor(() => {
@@ -161,7 +161,7 @@ describe('Orders Component', () => {
     test('handles page size selection', async () => {
         render(
             <BrowserRouter>
-                <Orders />
+                <Orders orders={mockOrders} />
             </BrowserRouter>
         );
         await waitFor(() => {
@@ -175,7 +175,7 @@ describe('Orders Component', () => {
     test('renders pagination navigation buttons', async () => {
         render(
             <BrowserRouter>
-                <Orders />
+                <Orders orders={mockOrders} />
             </BrowserRouter>
         );
         await waitFor(() => {
