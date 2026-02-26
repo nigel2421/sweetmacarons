@@ -1,67 +1,58 @@
 
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
+import { signInWithPopup } from 'firebase/auth';
 import { auth, googleProvider } from '../firebase';
+import { FcGoogle } from 'react-icons/fc';
 import './Login.css';
 
 const Login = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleEmailLogin = async (e) => {
-    e.preventDefault();
+  const handleGoogleLogin = async () => {
+    setLoading(true);
+    setError('');
     try {
-      await signInWithEmailAndPassword(auth, email, password);
-      // Redirect to my-account. Role-based redirection can also happen in App.jsx or ProtectedRoute
+      await signInWithPopup(auth, googleProvider);
       navigate('/my-account');
     } catch (err) {
-      setError(err.message);
-    }
-  };
-
-  const handleSocialLogin = async (provider) => {
-    try {
-      await signInWithPopup(auth, provider);
-      navigate('/my-account');
-    } catch (err) {
-      setError(err.message);
+      if (err.code !== 'auth/popup-closed-by-user') {
+        setError('Something went wrong. Please try again.');
+      }
+      setLoading(false);
     }
   };
 
   return (
     <div className="login-page">
       <div className="login-container">
-        <h1>Login</h1>
-        {error && <p className="error-message">{error}</p>}
-
-        <form onSubmit={handleEmailLogin} className="login-form">
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="Email"
-            required
-          />
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="Password"
-            required
-          />
-          <button type="submit" className="login-button">Login</button>
-        </form>
-
-        <div className="divider">OR</div>
-
-        <div className="social-login">
-          <button onClick={() => handleSocialLogin(googleProvider)} className="social-button google">
-            Login with Google
-          </button>
+        <div className="login-brand">
+          <span className="login-emoji" aria-hidden="true">🧁</span>
+          <h1 className="login-heading">Welcome</h1>
+          <p className="login-subtitle">
+            Sign in to order handcrafted macarons, track your orders, and more.
+          </p>
         </div>
+
+        {error && <p className="error-message" role="alert">{error}</p>}
+
+        <button
+          onClick={handleGoogleLogin}
+          className="google-sign-in-button"
+          disabled={loading}
+          aria-label="Continue with Google"
+        >
+          <FcGoogle className="google-icon" />
+          <span>{loading ? 'Signing in…' : 'Continue with Google'}</span>
+        </button>
+
+        <p className="login-footer-text">
+          By signing in, you agree to our{' '}
+          <a href="/terms-of-service">Terms of Service</a> and{' '}
+          <a href="/privacy-policy">Privacy Policy</a>.
+        </p>
       </div>
     </div>
   );

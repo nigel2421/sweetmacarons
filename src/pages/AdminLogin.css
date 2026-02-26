@@ -1,0 +1,187 @@
+.admin-login-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 75vh;
+    padding: 2rem 1rem;
+}
+
+.admin-login-container {
+    background-color: #ffffff;
+    padding: 2.5rem 2.5rem 3rem;
+    border-radius: 20px;
+    box-shadow:
+        0 4px 24px rgba(45, 55, 72, 0.08),
+        0 1px 4px rgba(0, 0, 0, 0.04);
+    width: 90%;
+    max-width: 420px;
+    animation: adminFadeIn 0.5s ease-out;
+}
+
+@keyframes adminFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(16px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Back link */
+.admin-back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #718096;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: color 0.2s ease;
+    margin-bottom: 1.5rem;
+}
+
+.admin-back-link:hover {
+    color: #e75480;
+}
+
+/* Brand section */
+.admin-login-brand {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.admin-lock-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    margin: 0 auto 1rem;
+    box-shadow: 0 4px 12px rgba(45, 55, 72, 0.2);
+}
+
+.admin-login-heading {
+    font-family: 'Fredoka', cursive;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #2d3748;
+    margin: 0 0 0.4rem;
+}
+
+.admin-login-subtitle {
+    color: #a0aec0;
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+/* Error */
+.admin-error-message {
+    color: #E53E3E;
+    background-color: #FFF5F5;
+    border: 1px solid #FED7D7;
+    border-radius: 10px;
+    padding: 0.75rem 1rem;
+    margin-bottom: 1.5rem;
+    font-size: 0.9rem;
+    text-align: center;
+}
+
+/* Form */
+.admin-login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.admin-input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    text-align: left;
+}
+
+.admin-input-group label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #4a5568;
+}
+
+.admin-input-group input {
+    padding: 0.8rem 1rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    color: #2d3748;
+    background-color: #f7fafc;
+    transition: all 0.2s ease;
+}
+
+.admin-input-group input:focus {
+    outline: none;
+    border-color: #2d3748;
+    background-color: #ffffff;
+    box-shadow: 0 0 0 3px rgba(45, 55, 72, 0.1);
+}
+
+.admin-input-group input::placeholder {
+    color: #cbd5e0;
+}
+
+/* Button */
+.admin-login-button {
+    padding: 0.85rem;
+    border: none;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    margin-top: 0.5rem;
+    box-shadow: 0 2px 8px rgba(45, 55, 72, 0.15);
+}
+
+.admin-login-button:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(45, 55, 72, 0.25);
+}
+
+.admin-login-button:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+.admin-login-button:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.admin-login-button:focus-visible {
+    outline: 2px solid #2d3748;
+    outline-offset: 2px;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+    .admin-login-container {
+        padding: 2rem 1.5rem 2.5rem;
+        border-radius: 16px;
+    }
+
+    .admin-login-heading {
+        font-size: 1.5rem;
+    }
+
+    .admin-lock-icon {
+        width: 48px;
+        height: 48px;
+        font-size: 1.1rem;
+    }
+}

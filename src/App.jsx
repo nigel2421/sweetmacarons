@@ -30,6 +30,7 @@ const DataDeletion = lazy(() => import('./pages/DataDeletion'));
 const TermsOfService = lazy(() => import('./pages/TermsOfService'));
 const LegalInfo = lazy(() => import('./pages/LegalInfo'));
 const DisclaimerPage = lazy(() => import('./DisclaimerPage'));
+const AdminLogin = lazy(() => import('./pages/AdminLogin'));
 const NotFoundPage = lazy(() => import('./pages/NotFoundPage'));
 
 const App = () => {
@@ -172,6 +173,7 @@ const App = () => {
               <Route path="/about" element={<About />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/login" element={<Login />} />
+              <Route path="/admin-login" element={<AdminLogin />} />
               <Route path="/my-account" element={<ProtectedRoute user={user}><MyAccount user={user} /></ProtectedRoute>} />
               <Route path="/my-orders" element={<ProtectedRoute user={user}><MyOrders user={user} orders={orders} isAdmin={isAdmin} /></ProtectedRoute>} />
               <Route path="/dashboard" element={<ProtectedRoute user={user} adminOnly><Dashboard orders={orders} /></ProtectedRoute>} />
