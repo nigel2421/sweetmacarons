@@ -18,7 +18,7 @@ const OrderDetailsModal = ({ order, show, onClose, onUpdateStatus, onReorder }) 
     if (order?.depositAmount !== undefined) {
       setTempDeposit(order.depositAmount);
     } else if (order?.macaronsTotal) {
-      setTempDeposit(Math.round(order.macaronsTotal * 0.3));
+      setTempDeposit(Math.round(order.macaronsTotal * 0.5));
     }
   }, [order?.id, order?.depositAmount, order?.macaronsTotal]);
 
@@ -29,7 +29,7 @@ const OrderDetailsModal = ({ order, show, onClose, onUpdateStatus, onReorder }) 
   const macaronsTotal = order.macaronsTotal || 0;
   const deliveryFee = order.deliveryFee || 0;
   const grandTotal = macaronsTotal + deliveryFee;
-  const depositAmount = order.depositAmount !== undefined ? order.depositAmount : (macaronsTotal * 0.3);
+  const depositAmount = order.depositAmount !== undefined ? order.depositAmount : (macaronsTotal * 0.5);
   const balance = grandTotal - depositAmount;
 
   const handleDepositUpdate = async () => {
@@ -195,9 +195,9 @@ const OrderDetailsModal = ({ order, show, onClose, onUpdateStatus, onReorder }) 
                         <button
                           className="btn-set-30"
                           onClick={() => setTempDeposit(Math.round(macaronsTotal * 0.3))}
-                          title="Calculate 30% of macarons total"
+                          title="Calculate 50% of macarons total"
                         >
-                          Set 30%
+                          Set 50%
                         </button>
                         <button
                           className="btn-save-deposit"
@@ -210,7 +210,7 @@ const OrderDetailsModal = ({ order, show, onClose, onUpdateStatus, onReorder }) 
                           className="btn-cancel-edit"
                           onClick={() => {
                             setIsEditingDeposit(false);
-                            setTempDeposit(order.depositAmount || Math.round(macaronsTotal * 0.3));
+                            setTempDeposit(order.depositAmount || Math.round(macaronsTotal * 0.5));
                           }}
                         >
                           Cancel

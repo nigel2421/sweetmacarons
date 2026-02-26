@@ -79,8 +79,8 @@ describe('DisclaimerPage Component', () => {
         expect(screen.getByText(/Disclaimer/i)).toBeInTheDocument();
         expect(screen.getByText(/Hand made to perfection/i)).toBeInTheDocument();
 
-        // Deposit is 30% of macaronsTotal (1200 * 0.3 = 360)
-        expect(screen.getByText(/Ksh 360/)).toBeInTheDocument();
+        // Deposit is 50% of macaronsTotal (1200 * 0.5 = 600)
+        expect(screen.getByText(/Ksh 600/)).toBeInTheDocument();
     });
 
     test('toggles checkout button based on agreement checkbox', () => {

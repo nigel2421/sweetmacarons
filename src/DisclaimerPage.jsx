@@ -39,7 +39,7 @@ const DisclaimerPage = ({ user, onClearCart }) => {
 
   const { cart, deliveryOption, deliveryAddress, deliveryFee, macaronsTotal, grandTotal } = cartData;
 
-  const depositAmount = macaronsTotal * 0.3;
+  const depositAmount = macaronsTotal * 0.5;
   const orderWhatsAppNumber = '254723734211';
   const paymentNumber = '0769456153';
 
@@ -58,7 +58,7 @@ const DisclaimerPage = ({ user, onClearCart }) => {
       deliveryMessage = `\n*Delivery Address:* ${deliveryAddress}`;
     }
 
-    const message = `*Hello Los Tres Macarons!* 👋\n\nI would like to place an order for the following:\n\n${orderItems}${deliveryMessage}\n\n*Subtotal:* Ksh ${macaronsTotal.toLocaleString()}\n*Delivery Fee:* Ksh ${deliveryFee.toLocaleString()}\n*Total:* Ksh ${grandTotal.toLocaleString()}\n\n*Deposit Required (30%):* Ksh ${depositAmount.toLocaleString()}\n\n*Order ID:* ${orderId}\n\nI will share the payment confirmation shortly. Thank you!`;
+    const message = `*Hello Los Tres Macarons!* 👋\n\nI would like to place an order for the following:\n\n${orderItems}${deliveryMessage}\n\n*Subtotal:* Ksh ${macaronsTotal.toLocaleString()}\n*Delivery Fee:* Ksh ${deliveryFee.toLocaleString()}\n*Total:* Ksh ${grandTotal.toLocaleString()}\n\n*Deposit Required (50%):* Ksh ${depositAmount.toLocaleString()}\n\n*Order ID:* ${orderId}\n\nI will share the payment confirmation shortly. Thank you!`;
     setWhatsappMessage(message);
 
     try {
@@ -75,8 +75,8 @@ const DisclaimerPage = ({ user, onClearCart }) => {
         deliveryAddress,
         deliveryFee,
         macaronsTotal,
-        depositAmount: macaronsTotal * 0.3,
-        balance: grandTotal - (macaronsTotal * 0.3),
+        depositAmount: macaronsTotal * 0.5,
+        balance: grandTotal - (macaronsTotal * 0.5),
       });
 
       console.log('Order saved successfully!');
@@ -123,10 +123,10 @@ const DisclaimerPage = ({ user, onClearCart }) => {
           <p>Macarons ordered will take up to 3 days before delivery as they are hand made to perfection.</p>
           <h2>Deposit</h2>
           <p>
-            <b>To begin work, a deposit of 30% of the total cost for the macarons is required.</b>
+            <b>To begin work, a deposit of 50% of the total cost for the macarons is required.</b>
           </p>
           <div className="deposit-info">
-            <p>30% Deposit Amount: <strong>Ksh {depositAmount.toLocaleString()}</strong></p>
+            <p>50% Deposit Amount: <strong>Ksh {depositAmount.toLocaleString()}</strong></p>
           </div>
           <div className="payment-info">
             <p>You can pay via Lipa Na MPESA or to Pochi la Biashara on the number provided below.</p>
@@ -136,7 +136,7 @@ const DisclaimerPage = ({ user, onClearCart }) => {
                 <FiCopy style={{ color: '#2D3748' }} />
               </button>
             </div>
-            <p className="whatsapp-instruction">Please share the deposit confirmation message via WhatsApp.</p>
+            <p className="whatsapp-instruction">Please note: <br />A 50% deposit is required before your macaron order can be created.<br />Kindly send the deposit via M-Pesa to 0769456153, and <br />Share the M-Pesa confirmation message in the WhatsApp chat where your order is being placed.</p>
           </div>
           <div className="consent-checkbox">
             <input type="checkbox" id="agree" checked={agree} onChange={() => setAgree(!agree)} />
