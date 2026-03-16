@@ -7,9 +7,10 @@ import { logAdminAction } from '../lib/audit';
 import { generateOrderReceipt } from '../lib/pdf';
 import { toast } from 'react-toastify';
 import { FiDownload } from 'react-icons/fi';
+import { scheduleStatusUpdates } from '../automation';
 import './OrderDetailsModal.css';
 
-const OrderDetailsModal = ({ order, show, onClose, onUpdateStatus, onReorder }) => {
+const OrderDetailsModal = ({ order, show, onClose, onUpdateStatus, onReorder, isAdmin }) => {
   const [isUpdating, setIsUpdating] = React.useState(false);
   const [isEditingDeposit, setIsEditingDeposit] = React.useState(false);
   const [tempDeposit, setTempDeposit] = React.useState(0);
@@ -95,6 +96,10 @@ const OrderDetailsModal = ({ order, show, onClose, onUpdateStatus, onReorder }) 
         previousStatus
       });
 
+      if (statusValue === 'deposit-paid') {
+        scheduleStatusUpdates({ ...order, status: statusValue });
+      }
+
       if (onUpdateStatus) onUpdateStatus(order.id, statusValue);
       toast.success(`Order status updated to ${statusValue}`);
     } catch (error) {
@@ -130,7 +135,7 @@ const OrderDetailsModal = ({ order, show, onClose, onUpdateStatus, onReorder }) 
             <p><strong>Date:</strong> {new Date(order.createdAt?.toDate?.() || order.createdAt).toLocaleString()}</p>
             <div className="status-selector">
               <strong>Status:</strong>
-              {onUpdateStatus ? (
+              {isAdmin ? (
                 <div className="selector-container">
                   <select
                     value={order.status}
@@ -138,10 +143,11 @@ const OrderDetailsModal = ({ order, show, onClose, onUpdateStatus, onReorder }) 
                     disabled={isUpdating}
                   >
                     <option value="pending">Pending</option>
-                    <option value="paid">Paid</option>
+                    <option value="deposit-paid">Deposit Paid</option>
                     <option value="in-progress">In Progress</option>
                     <option value="shipped">Shipped</option>
                     <option value="delivered">Delivered</option>
+                    <option value="order-closed">Order Closed</option>
                     <option value="cancelled">Cancelled</option>
                   </select>
                   {isUpdating && <div className="status-spinner"></div>}
@@ -178,7 +184,7 @@ const OrderDetailsModal = ({ order, show, onClose, onUpdateStatus, onReorder }) 
               </div>
               <div className="total-row financials">
                 <strong>Deposit Paid:</strong>
-                {onUpdateStatus ? (
+                {isAdmin ? (
                   isEditingDeposit ? (
                     <div className="deposit-manage-box">
                       <div className="deposit-input-wrapper">

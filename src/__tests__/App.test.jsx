@@ -19,7 +19,6 @@ vi.mock('firebase/auth', () => ({
   getAuth: vi.fn(() => ({})),
 }));
 
-
 describe('App component routing', () => {
   test('renders the landing page by default', async () => {
     render(
@@ -27,12 +26,7 @@ describe('App component routing', () => {
         <App />
       </MemoryRouter>
     );
-    // screen.debug(); // Uncomment if needed, but findBy* already waits
-    expect(await screen.findByRole('heading', { name: /Explore Macarons/i }, { timeout: 3000 })).toBeInTheDocument();
-
-
-
-
+    expect(await screen.findByRole('heading', { name: /Explore Our Gourmet Macaron Collection/i })).toBeInTheDocument();
   });
 
   test('navigates to the about page', async () => {

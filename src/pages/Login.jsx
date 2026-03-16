@@ -30,7 +30,7 @@ const Login = () => {
       <div className="login-container">
         <div className="login-brand">
           <span className="login-emoji" aria-hidden="true">🧁</span>
-          <h1 className="login-heading">Welcome</h1>
+          <h1 className="login-heading">Login</h1>
           <p className="login-subtitle">
             Sign in to order handcrafted macarons, track your orders, and more.
           </p>

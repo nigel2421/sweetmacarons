@@ -32,7 +32,7 @@ const MacaronCard = ({ macaron, onSelect, onAddToCart }) => {
     >
       <img
         src={macaron.image}
-        alt={macaron.name}
+        alt={macaron.alt || macaron.name}
         className="macaron-card-image"
       />
       <div className="macaron-card-content">
@@ -84,15 +84,43 @@ const MacaronCard = ({ macaron, onSelect, onAddToCart }) => {
 };
 
 const Macarons = ({ macarons, onSelectMacaron, onAddToCart }) => {
+  const groupedMacarons = macarons.reduce((acc, macaron) => {
+    const category = macaron.category || 'Other';
+    if (!acc[category]) {
+      acc[category] = [];
+    }
+    acc[category].push(macaron);
+    return acc;
+  }, {});
+
+  const categoryOrder = ['Classic Flavors', 'Specialty Flavors', 'Vegan', 'Custom & Gifts', 'Other'];
+
+  const sortedCategories = Object.keys(groupedMacarons).sort((a, b) => {
+      const indexA = categoryOrder.indexOf(a);
+      const indexB = categoryOrder.indexOf(b);
+      if (indexA === -1 && indexB === -1) return a.localeCompare(b); // both are not in order array, sort alphabetically
+      if (indexA === -1) return 1; // a is not in order, should come after b
+      if (indexB === -1) return -1; // b is not in order, should come after a
+      return indexA - indexB; // both are in order, sort by their index
+  });
+
+
   return (
     <div className="macarons-container">
-      {macarons.map((macaron) => (
-        <MacaronCard
-          key={macaron.id}
-          macaron={macaron}
-          onSelect={onSelectMacaron}
-          onAddToCart={onAddToCart}
-        />
+      {sortedCategories.map((category) => (
+        <div key={category} className="macaron-category">
+          <h2 className="macaron-category-title">{category}</h2>
+          <div className="macaron-category-list">
+            {groupedMacarons[category].map((macaron) => (
+              <MacaronCard
+                key={macaron.id}
+                macaron={macaron}
+                onSelect={onSelectMacaron}
+                onAddToCart={onAddToCart}
+              />
+            ))}
+          </div>
+        </div>
       ))}
     </div>
   );

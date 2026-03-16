@@ -100,6 +100,7 @@ describe('OrderDetailsModal Component', () => {
                 order={mockOrder}
                 onClose={onClose}
                 onUpdateStatus={onUpdateStatus}
+                isAdmin={true}
             />
         );
 

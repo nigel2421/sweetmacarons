@@ -91,6 +91,7 @@ body,
   width: auto;
   border-radius: 12px;
   object-fit: contain;
+  background-color: var(--bg-white) !important;
 }
 
 .menu-toggle {
@@ -109,7 +110,7 @@ body,
 }
 
 .header-nav {
-  display: flex;
+  display: none; /* Hide on desktop by default */
   align-items: center;
 }
 
@@ -184,57 +185,6 @@ body,
   border: 2px solid #fff;
 }
 
-/* Mobile Layout */
-@media (max-width: 768px) {
-  .app-header {
-    padding: 0 1.25rem;
-    height: var(--mobile-header-height);
-  }
-
-  .menu-toggle {
-    display: block;
-  }
-
-  .logo-text {
-    font-size: 1.25rem;
-  }
-
-  .logo {
-    height: 45px;
-  }
-
-  .header-nav {
-    position: fixed;
-    top: var(--mobile-header-height);
-    left: -110%;
-    width: 280px;
-    height: calc(100vh - var(--mobile-header-height));
-    background: #fff;
-    flex-direction: column;
-    padding: 2.5rem 1.5rem;
-    transition: left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 10px 0 30px rgba(0, 0, 0, 0.05);
-    z-index: 999;
-  }
-
-  .header-nav.open {
-    left: 0;
-  }
-
-  .header-nav ul {
-    flex-direction: column;
-    gap: 1.75rem;
-    align-items: flex-start;
-    width: 100%;
-  }
-
-  .header-nav a {
-    font-size: 1.1rem;
-    width: 100%;
-    display: block;
-  }
-}
-
 main {
   padding: 3rem 2rem;
   min-height: calc(100vh - var(--header-height));
@@ -251,6 +201,12 @@ main {
   letter-spacing: -0.5px;
 }
 
+.app-container {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* Mobile Layout */
 @media (max-width: 768px) {
   .app-header {
     padding: 0 1rem;
@@ -260,7 +216,7 @@ main {
   }
 
   .header-title-text {
-    font-size: 1.25rem;
+    font-size: 1.5rem;
   }
 
   main {
@@ -268,23 +224,81 @@ main {
   }
 
   .explore-macarons-title {
-    font-size: 2rem;
+    font-size: 2.2rem;
     margin-top: 2rem;
     margin-bottom: 1.5rem;
   }
-}
 
-.app-container {
-  max-width: 1400px;
-  margin: 0 auto;
-}
-
-/* Hide elements on desktop */
-@media (min-width: 769px) {
-  .header-nav {
-    display: none;
+  .menu-toggle {
+    display: block;
+    z-index: 1001; /* Ensure menu toggle is above overlay */
   }
-  .mobile-only-nav-item {
-    display: none !important;
+
+  .logo {
+    height: 50px;
+  }
+
+  .header-nav {
+    position: fixed;
+    top: 0;
+    left: -100%;
+    width: 280px;
+    height: 100vh;
+    background: #fff;
+    flex-direction: column;
+    padding: 6rem 2rem 2rem;
+    transition: left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 10px 0 30px rgba(0, 0, 0, 0.05);
+    z-index: 1000;
+    display: flex; /* Ensure it's visible on mobile */
+  }
+
+  .header-nav.open {
+    left: 0;
+  }
+
+  .header-nav ul {
+    flex-direction: column;
+    gap: 2.5rem;
+    align-items: flex-start;
+    width: 100%;
+  }
+
+  .header-nav a {
+    font-size: 1.2rem;
+    width: 100%;
+    display: block;
+  }
+
+  .nav-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.4s, visibility 0.4s;
+    z-index: 999;
+  }
+
+  .nav-overlay.open {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .header-right {
+    gap: 1rem;
+  }
+
+  .cart-icon-container {
+    font-size: 1.5rem;
+  }
+
+  button,
+  .button {
+    padding: 0.8em 1.5em;
+    font-size: 1.1em;
   }
 }

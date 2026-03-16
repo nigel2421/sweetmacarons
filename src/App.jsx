@@ -31,6 +31,7 @@ const TermsOfService = lazy(() => import('./pages/TermsOfService'));
 const LegalInfo = lazy(() => import('./pages/LegalInfo'));
 const DisclaimerPage = lazy(() => import('./DisclaimerPage'));
 const AdminLogin = lazy(() => import('./pages/AdminLogin'));
+const GrantAdmin = lazy(() => import('./pages/GrantAdmin'));
 const NotFoundPage = lazy(() => import('./pages/NotFoundPage'));
 
 const App = () => {
@@ -73,6 +74,14 @@ const App = () => {
       if (unsubscribeOrders) unsubscribeOrders();
     };
   }, []);
+
+  useEffect(() => {
+    if (isMenuOpen) {
+      document.body.classList.add('menu-open');
+    } else {
+      document.body.classList.remove('menu-open');
+    }
+  }, [isMenuOpen]);
 
   const addToCart = (product, option, quantity = 1) => {
     if (!product || !option) return;
@@ -140,6 +149,10 @@ const App = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
+  const closeMenu = () => {
+    setIsMenuOpen(false);
+  }
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -154,6 +167,7 @@ const App = () => {
           toggleMenu={toggleMenu}
           isMenuOpen={isMenuOpen}
           setIsCartVisible={setIsCartVisible}
+          closeMenu={closeMenu}
         />
         <main className="app-container">
           <Suspense fallback={
@@ -178,12 +192,13 @@ const App = () => {
               <Route path="/my-orders" element={<ProtectedRoute user={user}><MyOrders user={user} orders={orders} isAdmin={isAdmin} /></ProtectedRoute>} />
               <Route path="/dashboard" element={<ProtectedRoute user={user} adminOnly><Dashboard orders={orders} /></ProtectedRoute>} />
               <Route path="/all-reviews" element={<ProtectedRoute user={user} adminOnly><AllReviewsPage /></ProtectedRoute>} />
-              <Route path="/orders" element={<ProtectedRoute user={user} adminOnly><Orders orders={orders} isAdmin={isAdmin} /></ProtectedRoute>} />
+              <Route path="/orders" element={<ProtectedRoute user={user} adminOnly><Orders orders={orders} /></ProtectedRoute>} />
               <Route path="/users" element={<ProtectedRoute user={user} adminOnly><Users orders={orders} /></ProtectedRoute>} />
               <Route path="/data-deletion" element={<DataDeletion />} />
               <Route path="/terms-of-service" element={<TermsOfService />} />
               <Route path="/privacy-policy" element={<LegalInfo />} />
               <Route path="/disclaimer" element={<DisclaimerPage user={user} onClearCart={clearCart} />} />
+              <Route path="/grant-admin" element={<GrantAdmin />} />
               <Route path="*" element={<NotFoundPage />} />
             </Routes>
           </Suspense>

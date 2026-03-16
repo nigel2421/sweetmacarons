@@ -1,52 +1,50 @@
 
-# Application Blueprint
+# Project Blueprint
 
-## 1. Overview
+## Overview
 
-**Purpose:** A modern, responsive e-commerce web application for a macaron business named "Los Tres Macarons." The application allows users to browse products, place orders, and manage their accounts. Administrators have access to a dashboard for managing users, orders, and viewing analytics.
+This document outlines the plan for implementing an Order Management UI and backend logic with a specific status dropdown and automated workflow. The goal is to create a system that automates the order fulfillment process and provides a clear and organized view of active and completed orders.
 
-**Key Features:**
-- User authentication (Google & Email)
-- Product catalog with details
-- Shopping cart and checkout
-- Order history and reordering
-- Admin dashboard with user and order management
-- Real-time data updates with Firestore
+## Plan
 
-## 2. Architecture & Design Choices
+### 1. Update Status Dropdown
 
-- **Frontend:** React (Vite)
-- **Backend:** Firebase (Authentication, Firestore, Cloud Functions)
-- **Styling:** CSS with a focus on modern, responsive design
-- **Routing:** `react-router-dom` for client-side navigation
-- **Real-time Data:** Firestore `onSnapshot` for live updates to orders.
+- Modify the status dropdown in `src/pages/OrderDetailsModal.jsx` to include the following options in this exact order:
+  - Pending
+  - Deposit Paid
+  - In Progress
+  - Shipped
+  - Delivered
+  - Order Closed
+  - Cancelled
 
-## 3. Implemented Features & Styles
+### 2. Implement Automation Logic
 
-- **Header:** A sticky header with the logo, site title, navigation links, cart icon, and user profile icon.
-- **Footer:** A simple footer with navigation links and social media icons.
-- **Home Page:** Displays a hero section and a grid of macaron products.
-- **Product Cards:** Each card shows the macaron's name, image, and price, with a button to add it to the cart.
-- **Cart:** A modal that displays the items in the cart, with options to remove items or clear the cart.
-- **User Authentication:** A login page with options for Google Sign-In and email/password authentication.
-- **User & Admin Roles:** The application distinguishes between regular users and administrators, with administrators having access to a protected dashboard.
-- **Orders Page:** Displays a table of the user's past orders, with real-time status updates.
-- **User Management Page:** An admin-only page that currently displays a list of users who have placed orders.
-- **Code Splitting:** `React.lazy` is used for page components. Granular `manualChunks` configuration in `vite.config.js` splits large dependencies (Firebase, Recharts, jsPDF) into separate chunks to optimize initial load times.
+- Create a new file, `src/automation.js`, to house the automation logic for the 4-day workflow.
+- Define the time intervals for status changes as variables in `src/automation.js`:
+  - `IN_PROGRESS_TIMEOUT`: 2 hours
+  - `SHIPPED_TIMEOUT`: 72 hours
+  - `DELIVERED_TIMEOUT`: 96 hours
+- Create a function in `src/automation.js` that will be triggered when an order status is changed to `Deposit Paid`.
+- This function will use `setTimeout` to automatically update the order status based on the defined time intervals.
+- The automation will be triggered from the `handleStatusChange` function in `src/pages/OrderDetailsModal.jsx`.
 
-## 4. Current Task: Fix User Management & Ensure Real-time Updates
+### 3. Implement Manual Actions & State Management
 
-**Problem:** The User Management page (`/users`) does not display all registered users; it only shows users who have placed at least one order. Additionally, the user wants to ensure that all data, including orders, is refreshed in real-time.
+- The `handleStatusChange` function in `src/pages/OrderDetailsModal.jsx` will be updated to handle manual status changes.
+- The `Order Closed` status will be a manual action that can only be set by an admin.
 
-**Plan:**
+### 4. Implement Dashboard Filtering
 
-1.  **Confirm Real-time Order Updates:** The application already uses Firestore's `onSnapshot` for real-time updates on the `Orders` page, so this functionality is already implemented.
+- Create a new file, `src/pages/Orders.jsx`, to implement the dashboard filtering with two distinct views:
+  - **Active Orders**: Displays any order with the status: Pending, Deposit Paid, In Progress, Shipped, or Delivered.
+  - **Completed/Historical Orders**: Displays only orders marked as Order Closed or Cancelled.
+- The `Orders` page will fetch all orders from Firestore and filter them based on the selected view.
 
-2.  **Create a Firebase Cloud Function:**
-    - A new HTTP-callable Cloud Function named `listUsers` will be created.
-    - This function will use the Firebase Admin SDK to fetch the complete list of users from Firebase Authentication.
-    - The function will be secured to ensure that only authenticated admin users can call it.
+### 5. Update Routing
 
-3.  **Update the User Management Page (`Users.jsx`):**
-    - The `Users.jsx` component will be modified to call the new `listUsers` Cloud Function.
-    - The component will then merge the complete user list from the function with the existing order data from Firestore to provide a comprehensive view of all users and their order history.
+- Update the routing in `src/App.jsx` to include the new `Orders` page.
+
+### 6. Testing
+
+- Run all tests to ensure that the new features are working correctly and that no existing functionality has been broken.

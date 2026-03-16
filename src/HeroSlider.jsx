@@ -22,6 +22,8 @@ const HeroSlider = ({ slides }) => {
           key={index}
           className={`hero-slide ${index === currentSlide ? 'active' : ''}`}
           style={{ backgroundImage: `url(${slide.image})` }}
+          role="img"
+          aria-label={slide.alt || slide.title}
         >
           <div className="hero-slide-content">
             <h2>{slide.title}</h2>

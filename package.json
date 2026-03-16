@@ -8,7 +8,8 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "test": "vitest"
+    "test": "vitest",
+    "compress": "node scripts/compress-images.mjs"
   },
   "dependencies": {
     "@dataconnect/generated": "file:src/dataconnect-generated",
@@ -26,6 +27,7 @@
     "react-slick": "^0.31.0",
     "react-toastify": "^11.0.5",
     "recharts": "^2.12.7",
+    "sharp": "^0.34.5",
     "slick-carousel": "^1.8.1"
   },
   "devDependencies": {
