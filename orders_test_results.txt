@@ -1,0 +1,771 @@
+
+[1m[46m RUN [49m[22m [36mv4.0.18 [39m[90mC:/Users/USER/Music/WEBSITES/sweetmacarons[39m
+
+ [31mÔØ»[39m src/__tests__/Orders.test.jsx [2m([22m[2m4 tests[22m[2m | [22m[31m1 failed[39m[2m)[22m[33m 680[2mms[22m[39m
+     [32mÔ£ô[39m renders active orders by default[32m 144[2mms[22m[39m
+     [33m[2mÔ£ô[22m[39m switches to completed/historical orders tab and filters correctly [33m 320[2mms[22m[39m
+[31m     [31m├ù[31m handles bulk status updates for multiple orders[39m[32m 159[2mms[22m[39m
+     [32mÔ£ô[39m opens order details modal when an order is clicked[32m 53[2mms[22m[39m
+
+ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ» Failed Tests 1 ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»
+
+ FAIL  src/__tests__/Orders.test.jsx > Orders Page > handles bulk status updates for multiple orders
+TestingLibraryElementError: Unable to find an element with the display value: /Update Status/i.
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <div
+      class="orders-page"
+    >
+      <h1>
+        Order Management
+      </h1>
+      <div
+        class="tabs"
+      >
+        <button
+          class="tab-button active"
+        >
+          Active Orders
+        </button>
+        <button
+          class="tab-button "
+        >
+          Completed/Historical Orders
+        </button>
+      </div>
+      <div
+        class="bulk-actions-bar"
+      >
+        <span
+          class="selected-count"
+        >
+          5
+           orders selected
+        </span>
+        <div
+          class="bulk-controls"
+        >
+          <select
+            class="bulk-status-select"
+          >
+            <option
+              value=""
+            >
+              Select Status...
+            </option>
+            <option
+              value="pending"
+            >
+              Pending
+            </option>
+            <option
+              value="deposit-paid"
+            >
+              Deposit Paid
+            </option>
+            <option
+              value="in-progress"
+            >
+              In Progress
+            </option>
+            <option
+              value="shipped"
+            >
+              Shipped
+            </option>
+            <option
+              value="delivered"
+            >
+              Delivered
+            </option>
+            <option
+              value="order-closed"
+            >
+              Order Completed
+            </option>
+          </select>
+          <button
+            class="apply-bulk-btn"
+            disabled=""
+          >
+            Apply to All
+          </button>
+        </div>
+      </div>
+      <div
+        class="orders-container"
+      >
+        <div
+          class="table-wrapper desktop-only"
+        >
+          <table
+            class="orders-table"
+          >
+            <thead>
+              <tr>
+                <th
+                  class="checkbox-cell"
+                >
+                  <input
+                    type="checkbox"
+                  />
+                </th>
+                <th>
+                  Order ID
+                </th>
+                <th>
+                  Date
+                </th>
+                <th>
+                  Customer
+                </th>
+                <th>
+                  Total
+                </th>
+                <th>
+                  Status
+                </th>
+                <th>
+                  Actions
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                class="order-row selected"
+              >
+                <td
+                  class="checkbox-cell"
+                >
+                  <input
+                    type="checkbox"
+                  />
+                </td>
+                <td
+                  class="order-id"
+                >
+                  #
+                  LTM-101
+                </td>
+                <td>
+                  22/03/2026
+                </td>
+                <td>
+                  Anonymous
+                </td>
+                <td
+                  class="order-total"
+                >
+                  Ksh 
+                  100
+                </td>
+                <td>
+                  <span
+                    class="order-status-badge pending"
+                  >
+                    pending
+                  </span>
+                </td>
+                <td>
+                  <button
+                    class="edit-order-btn"
+                  >
+                    View Details
+                  </button>
+                </td>
+              </tr>
+              <tr
+                class="order-row selected"
+              >
+                <td
+                  class="checkbox-cell"
+                >
+                  <input
+                    type="checkbox"
+                  />
+                </td>
+                <td
+                  class="order-id"
+                >
+                  #
+                  LTM-102
+                </td>
+                <td>
+                  22/03/2026
+                </td>
+                <td>
+                  Anonymous
+                </td>
+                <td
+                  class="order-total"
+                >
+                  Ksh 
+                  150
+                </td>
+                <td>
+                  <span
+                    class="order-status-badge depositpaid"
+                  >
+                    deposit-paid
+                  </span>
+                </td>
+                <td>
+                  <button
+                    class="edit-order-btn"
+                  >
+                    View Details
+                  </button>
+                </td>
+              </tr>
+              <tr
+                class="order-row selected"
+              >
+                <td
+                  class="checkbox-cell"
+                >
+                  <input
+                    type="checkbox"
+                  />
+                </td>
+                <td
+                  class="order-id"
+                >
+                  #
+                  LTM-103
+                </td>
+                <td>
+                  22/03/2026
+                </td>
+                <td>
+                  Anonymous
+                </td>
+                <td
+                  class="order-total"
+                >
+                  Ksh 
+                  200
+                </td>
+                <td>
+                  <span
+                    class="order-status-badge inprogress"
+                  >
+                    in-progress
+                  </span>
+                </td>
+                <td>
+                  <button
+                    class="edit-order-btn"
+                  >
+                    View Details
+                  </button>
+                </td>
+              </tr>
+              <tr
+                class="order-row selected"
+              >
+                <td
+                  class="checkbox-cell"
+                >
+                  <input
+                    type="checkbox"
+                  />
+                </td>
+                <td
+                  class="order-id"
+                >
+                  #
+                  LTM-104
+                </td>
+                <td>
+                  22/03/2026
+                </td>
+                <td>
+                  Anonymous
+                </td>
+                <td
+                  class="order-total"
+                >
+                  Ksh 
+                  250
+                </td>
+                <td>
+                  <span
+                    class="order-status-badge shipped"
+                  >
+                    shipped
+                  </span>
+                </td>
+                <td>
+                  <button
+                    class="edit-order-btn"
+                  >
+                    View Details
+                  </button>
+                </td>
+              </tr>
+              <tr
+                class="order-row selected"
+              >
+                <td
+                  class="checkbox-cell"
+                >
+                  <input
+                    type="checkbox"
+                  />
+                </td>
+                <td
+                  class="order-id"
+                >
+                  #
+                  LTM-105
+                </td>
+                <td>
+                  22/03/2026
+                </td>
+                <td>
+                  Anonymous
+                </td>
+                <td
+                  class="order-total"
+                >
+                  Ksh 
+                  300
+                </td>
+                <td>
+                  <span
+                    class="order-status-badge delivered"
+                  >
+                    delivered
+                  </span>
+                </td>
+                <td>
+                  <button
+                    class="edit-order-btn"
+                  >
+                    View Details
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div
+          class="mobile-only orders-cards-list"
+        >
+          <div
+            class="order-mobile-card selected"
+          >
+            <div
+              class="card-selection-header"
+            >
+              <input
+                type="checkbox"
+              />
+              <span
+                class="card-order-id"
+              >
+                #
+                LTM-101
+              </span>
+              <span
+                class="order-status-badge pending"
+              >
+                pending
+              </span>
+            </div>
+            <div
+              class="card-body"
+            >
+              <div
+                class="card-info"
+              >
+                <span
+                  class="label"
+                >
+                  Customer:
+                </span>
+                <span
+                  class="value"
+                >
+                  Anonymous
+                </span>
+              </div>
+              <div
+                class="card-info"
+              >
+                <span
+                  class="label"
+                >
+                  Date:
+                </span>
+                <span
+                  class="value"
+                >
+                  22/03/2026
+                </span>
+              </div>
+              <div
+                class="card-info"
+              >
+                <span
+                  class="label"
+                >
+                  Total:
+                </span>
+                <span
+                  class="value highlighting"
+                >
+                  Ksh 
+                  100
+                </span>
+              </div>
+            </div>
+            <div
+              class="card-footer"
+            >
+              <button
+                class="view-details-mobile-btn"
+              >
+                View & Edit Details
+              </button>
+            </div>
+          </div>
+          <div
+            class="order-mobile-card selected"
+          >
+            <div
+              class="card-selection-header"
+            >
+              <input
+                type="checkbox"
+              />
+              <span
+                class="card-order-id"
+              >
+                #
+                LTM-102
+              </span>
+              <span
+                class="order-status-badge depositpaid"
+              >
+                deposit-paid
+              </span>
+            </div>
+            <div
+              class="card-body"
+            >
+              <div
+                class="card-info"
+              >
+                <span
+                  class="label"
+                >
+                  Customer:
+                </span>
+                <span
+                  class="value"
+                >
+                  Anonymous
+                </span>
+              </div>
+              <div
+                class="card-info"
+              >
+                <span
+                  class="label"
+                >
+                  Date:
+                </span>
+                <span
+                  class="value"
+                >
+                  22/03/2026
+                </span>
+              </div>
+              <div
+                class="card-info"
+              >
+                <span
+                  class="label"
+                >
+                  Total:
+                </span>
+                <span
+                  class="value highlighting"
+                >
+                  Ksh 
+                  150
+                </span>
+              </div>
+            </div>
+            <div
+              class="card-footer"
+            >
+              <button
+                class="view-details-mobile-btn"
+              >
+                View & Edit Details
+              </button>
+            </div>
+          </div>
+          <div
+            class="order-mobile-card selected"
+          >
+            <div
+              class="card-selection-header"
+            >
+              <input
+                type="checkbox"
+              />
+              <span
+                class="card-order-id"
+              >
+                #
+                LTM-103
+              </span>
+              <span
+                class="order-status-badge inprogress"
+              >
+                in-progress
+              </span>
+            </div>
+            <div
+              class="card-body"
+            >
+              <div
+                class="card-info"
+              >
+                <span
+                  class="label"
+                >
+                  Customer:
+                </span>
+                <span
+                  class="value"
+                >
+                  Anonymous
+                </span>
+              </div>
+              <div
+                class="card-info"
+              >
+                <span
+                  class="label"
+                >
+                  Date:
+                </span>
+                <span
+                  class="value"
+                >
+                  22/03/2026
+                </span>
+              </div>
+              <div
+                class="card-info"
+              >
+                <span
+                  class="label"
+                >
+                  Total:
+                </span>
+                <span
+                  class="value highlighting"
+                >
+                  Ksh 
+                  200
+                </span>
+              </div>
+            </div>
+            <div
+              class="card-footer"
+            >
+              <button
+                class="view-details-mobile-btn"
+              >
+                View & Edit Details
+              </button>
+            </div>
+          </div>
+          <div
+            class="order-mobile-card selected"
+          >
+            <div
+              class="card-selection-header"
+            >
+              <input
+                type="checkbox"
+              />
+              <span
+                class="card-order-id"
+              >
+                #
+                LTM-104
+              </span>
+              <span
+                class="order-status-badge shipped"
+              >
+                shipped
+              </span>
+            </div>
+            <div
+              class="card-body"
+            >
+              <div
+                class="card-info"
+              >
+                <span
+                  class="label"
+                >
+                  Customer:
+                </span>
+                <span
+                  class="value"
+                >
+                  Anonymous
+                </span>
+              </div>
+              <div
+                class="card-info"
+              >
+                <span
+                  class="label"
+                >
+                  Date:
+                </span>
+                <span
+                  class="value"
+                >
+                  22/03/2026
+                </span>
+              </div>
+              <div
+                class="card-info"
+              >
+                <span
+                  class="label"
+                >
+                  Total:
+                </span>
+                <span
+                  class="value highlighting"
+                >
+                  Ksh 
+                  250
+                </span>
+              </div>
+            </div>
+            <div
+              class="card-footer"
+            >
+              <button
+                class="view-details-mobile-btn"
+              >
+                View & Edit Details
+              </button>
+            </div>
+          </div>
+          <div
+            class="order-mobile-card selected"
+          >
+            <div
+              class="card-selection-header"
+            >
+              <input
+                type="checkbox"
+              />
+              <span
+                class="card-order-id"
+              >
+                #
+                LTM-105
+              </span>
+              <span
+                class="order-status-badge delivered"
+              >
+                delivered
+              </span>
+            </div>
+            <div
+              class="card-body"
+            >
+              <div
+                class="card-info"
+              >
+                <span
+                  class="label"
+                >
+                  Customer:
+                </span>
+                <span
+                  class="value"
+                >
+                  Anonymous
+                </span>
+              </div>
+              <div
+                class="card-info"
+              >
+                <span
+                  class="label"
+                >
+                  Date:
+                </span>
+                <span
+                  class="value"
+                >
+                  22/03/2026
+                </span>
+              </div>
+              <div
+                class="card-info"
+              >
+                <span
+                  class="label"
+                >
+                  Total:
+                </span>
+                <span
+                  class="value highlighting"
+                >
+                  Ksh 
+                  300
+                </span>
+              </div>
+            </div>
+            <div
+              class="card-footer"
+            >
+              <button
+                class="view-details-mobile-btn"
+              >
+                View & Edit Details
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+ ÔØ» Object.getElementError node_modules/@testing-library/dom/dist/config.js:37:19
+ ÔØ» node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ÔØ» node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ÔØ» node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ÔØ» src/__tests__/Orders.test.jsx:78:35
+     76|         
+     77|         // Change bulk status
+     78|         const bulkSelect = screen.getByDisplayValue(/Update Status/i);
+       |                                   ^
+     79|         fireEvent.change(bulkSelect, { target: { value: 'shipped' } });
+     80|         
+
+ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»[1/1]ÔÄ»
+
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m3 passed[39m[22m[90m (4)[39m
+[2m   Start at [22m 09:45:37
+[2m   Duration [22m 3.49s[2m (transform 258ms, setup 244ms, import 859ms, tests 680ms, environment 1.42s)[22m
+

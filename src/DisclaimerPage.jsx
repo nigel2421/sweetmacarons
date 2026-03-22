@@ -14,6 +14,7 @@ const DisclaimerPage = ({ user, onClearCart }) => {
   const [agree, setAgree] = useState(false);
   const [isOrderSuccessful, setIsOrderSuccessful] = useState(false);
   const [whatsappMessage, setWhatsappMessage] = useState('');
+  const [orderNotes, setOrderNotes] = useState('');
 
   // Store cart data in state to prevent loss on re-renders
   const [cartData] = useState(() => {
@@ -75,6 +76,7 @@ const DisclaimerPage = ({ user, onClearCart }) => {
         deliveryAddress,
         deliveryFee,
         macaronsTotal,
+        orderNotes,
         depositAmount: macaronsTotal * 0.5,
         balance: grandTotal - (macaronsTotal * 0.5),
       });
@@ -141,6 +143,17 @@ const DisclaimerPage = ({ user, onClearCart }) => {
           <div className="consent-checkbox">
             <input type="checkbox" id="agree" checked={agree} onChange={() => setAgree(!agree)} />
             <label htmlFor="agree">I agree to these terms and conditions.</label>
+          </div>
+          <div className="order-notes-section">
+            <h3>Order Notes (Optional)</h3>
+            <p className="subtitle">Any special requests, allergies, or delivery instructions?</p>
+            <textarea
+              value={orderNotes}
+              onChange={(e) => setOrderNotes(e.target.value)}
+              placeholder="e.g. Nut allergy, Deliver before 2pm, Happy Birthday message..."
+              rows="3"
+              className="order-notes-input"
+            ></textarea>
           </div>
           {agree && (
             <div className="cart-review">

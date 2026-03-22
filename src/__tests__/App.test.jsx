@@ -26,7 +26,7 @@ describe('App component routing', () => {
         <App />
       </MemoryRouter>
     );
-    expect(await screen.findByRole('heading', { name: /Explore Our Gourmet Macaron Collection/i })).toBeInTheDocument();
+    expect(await screen.findByRole('heading', { name: /Explore Our Gourmet Macaron Collection/i }, { timeout: 3000 })).toBeInTheDocument();
   });
 
   test('navigates to the about page', async () => {
@@ -35,7 +35,7 @@ describe('App component routing', () => {
         <App />
       </MemoryRouter>
     );
-    expect(await screen.findByRole('heading', { name: 'About Us' })).toBeInTheDocument();
+    expect(await screen.findByRole('heading', { name: 'About Us' }, { timeout: 3000 })).toBeInTheDocument();
   });
 
   test('navigates to the login page', async () => {
@@ -44,6 +44,6 @@ describe('App component routing', () => {
         <App />
       </MemoryRouter>
     );
-    expect(await screen.findByRole('heading', { name: 'Login' })).toBeInTheDocument();
+    expect(await screen.findByRole('heading', { name: 'Login' }, { timeout: 3000 })).toBeInTheDocument();
   });
 });

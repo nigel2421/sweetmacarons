@@ -8,6 +8,8 @@ import {
   getDocs,
   addDoc,
 } from 'firebase/firestore';
+import { aiService } from './services/aiService';
+import { FiMessageSquare, FiZap } from 'react-icons/fi';
 import './Reviews.css';
 
 // A more advanced Star component using SVG for better styling
@@ -32,6 +34,25 @@ const Reviews = ({ productId, user }) => {
   const [hoverRating, setHoverRating] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [summary, setSummary] = useState(null);
+  const [isSummarizing, setIsSummarizing] = useState(false);
+
+  useEffect(() => {
+    const getSummary = async () => {
+      if (reviews.length >= 3 && !summary) {
+        setIsSummarizing(true);
+        try {
+          const text = await aiService.summarizeReviews(reviews);
+          setSummary(text);
+        } catch (e) {
+          console.error("AI Summary failed", e);
+        } finally {
+          setIsSummarizing(false);
+        }
+      }
+    };
+    getSummary();
+  }, [reviews, summary]);
 
   useEffect(() => {
     if (user) {
@@ -109,6 +130,22 @@ const Reviews = ({ productId, user }) => {
       <h3>Customer Reviews</h3>
       {isLoading && <p>Loading...</p>}
       {error && <p className="error-message">{error}</p>}
+      
+      {isSummarizing && (
+        <div className="ai-summarizing-status">
+          <FiZap className="pulse" /> Creating AI summary...
+        </div>
+      )}
+
+      {summary && (
+        <div className="ai-review-summary">
+          <div className="summary-header">
+            <FiMessageSquare /> <span>What customers are saying</span>
+          </div>
+          <p className="summary-text">"{summary}"</p>
+        </div>
+      )}
+
       <div className="reviews-list">
         {reviews.length > 0 ? (
           reviews.map((review) => (

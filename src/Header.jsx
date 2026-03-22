@@ -2,7 +2,7 @@ import React from 'react';
 import { FiShoppingCart, FiMenu, FiUser, FiX } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
 
-const Header = ({ user, cart = [], toggleMenu, isMenuOpen, setIsCartVisible, closeMenu }) => {
+const Header = ({ user, isAdmin, cart = [], toggleMenu, isMenuOpen, setIsCartVisible, closeMenu }) => {
   const safeCart = Array.isArray(cart) ? cart : [];
   const cartCount = safeCart.reduce((acc, item) => acc + item.quantity, 0);
 
@@ -37,7 +37,9 @@ const Header = ({ user, cart = [], toggleMenu, isMenuOpen, setIsCartVisible, clo
         <ul>
           <li><Link to="/" onClick={closeMenu}>Home</Link></li>
           <li><Link to="/about" onClick={closeMenu}>About</Link></li>
+          <li><Link to="/flavor-explorer" onClick={closeMenu}>Flavor Explorer</Link></li>
           <li><Link to="/contact" onClick={closeMenu}>Contact</Link></li>
+          {isAdmin && <li><Link to="/dashboard" onClick={closeMenu} style={{ color: '#e75480', fontWeight: '700' }}>🛡️ Admin Console</Link></li>}
           {user ? (
             <li><Link to="/my-account" onClick={closeMenu}>My Account</Link></li>
           ) : (

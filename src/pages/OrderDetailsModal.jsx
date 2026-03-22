@@ -8,12 +8,33 @@ import { generateOrderReceipt } from '../lib/pdf';
 import { toast } from 'react-toastify';
 import { FiDownload } from 'react-icons/fi';
 import { scheduleStatusUpdates } from '../automation';
+import { aiService } from '../services/aiService';
+import { FiAlertTriangle, FiInfo, FiZap } from 'react-icons/fi';
 import './OrderDetailsModal.css';
 
 const OrderDetailsModal = ({ order, show, onClose, onUpdateStatus, onReorder, isAdmin }) => {
   const [isUpdating, setIsUpdating] = React.useState(false);
   const [isEditingDeposit, setIsEditingDeposit] = React.useState(false);
   const [tempDeposit, setTempDeposit] = React.useState(0);
+  const [aiAlerts, setAiAlerts] = React.useState(null);
+  const [isScanning, setIsScanning] = React.useState(false);
+
+  React.useEffect(() => {
+    const scanNote = async () => {
+      if (order?.orderNotes && isAdmin && !aiAlerts) {
+        setIsScanning(true);
+        try {
+          const result = await aiService.scanOrderNotes(order.orderNotes);
+          setAiAlerts(result);
+        } catch (e) {
+          console.error("AI Scan failed", e);
+        } finally {
+          setIsScanning(false);
+        }
+      }
+    };
+    scanNote();
+  }, [order?.orderNotes, isAdmin, order?.id, aiAlerts]);
 
   React.useEffect(() => {
     if (order?.depositAmount !== undefined) {
@@ -44,11 +65,11 @@ const OrderDetailsModal = ({ order, show, onClose, onUpdateStatus, onReorder, is
         balance: grandTotal - tempDeposit
       };
 
-      // Auto-update status to in-progress if it was pending
+      // Auto-update status to deposit-paid if it was pending
       if (order.status === 'pending') {
-        updateData.status = 'in-progress';
+        updateData.status = 'deposit-paid';
         updateData.statusHistory = arrayUnion({
-          status: 'in-progress',
+          status: 'deposit-paid',
           timestamp: new Date().toISOString(),
           updatedBy: auth.currentUser?.email || 'System (Deposit Set)'
         });
@@ -65,7 +86,7 @@ const OrderDetailsModal = ({ order, show, onClose, onUpdateStatus, onReorder, is
 
       if (onUpdateStatus) onUpdateStatus(order.id, updateData.status || order.status);
       setIsEditingDeposit(false);
-      toast.success("Deposit updated and status set to in-progress");
+      toast.success("Deposit updated and status set to 'deposit-paid'");
     } catch (error) {
       console.error("Error updating deposit:", error);
       toast.error("Failed to update deposit");
@@ -147,7 +168,7 @@ const OrderDetailsModal = ({ order, show, onClose, onUpdateStatus, onReorder, is
                     <option value="in-progress">In Progress</option>
                     <option value="shipped">Shipped</option>
                     <option value="delivered">Delivered</option>
-                    <option value="order-closed">Order Closed</option>
+                    <option value="order-closed">Order Completed</option>
                     <option value="cancelled">Cancelled</option>
                   </select>
                   {isUpdating && <div className="status-spinner"></div>}
@@ -156,6 +177,33 @@ const OrderDetailsModal = ({ order, show, onClose, onUpdateStatus, onReorder, is
                 <span className={`order-status ${order.status.toLowerCase().replace('-', '')}`}>{order.status}</span>
               )}
             </div>
+            
+            {isAdmin && isScanning && (
+              <div className="ai-scanning-badge">
+                <FiZap className="pulse" /> Scanning for alerts...
+              </div>
+            )}
+
+            {isAdmin && aiAlerts?.hasAlert && (
+              <div className="ai-alert-banner">
+                <div className="alert-header">
+                  <FiAlertTriangle /> <span>AI SAFETY ALERT</span>
+                </div>
+                <div className="alert-tags">
+                  {aiAlerts.alerts.map((alert, i) => (
+                    <span key={i} className="alert-tag">{alert}</span>
+                  ))}
+                </div>
+                <p className="alert-summary">{aiAlerts.summary}</p>
+              </div>
+            )}
+
+            {order.orderNotes && (
+              <div className="order-notes-display">
+                <strong>Customer Notes:</strong>
+                <p>{order.orderNotes}</p>
+              </div>
+            )}
             <hr />
             <h4>Items</h4>
             <div className="order-items-list">

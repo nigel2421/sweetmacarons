@@ -6,6 +6,7 @@
   # Use https://search.nixos.org/packages to find packages
   packages = [
     pkgs.nodejs_22
+    pkgs.firebase-tools
   ];
   # Sets environment variables in the workspace
   env = {};

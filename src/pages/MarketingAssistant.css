@@ -1,0 +1,161 @@
+
+.marketing-assistant {
+  max-width: 1000px;
+  margin: 2rem auto;
+  padding: 2rem;
+}
+
+.assistant-header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.header-icon {
+  font-size: 3rem;
+  color: #e75480;
+  margin-bottom: 1rem;
+}
+
+.assistant-header h2 {
+  font-family: 'Fredoka', sans-serif;
+  font-size: 2.2rem;
+  color: #e75480;
+  margin: 0 0 0.5rem 0;
+}
+
+.assistant-header p {
+  color: #718096;
+  font-size: 1.1rem;
+}
+
+.theme-input-group {
+  display: flex;
+  gap: 1rem;
+  background: white;
+  padding: 1.5rem;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+  margin-bottom: 2.5rem;
+}
+
+.theme-input-group input {
+  flex: 1;
+  padding: 0.8rem 1.2rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 1.1rem;
+}
+
+.theme-input-group button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0 1.5rem;
+  background: #e75480;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.theme-input-group button:hover {
+  background: #d4436d;
+}
+
+.marketing-results {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.result-card {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+}
+
+.result-card h3 {
+  margin: 0 0 1rem 0;
+  color: #4a5568;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.headline-card .card-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 2rem;
+}
+
+.large-text {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #2d3748;
+  margin: 0;
+}
+
+.result-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.caption-box {
+  background: #f8fafc;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  position: relative;
+}
+
+.caption-box p {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: #4a5568;
+}
+
+.caption-box button, .headline-card button {
+  background: transparent;
+  border: none;
+  color: #cbd5e0;
+  cursor: pointer;
+  padding: 0.5rem;
+  transition: color 0.2s;
+}
+
+.caption-box button:hover, .headline-card button:hover {
+  color: #e75480;
+}
+
+.flavor-ideas {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.flavor-ideas li {
+  padding: 0.8rem 0;
+  border-bottom: 1px solid #edf2f7;
+  color: #2d3748;
+  font-weight: 500;
+}
+
+.flavor-ideas li:last-child {
+  border-bottom: none;
+}
+
+@media (max-width: 768px) {
+  .result-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .theme-input-group {
+    flex-direction: column;
+  }
+}

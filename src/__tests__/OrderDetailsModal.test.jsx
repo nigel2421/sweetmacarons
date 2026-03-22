@@ -4,6 +4,7 @@ import { describe, test, expect, vi, beforeEach } from 'vitest';
 import OrderDetailsModal from '../pages/OrderDetailsModal';
 import { updateDoc } from 'firebase/firestore';
 import { generateOrderReceipt } from '../lib/pdf';
+import { aiService } from '../services/aiService';
 
 // Mock Firebase
 vi.mock('../firebase', () => ({
@@ -26,6 +27,12 @@ vi.mock('../lib/pdf', () => ({
 
 vi.mock('../lib/audit', () => ({
     logAdminAction: vi.fn(),
+}));
+
+vi.mock('../services/aiService', () => ({
+    aiService: {
+        scanOrderNotes: vi.fn(() => Promise.resolve({ hasAlert: true, alerts: ['Allergy'], summary: 'Caution' }))
+    }
 }));
 
 // Mock react-toastify
@@ -105,11 +112,11 @@ describe('OrderDetailsModal Component', () => {
         );
 
         const select = screen.getByRole('combobox');
-        fireEvent.change(select, { target: { value: 'paid' } });
+        fireEvent.change(select, { target: { value: 'deposit-paid' } });
 
         await waitFor(() => {
             expect(updateDoc).toHaveBeenCalled();
-            expect(onUpdateStatus).toHaveBeenCalledWith('LTM-1', 'paid');
+            expect(onUpdateStatus).toHaveBeenCalledWith('LTM-1', 'deposit-paid');
         });
     });
 
@@ -142,6 +149,26 @@ describe('OrderDetailsModal Component', () => {
         fireEvent.click(downloadBtn);
 
         expect(generateOrderReceipt).toHaveBeenCalledWith(mockOrder);
+    });
+
+    test('triggers AI note scan for admin when notes are present', async () => {
+        const orderWithNotes = {
+            ...mockOrder,
+            orderNotes: 'Please avoid peanuts, severe allergy.'
+        };
+        
+        render(
+            <OrderDetailsModal
+                show={true}
+                order={orderWithNotes}
+                onClose={onClose}
+                isAdmin={true}
+            />
+        );
+
+        await waitFor(() => {
+            expect(aiService.scanOrderNotes).toHaveBeenCalledWith(orderWithNotes.orderNotes);
+        });
     });
 
     test('renders status history correctly', () => {

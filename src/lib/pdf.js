@@ -10,7 +10,7 @@ export const generateOrderReceipt = async (order) => {
     if (!order) return;
 
     const doc = new jsPDF();
-    const logoUrl = '/images/logo.png';
+    const logoUrl = '/images/logo.jpeg';
 
     // Helper to load image
     const loadImage = (url) => {

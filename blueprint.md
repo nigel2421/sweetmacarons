@@ -45,6 +45,15 @@ This document outlines the plan for implementing an Order Management UI and back
 
 - Update the routing in `src/App.jsx` to include the new `Orders` page.
 
+## Long-term Maintenance & Project Continuity
+
+Following the deprecation of Firebase Studio, the project is maintained using a CLI-first and Emulator-based workflow.
+
+- **Environment**: Managed via `.idx/dev.nix` with `firebase-tools` included globally.
+- **Local Development**: Use `firebase emulators:start` to develop and test features locally. The Emulator UI (port 4000) provides a visual interface for managing local data.
+- **Deployment**: Use `firebase deploy` for all production updates.
+- **Reference**: Detailed maintenance procedures are documented in [MAINTENANCE.md](file:///c:/Users/USER/Music/WEBSITES/sweetmacarons/MAINTENANCE.md).
+
 ### 6. Testing
 
-- Run all tests to ensure that the new features are working correctly and that no existing functionality has been broken.
+- Run all tests to ensure that the new features are working correctly and that no existing functionality has been broken: `npm test`.

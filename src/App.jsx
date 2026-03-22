@@ -14,6 +14,7 @@ import CartModal from './CartModal';
 import ProductModal from './ProductModal';
 import ScrollToTop from './ScrollToTop';
 import ProtectedRoute from './ProtectedRoute';
+import AdminLayout from './components/AdminLayout';
 
 const Home = lazy(() => import('./pages/Home'));
 const About = lazy(() => import('./pages/About'));
@@ -32,6 +33,9 @@ const LegalInfo = lazy(() => import('./pages/LegalInfo'));
 const DisclaimerPage = lazy(() => import('./DisclaimerPage'));
 const AdminLogin = lazy(() => import('./pages/AdminLogin'));
 const GrantAdmin = lazy(() => import('./pages/GrantAdmin'));
+const AdminAIHelper = lazy(() => import('./pages/AdminAIHelper'));
+const FlavorExplorer = lazy(() => import('./pages/FlavorExplorer'));
+const MarketingAssistant = lazy(() => import('./pages/MarketingAssistant'));
 const NotFoundPage = lazy(() => import('./pages/NotFoundPage'));
 
 const App = () => {
@@ -163,6 +167,7 @@ const App = () => {
       <div className="app">
         <Header
           user={user}
+          isAdmin={isAdmin}
           cart={cart}
           toggleMenu={toggleMenu}
           isMenuOpen={isMenuOpen}
@@ -184,21 +189,29 @@ const App = () => {
           }>
             <Routes>
               <Route path="/" element={<Home onAddToCart={addToCart} onSelectMacaron={openProductModal} />} />
+              <Route path="/flavor-explorer" element={<FlavorExplorer />} />
               <Route path="/about" element={<About />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/login" element={<Login />} />
               <Route path="/admin-login" element={<AdminLogin />} />
               <Route path="/my-account" element={<ProtectedRoute user={user}><MyAccount user={user} /></ProtectedRoute>} />
-              <Route path="/my-orders" element={<ProtectedRoute user={user}><MyOrders user={user} orders={orders} isAdmin={isAdmin} /></ProtectedRoute>} />
-              <Route path="/dashboard" element={<ProtectedRoute user={user} adminOnly><Dashboard orders={orders} /></ProtectedRoute>} />
-              <Route path="/all-reviews" element={<ProtectedRoute user={user} adminOnly><AllReviewsPage /></ProtectedRoute>} />
-              <Route path="/orders" element={<ProtectedRoute user={user} adminOnly><Orders orders={orders} /></ProtectedRoute>} />
-              <Route path="/users" element={<ProtectedRoute user={user} adminOnly><Users orders={orders} /></ProtectedRoute>} />
-              <Route path="/data-deletion" element={<DataDeletion />} />
-              <Route path="/terms-of-service" element={<TermsOfService />} />
-              <Route path="/privacy-policy" element={<LegalInfo />} />
-              <Route path="/disclaimer" element={<DisclaimerPage user={user} onClearCart={clearCart} />} />
-              <Route path="/grant-admin" element={<GrantAdmin />} />
+               <Route path="/my-orders" element={<ProtectedRoute user={user}><MyOrders user={user} orders={orders} isAdmin={isAdmin} /></ProtectedRoute>} />
+               <Route path="/data-deletion" element={<DataDeletion />} />
+               <Route path="/terms-of-service" element={<TermsOfService />} />
+               <Route path="/privacy-policy" element={<LegalInfo />} />
+               <Route path="/disclaimer" element={<DisclaimerPage user={user} onClearCart={clearCart} />} />
+               <Route path="/grant-admin" element={<GrantAdmin />} />
+              
+              {/* Admin Console Layout */}
+              <Route element={<ProtectedRoute user={user} adminOnly><AdminLayout /></ProtectedRoute>}>
+                <Route path="/dashboard" element={<Dashboard orders={orders} />} />
+                <Route path="/all-reviews" element={<AllReviewsPage />} />
+                <Route path="/orders" element={<Orders orders={orders} isAdmin={isAdmin} />} />
+                <Route path="/users" element={<Users orders={orders} />} />
+                <Route path="/admin-ai-helper" element={<AdminAIHelper />} />
+                <Route path="/marketing-assistant" element={<MarketingAssistant />} />
+              </Route>
+
               <Route path="*" element={<NotFoundPage />} />
             </Routes>
           </Suspense>

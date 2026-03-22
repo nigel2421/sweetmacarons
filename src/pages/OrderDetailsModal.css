@@ -178,10 +178,15 @@
   padding: 0.6rem 1rem;
   border-radius: 8px;
   border: 1px solid #CBD5E0;
-  background: white;
-  color: #2D3748;
+  background: white !important;
+  color: #2D3748 !important;
   font-weight: 500;
   cursor: pointer;
+}
+
+.status-selector select option {
+  background: white !important;
+  color: #2D3748 !important;
 }
 
 .order-items-list {
@@ -481,3 +486,78 @@
   background: #F7FAFC;
   color: #4A5568;
 }
+
+/* AI Alert Styles */
+.ai-scanning-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  color: #666;
+  margin: 0.5rem 0;
+}
+
+.ai-alert-banner {
+  background: #fff5f5;
+  border: 1px solid #feb2b2;
+  border-radius: 8px;
+  padding: 1rem;
+  margin: 1rem 0;
+  border-left: 5px solid #f56565;
+}
+
+.alert-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 700;
+  color: #c53030;
+  margin-bottom: 0.5rem;
+}
+
+.alert-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.alert-tag {
+  background: #c53030;
+  color: white;
+  padding: 0.2rem 0.6rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.alert-summary {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #4a5568;
+}
+
+.order-notes-display {
+  background: #f7fafc;
+  padding: 1rem;
+  border-radius: 8px;
+  margin: 1rem 0;
+}
+
+.order-notes-display p {
+  margin: 0.5rem 0 0 0;
+  font-style: italic;
+  white-space: pre-wrap;
+}
+
+@keyframes pulse {
+  0% { opacity: 0.5; }
+  50% { opacity: 1; }
+  100% { opacity: 0.5; }
+}
+
+.pulse {
+  animation: pulse 1.5s infinite;
+  color: #e75480;
+}

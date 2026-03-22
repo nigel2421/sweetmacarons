@@ -1,0 +1,1961 @@
+
+[1m[46m RUN [49m[22m [36mv4.0.18 [39m[90mC:/Users/USER/Music/WEBSITES/sweetmacarons[39m
+
+stderr | src/__tests__/MyAccount.test.jsx > MyAccount Component > renders user email correctly
+Error checking admin claims: TypeError: user.getIdTokenResult is not a function
+    at checkIsAdmin (C:/Users/USER/Music/WEBSITES/sweetmacarons/src/admin.js:16:42)
+    at C:/Users/USER/Music/WEBSITES/sweetmacarons/src/pages/MyAccount.jsx:14:7
+    at Object.react_stack_bottom_frame (C:\Users\USER\Music\WEBSITES\sweetmacarons\node_modules\react-dom\cjs\react-dom-client.development.js:25989:20)
+    at runWithFiberInDEV (C:\Users\USER\Music\WEBSITES\sweetmacarons\node_modules\react-dom\cjs\react-dom-client.development.js:874:13)
+    at commitHookEffectListMount (C:\Users\USER\Music\WEBSITES\sweetmacarons\node_modules\react-dom\cjs\react-dom-client.development.js:13249:29)
+    at commitHookPassiveMountEffects (C:\Users\USER\Music\WEBSITES\sweetmacarons\node_modules\react-dom\cjs\react-dom-client.development.js:13336:11)
+    at commitPassiveMountOnFiber (C:\Users\USER\Music\WEBSITES\sweetmacarons\node_modules\react-dom\cjs\react-dom-client.development.js:15484:13)
+    at recursivelyTraversePassiveMountEffects (C:\Users\USER\Music\WEBSITES\sweetmacarons\node_modules\react-dom\cjs\react-dom-client.development.js:15439:11)
+    at commitPassiveMountOnFiber (C:\Users\USER\Music\WEBSITES\sweetmacarons\node_modules\react-dom\cjs\react-dom-client.development.js:15718:11)
+    at recursivelyTraversePassiveMountEffects (C:\Users\USER\Music\WEBSITES\sweetmacarons\node_modules\react-dom\cjs\react-dom-client.development.js:15439:11)
+
+[90mstdout[2m | src/__tests__/DisclaimerPage.test.jsx[2m > [22m[2mDisclaimerPage Component[2m > [22m[2mrenders disclaimer content and calculates deposit correctly
+[22m[39misOrderSuccessful changed to: [33mfalse[39m
+whatsappMessage length: [33m0[39m
+
+stderr | src/__tests__/MyAccount.test.jsx > MyAccount Component > calls logout when button is clicked
+Error checking admin claims: TypeError: user.getIdTokenResult is not a function
+    at checkIsAdmin (C:/Users/USER/Music/WEBSITES/sweetmacarons/src/admin.js:16:42)
+    at C:/Users/USER/Music/WEBSITES/sweetmacarons/src/pages/MyAccount.jsx:14:7
+    at Object.react_stack_bottom_frame (C:\Users\USER\Music\WEBSITES\sweetmacarons\node_modules\react-dom\cjs\react-dom-client.development.js:25989:20)
+    at runWithFiberInDEV (C:\Users\USER\Music\WEBSITES\sweetmacarons\node_modules\react-dom\cjs\react-dom-client.development.js:874:13)
+    at commitHookEffectListMount (C:\Users\USER\Music\WEBSITES\sweetmacarons\node_modules\react-dom\cjs\react-dom-client.development.js:13249:29)
+    at commitHookPassiveMountEffects (C:\Users\USER\Music\WEBSITES\sweetmacarons\node_modules\react-dom\cjs\react-dom-client.development.js:13336:11)
+    at commitPassiveMountOnFiber (C:\Users\USER\Music\WEBSITES\sweetmacarons\node_modules\react-dom\cjs\react-dom-client.development.js:15484:13)
+    at recursivelyTraversePassiveMountEffects (C:\Users\USER\Music\WEBSITES\sweetmacarons\node_modules\react-dom\cjs\react-dom-client.development.js:15439:11)
+    at commitPassiveMountOnFiber (C:\Users\USER\Music\WEBSITES\sweetmacarons\node_modules\react-dom\cjs\react-dom-client.development.js:15718:11)
+    at recursivelyTraversePassiveMountEffects (C:\Users\USER\Music\WEBSITES\sweetmacarons\node_modules\react-dom\cjs\react-dom-client.development.js:15439:11)
+
+ [32mÔ£ô[39m src/__tests__/MyAccount.test.jsx [2m([22m[2m3 tests[22m[2m)[22m[33m 864[2mms[22m[39m
+     [33m[2mÔ£ô[22m[39m calls logout when button is clicked [33m 664[2mms[22m[39m
+ [32mÔ£ô[39m src/__tests__/About.test.jsx [2m([22m[2m1 test[22m[2m)[22m[33m 822[2mms[22m[39m
+     [33m[2mÔ£ô[22m[39m renders the main heading and paragraphs [33m 817[2mms[22m[39m
+ [32mÔ£ô[39m src/__tests__/Reviews.test.jsx [2m([22m[2m3 tests[22m[2m)[22m[33m 1469[2mms[22m[39m
+     [33m[2mÔ£ô[22m[39m renders reviews correctly [33m 319[2mms[22m[39m
+     [33m[2mÔ£ô[22m[39m submits a new review [33m 1081[2mms[22m[39m
+ [32mÔ£ô[39m src/__tests__/LegalPages.test.jsx [2m([22m[2m3 tests[22m[2m)[22m[33m 1362[2mms[22m[39m
+     [33m[2mÔ£ô[22m[39m renders LegalInfo correctly [33m 1138[2mms[22m[39m
+[90mstdout[2m | src/__tests__/DisclaimerPage.test.jsx[2m > [22m[2mDisclaimerPage Component[2m > [22m[2mtoggles checkout button based on agreement checkbox
+[22m[39misOrderSuccessful changed to: [33mfalse[39m
+whatsappMessage length: [33m0[39m
+
+[90mstdout[2m | src/__tests__/DisclaimerPage.test.jsx[2m > [22m[2mDisclaimerPage Component[2m > [22m[2mcopies payment number to clipboard
+[22m[39misOrderSuccessful changed to: [33mfalse[39m
+whatsappMessage length: [33m0[39m
+
+ [32mÔ£ô[39m src/__tests__/DisclaimerPage.test.jsx [2m([22m[2m4 tests[22m[2m | [22m[33m1 skipped[39m[2m)[22m[33m 1546[2mms[22m[39m
+     [33m[2mÔ£ô[22m[39m renders disclaimer content and calculates deposit correctly [33m 383[2mms[22m[39m
+     [33m[2mÔ£ô[22m[39m toggles checkout button based on agreement checkbox [33m 1065[2mms[22m[39m
+[90mstdout[2m | src/__tests__/OrderDetailsModal.test.jsx[2m > [22m[2mOrderDetailsModal Component[2m > [22m[2mhandles status update for admin
+[22m[39mScheduling automations for order LTM-1 (Current status: deposit-paid)
+
+ [32mÔ£ô[39m src/__tests__/CartModal.test.jsx [2m([22m[2m2 tests[22m[2m)[22m[33m 1958[2mms[22m[39m
+     [33m[2mÔ£ô[22m[39m renders the cart items and total [33m 380[2mms[22m[39m
+     [33m[2mÔ£ô[22m[39m calculates delivery fee correctly [33m 1569[2mms[22m[39m
+ [32mÔ£ô[39m src/__tests__/ProductModal.test.jsx [2m([22m[2m3 tests[22m[2m)[22m[33m 2053[2mms[22m[39m
+     [33m[2mÔ£ô[22m[39m renders product details correctly [33m 570[2mms[22m[39m
+     [33m[2mÔ£ô[22m[39m calls onClose when circular close button is clicked [33m 1061[2mms[22m[39m
+ [31mÔØ»[39m src/__tests__/OrderDetailsModal.test.jsx [2m([22m[2m7 tests[22m[2m | [22m[31m1 failed[39m[2m)[22m[33m 3262[2mms[22m[39m
+     [33m[2mÔ£ô[22m[39m renders order details correctly [33m 470[2mms[22m[39m
+     [33m[2mÔ£ô[22m[39m calls onClose when close button is clicked [33m 1017[2mms[22m[39m
+     [33m[2mÔ£ô[22m[39m handles status update for admin [33m 315[2mms[22m[39m
+     [32mÔ£ô[39m displays reorder button for non-admin[32m 83[2mms[22m[39m
+     [32mÔ£ô[39m triggers PDF download when receipt button is clicked[32m 46[2mms[22m[39m
+[31m     [31m├ù[31m triggers AI note scan for admin when notes are present[39m[33m 1130[2mms[22m[39m
+     [32mÔ£ô[39m renders status history correctly[32m 194[2mms[22m[39m
+ [32mÔ£ô[39m src/__tests__/Macarons.test.jsx [2m([22m[2m4 tests[22m[2m)[22m[33m 1782[2mms[22m[39m
+     [33m[2mÔ£ô[22m[39m renders macaron cards correctly [33m 461[2mms[22m[39m
+     [33m[2mÔ£ô[22m[39m updates price when changing box size dropdown [33m 939[2mms[22m[39m
+     [33m[2mÔ£ô[22m[39m calls onAddToCart with selected option [33m 317[2mms[22m[39m
+ [31mÔØ»[39m src/__tests__/Orders.test.jsx [2m([22m[2m4 tests[22m[2m | [22m[31m1 failed[39m[2m)[22m[33m 2721[2mms[22m[39m
+     [33m[2mÔ£ô[22m[39m renders active orders by default [33m 575[2mms[22m[39m
+     [33m[2mÔ£ô[22m[39m switches to completed/historical orders tab and filters correctly [33m 1269[2mms[22m[39m
+[31m     [31m├ù[31m handles bulk status updates for multiple orders[39m[33m 683[2mms[22m[39m
+     [32mÔ£ô[39m opens order details modal when an order is clicked[32m 186[2mms[22m[39m
+ [31mÔØ»[39m src/__tests__/App.test.jsx [2m([22m[2m3 tests[22m[2m | [22m[31m1 failed[39m[2m)[22m[33m 4224[2mms[22m[39m
+     [33m[2mÔ£ô[22m[39m renders the landing page by default [33m 2120[2mms[22m[39m
+     [33m[2mÔ£ô[22m[39m navigates to the about page [33m 663[2mms[22m[39m
+[31m     [31m├ù[31m navigates to the login page[39m[33m 1433[2mms[22m[39m
+ [32mÔ£ô[39m src/__tests__/ConfirmationModal.test.jsx [2m([22m[2m4 tests[22m[2m)[22m[32m 223[2mms[22m[39m
+ [32mÔ£ô[39m src/__tests__/Footer.test.jsx [2m([22m[2m1 test[22m[2m)[22m[33m 312[2mms[22m[39m
+     [33m[2mÔ£ô[22m[39m renders all the navigation links and social media icons [33m 304[2mms[22m[39m
+ [32mÔ£ô[39m src/__tests__/Header.test.jsx [2m([22m[2m1 test[22m[2m)[22m[32m 222[2mms[22m[39m
+ [32mÔ£ô[39m src/__tests__/Dashboard.test.jsx [2m([22m[2m6 tests[22m[2m)[22m[33m 517[2mms[22m[39m
+ [32mÔ£ô[39m src/__tests__/AdminLogic.test.jsx [2m([22m[2m6 tests[22m[2m)[22m[32m 21[2mms[22m[39m
+ [32mÔ£ô[39m src/__tests__/Login.test.jsx [2m([22m[2m2 tests[22m[2m)[22m[33m 647[2mms[22m[39m
+     [33m[2mÔ£ô[22m[39m renders the login heading and Google sign-in button [33m 621[2mms[22m[39m
+ [32mÔ£ô[39m src/__tests__/OrderVisibility.test.jsx [2m([22m[2m2 tests[22m[2m)[22m[32m 98[2mms[22m[39m
+
+ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ» Failed Tests 3 ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»
+
+ FAIL  src/__tests__/App.test.jsx > App component routing > navigates to the login page
+TestingLibraryElementError: Unable to find role="heading" and name "Login"
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <div
+      class="app-wrapper "
+    >
+      <div
+        class="app"
+      >
+        <header
+          class="app-header"
+        >
+          <div
+            class="header-left"
+          >
+            <button
+              aria-label="Toggle menu"
+              class="menu-toggle"
+            >
+              <svg
+                fill="none"
+                height="1em"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="1em"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <line
+                  x1="3"
+                  x2="21"
+                  y1="12"
+                  y2="12"
+                />
+                <line
+                  x1="3"
+                  x2="21"
+                  y1="6"
+                  y2="6"
+                />
+                <line
+                  x1="3"
+                  x2="21"
+                  y1="18"
+                  y2="18"
+                />
+              </svg>
+            </button>
+            <a
+              data-discover="true"
+              href="/"
+            >
+              <img
+                alt="Los Tres Macarons"
+                class="logo"
+                src="/images/logo.jpeg"
+              />
+            </a>
+          </div>
+          <div
+            class="header-center"
+          >
+            <a
+              class="header-title-link"
+              data-discover="true"
+              href="/"
+            >
+              <h1
+                class="header-title-text"
+              >
+                Los Tres Macarons
+              </h1>
+            </a>
+          </div>
+          <div
+            class="header-right"
+          >
+            <div
+              class="cart-icon-container"
+              data-testid="cart-icon"
+            >
+              <svg
+                fill="none"
+                height="24"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <circle
+                  cx="9"
+                  cy="21"
+                  r="1"
+                />
+                <circle
+                  cx="20"
+                  cy="21"
+                  r="1"
+                />
+                <path
+                  d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"
+                />
+              </svg>
+            </div>
+            <a
+              aria-label="My Account"
+              class="user-icon-link"
+              data-discover="true"
+              href="/my-account"
+            >
+              <svg
+                fill="none"
+                height="24"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"
+                />
+                <circle
+                  cx="12"
+                  cy="7"
+                  r="4"
+                />
+              </svg>
+            </a>
+          </div>
+        </header>
+        <div
+          class="nav-overlay "
+        />
+        <nav
+          class="header-nav "
+        >
+          <ul>
+            <li>
+              <a
+                data-discover="true"
+                href="/"
+              >
+                Home
+              </a>
+            </li>
+            <li>
+              <a
+                data-discover="true"
+                href="/about"
+              >
+                About
+              </a>
+            </li>
+            <li>
+              <a
+                data-discover="true"
+                href="/flavor-explorer"
+              >
+                Flavor Explorer
+              </a>
+            </li>
+            <li>
+              <a
+                data-discover="true"
+                href="/contact"
+              >
+                Contact
+              </a>
+            </li>
+            <li>
+              <a
+                data-discover="true"
+                href="/login"
+              >
+                Login
+              </a>
+            </li>
+          </ul>
+        </nav>
+        <main
+          class="app-container"
+        >
+          <div
+            style="display: flex; justify-content: center; align-items: center; min-height: 60vh; font-size: 1.2rem; color: rgb(231, 84, 128);"
+          >
+            Loading...
+          </div>
+        </main>
+        <footer
+          class="footer"
+        >
+          <div
+            class="footer-content"
+          >
+            <div
+              class="footer-section about"
+            >
+              <h2
+                class="logo-text"
+              >
+                Los Tres Macarons
+              </h2>
+              <p>
+                Deliciously handcrafted macarons made with love and the finest ingredients. Perfect for any occasion.
+              </p>
+            </div>
+            <div
+              class="footer-section links"
+            >
+              <h2>
+                Quick Links
+              </h2>
+              <ul>
+                <li>
+                  <a
+                    data-discover="true"
+                    href="/"
+                  >
+                    Home
+                  </a>
+                </li>
+                <li>
+                  <a
+                    data-discover="true"
+                    href="/about"
+                  >
+                    About
+                  </a>
+                </li>
+                <li>
+                  <a
+                    data-discover="true"
+                    href="/contact"
+                  >
+                    Contact
+                  </a>
+                </li>
+                <li>
+                  <a
+                    data-discover="true"
+                    href="/admin-login"
+                  >
+                    Admin
+                  </a>
+                </li>
+              </ul>
+            </div>
+            <div
+              class="footer-section social"
+            >
+              <h2>
+                Follow Us
+              </h2>
+              <div
+                class="social-icons"
+              >
+                <a
+                  href="https://www.facebook.com/profile.php?id=100090266093209"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  <svg
+                    fill="none"
+                    height="1em"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    viewBox="0 0 24 24"
+                    width="1em"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"
+                    />
+                  </svg>
+                </a>
+                <a
+                  href="https://www.instagram.com/lostresmacaronske/"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  <svg
+                    fill="none"
+                    height="1em"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    viewBox="0 0 24 24"
+                    width="1em"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <rect
+                      height="20"
+                      rx="5"
+                      ry="5"
+                      width="20"
+                      x="2"
+                      y="2"
+                    />
+                    <path
+                      d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"
+                    />
+                    <line
+                      x1="17.5"
+                      x2="17.51"
+                      y1="6.5"
+                      y2="6.5"
+                    />
+                  </svg>
+                </a>
+              </div>
+            </div>
+          </div>
+          <div
+            class="footer-bottom"
+          >
+            ┬® 
+            2026
+             Los Tres Macarons. All Rights Reserved. | 
+            <a
+              data-discover="true"
+              href="/disclaimer"
+            >
+              Disclaimer
+            </a>
+             | 
+            <a
+              data-discover="true"
+              href="/privacy-policy"
+            >
+              Privacy Policy
+            </a>
+             | 
+            <a
+              data-discover="true"
+              href="/terms-of-service"
+            >
+              Terms of Service
+            </a>
+             | 
+            <a
+              data-discover="true"
+              href="/data-deletion"
+            >
+              Data Deletion
+            </a>
+          </div>
+        </footer>
+        <section
+          aria-atomic="false"
+          aria-label="Notifications Alt+T"
+          aria-live="polite"
+          aria-relevant="additions text"
+          class="Toastify"
+        />
+      </div>
+    </div>
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <div
+      class="app-wrapper "
+    >
+      <div
+        class="app"
+      >
+        <header
+          class="app-header"
+        >
+          <div
+            class="header-left"
+          >
+            <button
+              aria-label="Toggle menu"
+              class="menu-toggle"
+            >
+              <svg
+                fill="none"
+                height="1em"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="1em"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <line
+                  x1="3"
+                  x2="21"
+                  y1="12"
+                  y2="12"
+                />
+                <line
+                  x1="3"
+                  x2="21"
+                  y1="6"
+                  y2="6"
+                />
+                <line
+                  x1="3"
+                  x2="21"
+                  y1="18"
+                  y2="18"
+                />
+              </svg>
+            </button>
+            <a
+              data-discover="true"
+              href="/"
+            >
+              <img
+                alt="Los Tres Macarons"
+                class="logo"
+                src="/images/logo.jpeg"
+              />
+            </a>
+          </div>
+          <div
+            class="header-center"
+          >
+            <a
+              class="header-title-link"
+              data-discover="true"
+              href="/"
+            >
+              <h1
+                class="header-title-text"
+              >
+                Los Tres Macarons
+              </h1>
+            </a>
+          </div>
+          <div
+            class="header-right"
+          >
+            <div
+              class="cart-icon-container"
+              data-testid="cart-icon"
+            >
+              <svg
+                fill="none"
+                height="24"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <circle
+                  cx="9"
+                  cy="21"
+                  r="1"
+                />
+                <circle
+                  cx="20"
+                  cy="21"
+                  r="1"
+                />
+                <path
+                  d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"
+                />
+              </svg>
+            </div>
+            <a
+              aria-label="My Account"
+              class="user-icon-link"
+              data-discover="true"
+              href="/my-account"
+            >
+              <svg
+                fill="none"
+                height="24"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"
+                />
+                <circle
+                  cx="12"
+                  cy="7"
+                  r="4"
+                />
+              </svg>
+            </a>
+          </div>
+        </header>
+        <div
+          class="nav-overlay "
+        />
+        <nav
+          class="header-nav "
+        >
+          <ul>
+            <li>
+              <a
+                data-discover="true"
+                href="/"
+              >
+                Home
+              </a>
+            </li>
+            <li>
+              <a
+                data-discover="true"
+                href="/about"
+              >
+                About
+              </a>
+            </li>
+            <li>
+              <a
+                data-discover="true"
+                href="/flavor-explorer"
+              >
+                Flavor Explorer
+              </a>
+            </li>
+            <li>
+              <a
+                data-discover="true"
+                href="/contact"
+              >
+                Contact
+              </a>
+            </li>
+            <li>
+              <a
+                data-discover="true"
+                href="/login"
+              >
+                Login
+              </a>
+            </li>
+          </ul>
+        </nav>
+        <main
+          class="app-container"
+        >
+          <div
+            style="display: flex; justify-content: center; align-items: center; min-height: 60vh; font-size: 1.2rem; color: rgb(231, 84, 128);"
+          >
+            Loading...
+          </div>
+        </main>
+        <footer
+          class="footer"
+        >
+          <div
+            class="footer-content"
+          >
+            <div
+              class="footer-section about"
+            >
+              <h2
+                class="logo-text"
+              >
+                Los Tres Macarons
+              </h2>
+              <p>
+                Deliciously handcrafted macarons made with love and the finest ingredients. Perfect for any occasion.
+              </p>
+            </div>
+            <div
+              class="footer-section links"
+            >
+              <h2>
+                Quick Links
+              </h2>
+              <ul>
+                <li>
+                  <a
+                    data-discover="true"
+                    href="/"
+                  >
+                    Home
+                  </a>
+                </li>
+                <li>
+                  <a
+                    data-discover="true"
+                    href="/about"
+                  >
+                    About
+                  </a>
+                </li>
+                <li>
+                  <a
+                    data-discover="true"
+                    href="/contact"
+                  >
+                    Contact
+                  </a>
+                </li>
+                <li>
+                  <a
+                    data-discover="true"
+                    href="/admin-login"
+                  >
+                    Admin
+                  </a>
+                </li>
+              </ul>
+            </div>
+            <div
+              class="footer-section social"
+            >
+              <h2>
+                Follow Us
+              </h2>
+              <div
+                class="social-icons"
+              >
+                <a
+                  href="https://www.facebook.com/profile.php?id=100090266093209"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  <svg
+                    fill="none"
+                    height="1em"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    viewBox="0 0 24 24"
+                    width="1em"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"
+                    />
+                  </svg>
+                </a>
+                <a
+                  href="https://www.instagram.com/lostresmacaronske/"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  <svg
+                    fill="none"
+                    height="1em"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    viewBox="0 0 24 24"
+                    width="1em"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <rect
+                      height="20"
+                      rx="5"
+                      ry="5"
+                      width="20"
+                      x="2"
+                      y="2"
+                    />
+                    <path
+                      d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"
+                    />
+                    <line
+                      x1="17.5"
+                      x2="17.51"
+                      y1="6.5"
+                      y2="6.5"
+                    />
+                  </svg>
+                </a>
+              </div>
+            </div>
+          </div>
+          <div
+            class="footer-bottom"
+          >
+            ┬® 
+            2026
+             Los Tres Macarons. All Rights Reserved. | 
+            <a
+              data-discover="true"
+              href="/disclaimer"
+            >
+              Disclaimer
+            </a>
+             | 
+            <a
+              data-discover="true"
+              href="/privacy-policy"
+            >
+              Privacy Policy
+            </a>
+             | 
+            <a
+              data-discover="true"
+              href="/terms-of-service"
+            >
+              Terms of Service
+            </a>
+             | 
+            <a
+              data-discover="true"
+              href="/data-deletion"
+            >
+              Data Deletion
+            </a>
+          </div>
+        </footer>
+        <section
+          aria-atomic="false"
+          aria-label="Notifications Alt+T"
+          aria-live="polite"
+          aria-relevant="additions text"
+          class="Toastify"
+        />
+      </div>
+    </div>
+  </div>
+</body>
+ ÔØ» waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ÔØ» node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ÔØ» src/__tests__/App.test.jsx:47:25
+     45|       </MemoryRouter>
+     46|     );
+     47|     expect(await screen.findByRole('heading', { name: 'Login' })).toBeÔÇª
+       |                         ^
+     48|   });
+     49| });
+
+ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»[1/3]ÔÄ»
+
+ FAIL  src/__tests__/OrderDetailsModal.test.jsx > OrderDetailsModal Component > triggers AI note scan for admin when notes are present
+Error: Unexpected module status 5. Cannot require() ES Module C:\Users\USER\Music\WEBSITES\sweetmacarons\src\services\aiService.js because it is not yet fully loaded. This may be caused by a race condition if the module is simultaneously dynamically import()-ed via Promise.all(). Try await-ing the import() sequentially in a loop instead. (from C:\Users\USER\Music\WEBSITES\sweetmacarons\src\__tests__\OrderDetailsModal.test.jsx)
+This is caused by either a bug in Node.js or incorrect usage of Node.js internals.
+Please open an issue with this stack trace at https://github.com/nodejs/node/issues
+
+
+Ignored nodes: comments, script, style
+<html>
+  <head />
+  <body>
+    <div>
+      <div
+        class="modal-overlay"
+      >
+        <div
+          class="modal-content"
+        >
+          <div
+            class="modal-header"
+          >
+            <h2>
+              Order Details
+            </h2>
+            <button
+              aria-label="Close modal"
+              class="modal-close-button"
+              title="Close"
+            >
+              <svg
+                fill="none"
+                height="20"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                style="stroke-width: 4;"
+                viewBox="0 0 24 24"
+                width="20"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <line
+                  x1="18"
+                  x2="6"
+                  y1="6"
+                  y2="18"
+                />
+                <line
+                  x1="6"
+                  x2="18"
+                  y1="6"
+                  y2="18"
+                />
+              </svg>
+              <span>
+                CLOSE
+              </span>
+            </button>
+          </div>
+          <div
+            class="order-details-scrollable"
+          >
+            <div
+              class="modal-body"
+            >
+              <div
+                class="order-title-row"
+              >
+                <h3>
+                  Order #
+                  LTM-1
+                </h3>
+                <button
+                  class="download-pdf-btn"
+                  title="Download Receipt as PDF"
+                >
+                  <svg
+                    fill="none"
+                    height="1em"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    viewBox="0 0 24 24"
+                    width="1em"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"
+                    />
+                    <polyline
+                      points="7 10 12 15 17 10"
+                    />
+                    <line
+                      x1="12"
+                      x2="12"
+                      y1="15"
+                      y2="3"
+                    />
+                  </svg>
+                   Receipt (PDF)
+                </button>
+              </div>
+              <p>
+                <strong>
+                  Date:
+                </strong>
+                 
+                01/01/2024, 03:00:00
+              </p>
+              <div
+                class="status-selector"
+              >
+                <strong>
+                  Status:
+                </strong>
+                <div
+                  class="selector-container"
+                >
+                  <select>
+                    <option
+                      value="pending"
+                    >
+                      Pending
+                    </option>
+                    <option
+                      value="deposit-paid"
+                    >
+                      Deposit Paid
+                    </option>
+                    <option
+                      value="in-progress"
+                    >
+                      In Progress
+                    </option>
+                    <option
+                      value="shipped"
+                    >
+                      Shipped
+                    </option>
+                    <option
+                      value="delivered"
+                    >
+                      Delivered
+                    </option>
+                    <option
+                      value="order-closed"
+                    >
+                      Order Completed
+                    </option>
+                    <option
+                      value="cancelled"
+                    >
+                      Cancelled
+                    </option>
+                  </select>
+                </div>
+              </div>
+              <div
+                class="ai-alert-banner"
+              >
+                <div
+                  class="alert-header"
+                >
+                  <svg
+                    fill="none"
+                    height="1em"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    viewBox="0 0 24 24"
+                    width="1em"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"
+                    />
+                    <line
+                      x1="12"
+                      x2="12"
+                      y1="9"
+                      y2="13"
+                    />
+                    <line
+                      x1="12"
+                      x2="12.01"
+                      y1="17"
+                      y2="17"
+                    />
+                  </svg>
+                   
+                  <span>
+                    AI SAFETY ALERT
+                  </span>
+                </div>
+                <div
+                  class="alert-tags"
+                >
+                  <span
+                    class="alert-tag"
+                  >
+                    Allergy
+                  </span>
+                </div>
+                <p
+                  class="alert-summary"
+                >
+                  Caution
+                </p>
+              </div>
+              <div
+                class="order-notes-display"
+              >
+                <strong>
+                  Customer Notes:
+                </strong>
+                <p>
+                  Please avoid peanuts, severe allergy.
+                </p>
+              </div>
+              <hr />
+              <h4>
+                Items
+              </h4>
+              <div
+                class="order-items-list"
+              >
+                <div
+                  class="order-item"
+                >
+                  <div
+                    class="item-info"
+                  >
+                    <span
+                      class="item-name"
+                    >
+                      Vanilla
+                    </span>
+                    <span
+                      class="item-details"
+                    >
+                      2
+                       x Box of 
+                      6
+                    </span>
+                  </div>
+                  <span
+                    class="item-price"
+                  >
+                    Ksh 
+                    1,200
+                  </span>
+                </div>
+              </div>
+              <div
+                class="order-totals"
+              >
+                <div
+                  class="total-row"
+                >
+                  <strong>
+                    Macarons Total:
+                  </strong>
+                  <span>
+                    Ksh 
+                    1,200
+                  </span>
+                </div>
+                <div
+                  class="total-row"
+                >
+                  <strong>
+                    Delivery Fee:
+                  </strong>
+                  <span>
+                    Ksh 
+                    400
+                  </span>
+                </div>
+                <div
+                  class="total-row grand-total"
+                >
+                  <strong>
+                    Grand Total:
+                  </strong>
+                  <strong>
+                    Ksh 
+                    1,600
+                  </strong>
+                </div>
+                <div
+                  class="total-row financials"
+                >
+                  <strong>
+                    Deposit Paid:
+                  </strong>
+                  <div
+                    class="deposit-view-box"
+                  >
+                    <span>
+                      Ksh 
+                      360
+                    </span>
+                    <button
+                      class="btn-edit-deposit"
+                    >
+                      Edit
+                    </button>
+                  </div>
+                </div>
+                <div
+                  class="total-row financials"
+                >
+                  <strong>
+                    Balance Due:
+                  </strong>
+                  <span
+                    class=""
+                  >
+                    Ksh 
+                    1,240
+                  </span>
+                </div>
+              </div>
+              <p
+                class="delivery-info"
+              >
+                <strong>
+                  Delivery Option:
+                </strong>
+                 
+                cbd
+              </p>
+              <div
+                class="delivery-address-details"
+              >
+                <h4>
+                  Delivery Address
+                </h4>
+                <p>
+                  123 CBD Street
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
+ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»[2/3]ÔÄ»
+
+ FAIL  src/__tests__/Orders.test.jsx > Orders Page > handles bulk status updates for multiple orders
+TestingLibraryElementError: Unable to find an element with the text: /3 Orders Selected/i. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <div
+      class="orders-page"
+    >
+      <h1>
+        Order Management
+      </h1>
+      <div
+        class="tabs"
+      >
+        <button
+          class="tab-button active"
+        >
+          Active Orders
+        </button>
+        <button
+          class="tab-button "
+        >
+          Completed/Historical Orders
+        </button>
+      </div>
+      <div
+        class="bulk-actions-bar"
+      >
+        <span
+          class="selected-count"
+        >
+          5
+           orders selected
+        </span>
+        <div
+          class="bulk-controls"
+        >
+          <select
+            class="bulk-status-select"
+          >
+            <option
+              value=""
+            >
+              Select Status...
+            </option>
+            <option
+              value="pending"
+            >
+              Pending
+            </option>
+            <option
+              value="deposit-paid"
+            >
+              Deposit Paid
+            </option>
+            <option
+              value="in-progress"
+            >
+              In Progress
+            </option>
+            <option
+              value="shipped"
+            >
+              Shipped
+            </option>
+            <option
+              value="delivered"
+            >
+              Delivered
+            </option>
+            <option
+              value="order-closed"
+            >
+              Order Completed
+            </option>
+          </select>
+          <button
+            class="apply-bulk-btn"
+            disabled=""
+          >
+            Apply to All
+          </button>
+        </div>
+      </div>
+      <div
+        class="orders-container"
+      >
+        <div
+          class="table-wrapper desktop-only"
+        >
+          <table
+            class="orders-table"
+          >
+            <thead>
+              <tr>
+                <th
+                  class="checkbox-cell"
+                >
+                  <input
+                    type="checkbox"
+                  />
+                </th>
+                <th>
+                  Order ID
+                </th>
+                <th>
+                  Date
+                </th>
+                <th>
+                  Customer
+                </th>
+                <th>
+                  Total
+                </th>
+                <th>
+                  Status
+                </th>
+                <th>
+                  Actions
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                class="order-row selected"
+              >
+                <td
+                  class="checkbox-cell"
+                >
+                  <input
+                    type="checkbox"
+                  />
+                </td>
+                <td
+                  class="order-id"
+                >
+                  #
+                  LTM-101
+                </td>
+                <td>
+                  22/03/2026
+                </td>
+                <td>
+                  Anonymous
+                </td>
+                <td
+                  class="order-total"
+                >
+                  Ksh 
+                  100
+                </td>
+                <td>
+                  <span
+                    class="order-status-badge pending"
+                  >
+                    pending
+                  </span>
+                </td>
+                <td>
+                  <button
+                    class="edit-order-btn"
+                  >
+                    View Details
+                  </button>
+                </td>
+              </tr>
+              <tr
+                class="order-row selected"
+              >
+                <td
+                  class="checkbox-cell"
+                >
+                  <input
+                    type="checkbox"
+                  />
+                </td>
+                <td
+                  class="order-id"
+                >
+                  #
+                  LTM-102
+                </td>
+                <td>
+                  22/03/2026
+                </td>
+                <td>
+                  Anonymous
+                </td>
+                <td
+                  class="order-total"
+                >
+                  Ksh 
+                  150
+                </td>
+                <td>
+                  <span
+                    class="order-status-badge depositpaid"
+                  >
+                    deposit-paid
+                  </span>
+                </td>
+                <td>
+                  <button
+                    class="edit-order-btn"
+                  >
+                    View Details
+                  </button>
+                </td>
+              </tr>
+              <tr
+                class="order-row selected"
+              >
+                <td
+                  class="checkbox-cell"
+                >
+                  <input
+                    type="checkbox"
+                  />
+                </td>
+                <td
+                  class="order-id"
+                >
+                  #
+                  LTM-103
+                </td>
+                <td>
+                  22/03/2026
+                </td>
+                <td>
+                  Anonymous
+                </td>
+                <td
+                  class="order-total"
+                >
+                  Ksh 
+                  200
+                </td>
+                <td>
+                  <span
+                    class="order-status-badge inprogress"
+                  >
+                    in-progress
+                  </span>
+                </td>
+                <td>
+                  <button
+                    class="edit-order-btn"
+                  >
+                    View Details
+                  </button>
+                </td>
+              </tr>
+              <tr
+                class="order-row selected"
+              >
+                <td
+                  class="checkbox-cell"
+                >
+                  <input
+                    type="checkbox"
+                  />
+                </td>
+                <td
+                  class="order-id"
+                >
+                  #
+                  LTM-104
+                </td>
+                <td>
+                  22/03/2026
+                </td>
+                <td>
+                  Anonymous
+                </td>
+                <td
+                  class="order-total"
+                >
+                  Ksh 
+                  250
+                </td>
+                <td>
+                  <span
+                    class="order-status-badge shipped"
+                  >
+                    shipped
+                  </span>
+                </td>
+                <td>
+                  <button
+                    class="edit-order-btn"
+                  >
+                    View Details
+                  </button>
+                </td>
+              </tr>
+              <tr
+                class="order-row selected"
+              >
+                <td
+                  class="checkbox-cell"
+                >
+                  <input
+                    type="checkbox"
+                  />
+                </td>
+                <td
+                  class="order-id"
+                >
+                  #
+                  LTM-105
+                </td>
+                <td>
+                  22/03/2026
+                </td>
+                <td>
+                  Anonymous
+                </td>
+                <td
+                  class="order-total"
+                >
+                  Ksh 
+                  300
+                </td>
+                <td>
+                  <span
+                    class="order-status-badge delivered"
+                  >
+                    delivered
+                  </span>
+                </td>
+                <td>
+                  <button
+                    class="edit-order-btn"
+                  >
+                    View Details
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div
+          class="mobile-only orders-cards-list"
+        >
+          <div
+            class="order-mobile-card selected"
+          >
+            <div
+              class="card-selection-header"
+            >
+              <input
+                type="checkbox"
+              />
+              <span
+                class="card-order-id"
+              >
+                #
+                LTM-101
+              </span>
+              <span
+                class="order-status-badge pending"
+              >
+                pending
+              </span>
+            </div>
+            <div
+              class="card-body"
+            >
+              <div
+                class="card-info"
+              >
+                <span
+                  class="label"
+                >
+                  Customer:
+                </span>
+                <span
+                  class="value"
+                >
+                  Anonymous
+                </span>
+              </div>
+              <div
+                class="card-info"
+              >
+                <span
+                  class="label"
+                >
+                  Date:
+                </span>
+                <span
+                  class="value"
+                >
+                  22/03/2026
+                </span>
+              </div>
+              <div
+                class="card-info"
+              >
+                <span
+                  class="label"
+                >
+                  Total:
+                </span>
+                <span
+                  class="value highlighting"
+                >
+                  Ksh 
+                  100
+                </span>
+              </div>
+            </div>
+            <div
+              class="card-footer"
+            >
+              <button
+                class="view-details-mobile-btn"
+              >
+                View & Edit Details
+              </button>
+            </div>
+          </div>
+          <div
+            class="order-mobile-card selected"
+          >
+            <div
+              class="card-selection-header"
+            >
+              <input
+                type="checkbox"
+              />
+              <span
+                class="card-order-id"
+              >
+                #
+                LTM-102
+              </span>
+              <span
+                class="order-status-badge depositpaid"
+              >
+                deposit-paid
+              </span>
+            </div>
+            <div
+              class="card-body"
+            >
+              <div
+                class="card-info"
+              >
+                <span
+                  class="label"
+                >
+                  Customer:
+                </span>
+                <span
+                  class="value"
+                >
+                  Anonymous
+                </span>
+              </div>
+              <div
+                class="card-info"
+              >
+                <span
+                  class="label"
+                >
+                  Date:
+                </span>
+                <span
+                  class="value"
+                >
+                  22/03/2026
+                </span>
+              </div>
+              <div
+                class="card-info"
+              >
+                <span
+                  class="label"
+                >
+                  Total:
+                </span>
+                <span
+                  class="value highlighting"
+                >
+                  Ksh 
+                  150
+                </span>
+              </div>
+            </div>
+            <div
+              class="card-footer"
+            >
+              <button
+                class="view-details-mobile-btn"
+              >
+                View & Edit Details
+              </button>
+            </div>
+          </div>
+          <div
+            class="order-mobile-card selected"
+          >
+            <div
+              class="card-selection-header"
+            >
+              <input
+                type="checkbox"
+              />
+              <span
+                class="card-order-id"
+              >
+                #
+                LTM-103
+              </span>
+              <span
+                class="order-status-badge inprogress"
+              >
+                in-progress
+              </span>
+            </div>
+            <div
+              class="card-body"
+            >
+              <div
+                class="card-info"
+              >
+                <span
+                  class="label"
+                >
+                  Customer:
+                </span>
+                <span
+                  class="value"
+                >
+                  Anonymous
+                </span>
+              </div>
+              <div
+                class="card-info"
+              >
+                <span
+                  class="label"
+                >
+                  Date:
+                </span>
+                <span
+                  class="value"
+                >
+                  22/03/2026
+                </span>
+              </div>
+              <div
+                class="card-info"
+              >
+                <span
+                  class="label"
+                >
+                  Total:
+                </span>
+                <span
+                  class="value highlighting"
+                >
+                  Ksh 
+                  200
+                </span>
+              </div>
+            </div>
+            <div
+              class="card-footer"
+            >
+              <button
+                class="view-details-mobile-btn"
+              >
+                View & Edit Details
+              </button>
+            </div>
+          </div>
+          <div
+            class="order-mobile-card selected"
+          >
+            <div
+              class="card-selection-header"
+            >
+              <input
+                type="checkbox"
+              />
+              <span
+                class="card-order-id"
+              >
+                #
+                LTM-104
+              </span>
+              <span
+                class="order-status-badge shipped"
+              >
+                shipped
+              </span>
+            </div>
+            <div
+              class="card-body"
+            >
+              <div
+                class="card-info"
+              >
+                <span
+                  class="label"
+                >
+                  Customer:
+                </span>
+                <span
+                  class="value"
+                >
+                  Anonymous
+                </span>
+              </div>
+              <div
+                class="card-info"
+              >
+                <span
+                  class="label"
+                >
+                  Date:
+                </span>
+                <span
+                  class="value"
+                >
+                  22/03/2026
+                </span>
+              </div>
+              <div
+                class="card-info"
+              >
+                <span
+                  class="label"
+                >
+                  Total:
+                </span>
+                <span
+                  class="value highlighting"
+                >
+                  Ksh 
+                  250
+                </span>
+              </div>
+            </div>
+            <div
+              class="card-footer"
+            >
+              <button
+                class="view-details-mobile-btn"
+              >
+                View & Edit Details
+              </button>
+            </div>
+          </div>
+          <div
+            class="order-mobile-card selected"
+          >
+            <div
+              class="card-selection-header"
+            >
+              <input
+                type="checkbox"
+              />
+              <span
+                class="card-order-id"
+              >
+                #
+                LTM-105
+              </span>
+              <span
+                class="order-status-badge delivered"
+              >
+                delivered
+              </span>
+            </div>
+            <div
+              class="card-body"
+            >
+              <div
+                class="card-info"
+              >
+                <span
+                  class="label"
+                >
+                  Customer:
+                </span>
+                <span
+                  class="value"
+                >
+                  Anonymous
+                </span>
+              </div>
+              <div
+                class="card-info"
+              >
+                <span
+                  class="label"
+                >
+                  Date:
+                </span>
+                <span
+                  class="value"
+                >
+                  22/03/2026
+                </span>
+              </div>
+              <div
+                class="card-info"
+              >
+                <span
+                  class="label"
+                >
+                  Total:
+                </span>
+                <span
+                  class="value highlighting"
+                >
+                  Ksh 
+                  300
+                </span>
+              </div>
+            </div>
+            <div
+              class="card-footer"
+            >
+              <button
+                class="view-details-mobile-btn"
+              >
+                View & Edit Details
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+ ÔØ» Object.getElementError node_modules/@testing-library/dom/dist/config.js:37:19
+ ÔØ» node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ÔØ» node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ÔØ» node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ÔØ» src/__tests__/Orders.test.jsx:75:23
+     73|         
+     74|         // Verify bulk actions bar appears
+     75|         expect(screen.getByText(/3 Orders Selected/i)).toBeInTheDocumeÔÇª
+       |                       ^
+     76|         
+     77|         // Change bulk status
+
+ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»[3/3]ÔÄ»
+
+
+[2m Test Files [22m [1m[31m3 failed[39m[22m[2m | [22m[1m[32m15 passed[39m[22m[90m (18)[39m
+[2m      Tests [22m [1m[31m3 failed[39m[22m[2m | [22m[1m[32m55 passed[39m[22m[2m | [22m[33m1 skipped[39m[90m (59)[39m
+[2m   Start at [22m 09:43:54
+[2m   Duration [22m 19.86s[2m (transform 8.04s, setup 13.09s, import 33.94s, tests 24.10s, environment 97.34s)[22m
+
