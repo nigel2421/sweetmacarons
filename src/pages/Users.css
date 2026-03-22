@@ -172,42 +172,75 @@
     color: #4a5568;
 }
 
+/* Pagination Styling */
 .pagination {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 1rem;
-    margin-top: 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1.5rem;
+  margin-top: 3rem;
+  padding: 1rem;
 }
 
-.pagination-button {
-    padding: 0.75rem 1.5rem;
-    background-color: #e75480;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s;
+.page-numbers {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
 }
 
-.pagination-button:hover:not(:disabled) {
-    background-color: #d4437a;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(231, 84, 128, 0.3);
+.page-num {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  border: 1px solid #e2e8f0;
+  background: white;
+  color: #4a5568;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.pagination-button:disabled {
-    background-color: #cbd5e0;
-    cursor: not-allowed;
-    transform: none;
+.page-num.active {
+  background: #e75480;
+  color: white;
+  border-color: #e75480;
+  box-shadow: 0 4px 10px rgba(231, 84, 128, 0.2);
 }
 
-.pagination-info {
-    font-size: 1rem;
-    color: #4a5568;
-    font-weight: 500;
+.page-num:hover:not(.active) {
+  background: #fdf2f5;
+  border-color: #e75480;
+  color: #e75480;
+  transform: translateY(-2px);
+}
+
+.pagination-btn {
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  background: white;
+  color: #4a5568;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.pagination-btn:hover:not(:disabled) {
+  background: #e75480;
+  color: white;
+  border-color: #e75480;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(231, 84, 128, 0.2);
+}
+
+.pagination-btn:disabled {
+  background: #f7fafc;
+  color: #cbd5e0;
+  border-color: #e2e8f0;
+  cursor: not-allowed;
 }
 
 @media (max-width: 768px) {

@@ -14,6 +14,9 @@ const Orders = ({ orders: initialOrders, isAdmin }) => {
     const [selectedOrderIds, setSelectedOrderIds] = useState([]);
     const [bulkStatus, setBulkStatus] = useState('');
 
+    const [currentPage, setCurrentPage] = useState(1);
+    const ordersPerPage = 10;
+
     const [prevInitialOrders, setPrevInitialOrders] = useState(initialOrders);
     if (initialOrders !== prevInitialOrders) {
         setOrders(initialOrders || []);
@@ -32,6 +35,7 @@ const Orders = ({ orders: initialOrders, isAdmin }) => {
             }
             // Clear selection on tab change
             setSelectedOrderIds([]);
+            setCurrentPage(1);
         };
 
         filterOrders();
@@ -146,7 +150,13 @@ const Orders = ({ orders: initialOrders, isAdmin }) => {
                     <div className="no-orders-wrapper">
                         <p>No orders found.</p>
                     </div>
-                ) : (
+                ) : (() => {
+                    const indexOfLastOrder = currentPage * ordersPerPage;
+                    const indexOfFirstOrder = indexOfLastOrder - ordersPerPage;
+                    const currentOrders = filteredOrders.slice(indexOfFirstOrder, indexOfLastOrder);
+                    const totalPages = Math.ceil(filteredOrders.length / ordersPerPage);
+
+                    return (
                     <>
                         {/* Desktop Table View */}
                         <div className="table-wrapper desktop-only">
@@ -169,7 +179,7 @@ const Orders = ({ orders: initialOrders, isAdmin }) => {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {filteredOrders.map(order => (
+                                    {currentOrders.map(order => (
                                         <tr key={order.id} className={`order-row ${selectedOrderIds.includes(order.id) ? 'selected' : ''}`}>
                                             <td className="checkbox-cell">
                                                 <input 
@@ -203,7 +213,7 @@ const Orders = ({ orders: initialOrders, isAdmin }) => {
 
                         {/* Mobile Card View */}
                         <div className="mobile-only orders-cards-list">
-                            {filteredOrders.map(order => (
+                            {currentOrders.map(order => (
                                 <div 
                                     key={order.id} 
                                     className={`order-mobile-card ${selectedOrderIds.includes(order.id) ? 'selected' : ''}`}
@@ -241,8 +251,39 @@ const Orders = ({ orders: initialOrders, isAdmin }) => {
                                 </div>
                             ))}
                         </div>
+
+                        {/* Pagination Controls */}
+                        {totalPages > 1 && (
+                            <div className="pagination">
+                                <button 
+                                    className="pagination-btn"
+                                    onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                                    disabled={currentPage === 1}
+                                >
+                                    Previous
+                                </button>
+                                <div className="page-numbers">
+                                    {[...Array(totalPages)].map((_, i) => (
+                                        <button 
+                                            key={i + 1}
+                                            className={`page-num ${currentPage === i + 1 ? 'active' : ''}`}
+                                            onClick={() => setCurrentPage(i + 1)}
+                                        >
+                                            {i + 1}
+                                        </button>
+                                    ))}
+                                </div>
+                                <button 
+                                    className="pagination-btn"
+                                    onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                                    disabled={currentPage === totalPages}
+                                >
+                                    Next
+                                </button>
+                            </div>
+                        )}
                     </>
-                )}
+                ); })()}
             </div>
             {selectedOrder && (
                 <OrderDetailsModal
@@ -250,6 +291,7 @@ const Orders = ({ orders: initialOrders, isAdmin }) => {
                     show={!!selectedOrder}
                     onClose={handleCloseModal}
                     onUpdateStatus={handleUpdateStatus}
+                    onReorder={() => {}}
                     isAdmin={isAdmin}
                 />
             )}

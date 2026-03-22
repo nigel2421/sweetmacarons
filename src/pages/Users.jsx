@@ -39,7 +39,8 @@ const Users = ({ orders = [] }) => {
 
                     const listUsers = httpsCallable(functions, 'listUsers');
                     const result = await listUsers();
-                    const authUsers = result.data.users || [];
+                    const data = result.data;
+                    const authUsers = data?.users || [];
 
                     if (authUsers.length === 0) {
                         console.warn("No auth users returned from Cloud Function.");
@@ -165,7 +166,10 @@ const Users = ({ orders = [] }) => {
                         type="text"
                         placeholder="Search by email, name, or ID..."
                         value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
+                        onChange={(e) => {
+                            setSearchTerm(e.target.value);
+                            setCurrentPage(1);
+                        }}
                         className="users-search"
                     />
                     <button onClick={handleExportCSV} className="export-csv-button">
@@ -213,7 +217,7 @@ const Users = ({ orders = [] }) => {
                             ))
                         ) : (
                             <tr>
-                                <td colSpan="5" className="no-users">No users found</td>
+                                <td colSpan={5} className="no-users">No users found</td>
                             </tr>
                         )}
                     </tbody>
@@ -225,17 +229,25 @@ const Users = ({ orders = [] }) => {
                     <button
                         onClick={() => paginate(currentPage - 1)}
                         disabled={currentPage === 1}
-                        className="pagination-button"
+                        className="pagination-btn"
                     >
                         Previous
                     </button>
-                    <span className="pagination-info">
-                        Page {currentPage} of {totalPages}
-                    </span>
+                    <div className="page-numbers">
+                        {[...Array(totalPages)].map((_, i) => (
+                            <button
+                                key={i + 1}
+                                className={`page-num ${currentPage === i + 1 ? 'active' : ''}`}
+                                onClick={() => paginate(i + 1)}
+                            >
+                                {i + 1}
+                            </button>
+                        ))}
+                    </div>
                     <button
                         onClick={() => paginate(currentPage + 1)}
                         disabled={currentPage === totalPages}
-                        className="pagination-button"
+                        className="pagination-btn"
                     >
                         Next
                     </button>
